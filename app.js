@@ -519,7 +519,7 @@ function setupAnswerToggle() {
 // ------------------------------------------------------------
 // 음성 암송 (익명 버전과 동일, 통과 시 3단계 저장)
 // ------------------------------------------------------------
-const VOICE_PASS = 90;
+const VOICE_PASS = 80;
 
 function normalizeWords(s) {
   return String(s || "")
