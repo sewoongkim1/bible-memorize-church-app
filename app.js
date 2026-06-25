@@ -358,7 +358,7 @@ function renderSummary() {
         </div>
 
         <div class="stat-grid">
-          <div class="stat-box status-done"><div class="stat-num">${counts[3]}</div><div class="stat-lbl">암송 완료</div></div>
+          <div class="stat-box status-done"><div class="stat-num">${counts[3]}</div><div class="stat-lbl">완료</div></div>
           <div class="stat-box status-s2"><div class="stat-num">${counts[2]}</div><div class="stat-lbl">2단계</div></div>
           <div class="stat-box status-s1"><div class="stat-num">${counts[1]}</div><div class="stat-lbl">1단계</div></div>
           <div class="stat-box status-none"><div class="stat-num">${counts[0]}</div><div class="stat-lbl">미시도</div></div>
