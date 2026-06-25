@@ -552,7 +552,7 @@ h1 {
 }
 /* 인사 문구 내 로그인 정보(이름·소속) 강조 */
 .summary-hello .summary-user {
-  font-size: 1.25rem; font-weight: 800; color: var(--navy);
+  font-size: 1rem; /* 기존 1.25rem의 0.8배 */ font-weight: 800; color: var(--navy);
   letter-spacing: -0.3px;
 }
 .gauge-wrap { margin-bottom: 24px; }
