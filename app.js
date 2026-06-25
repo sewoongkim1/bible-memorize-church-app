@@ -202,9 +202,9 @@ function renderEntryScreen() {
   const appEl = document.getElementById("app");
 
   appEl.innerHTML = `
+    <h2 class="tagline-main">성경말씀 암송 프로그램 </h2>
     <div class="entry-screen">
       <div class="entry-card">
-        <h2 class="entry-title">성경 암송</h2>
 
         <div class="entry-field">
           <div class="entry-label">구분</div>
