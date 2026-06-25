@@ -645,14 +645,20 @@ function setupVoice(verse, stage) {
     r.interimResults = true;
     r.continuous = true;
 
+    // 이 세션에서 확정된 텍스트. 매 onresult마다 results 전체로부터 '다시 구성'한다.
+    // (안드로이드 크롬은 continuous 모드에서 확정 결과를 반복 전송 → += 누적 시 중복됨)
+    let sessionFinal = "";
+
     r.onresult = (e) => {
+      let fin = "";
       let interim = "";
-      for (let i = e.resultIndex; i < e.results.length; i++) {
+      for (let i = 0; i < e.results.length; i++) {
         const t = e.results[i][0].transcript;
-        if (e.results[i].isFinal) finalText += t + " ";
+        if (e.results[i].isFinal) fin += t + " ";
         else interim += t;
       }
-      liveEl.textContent = (finalText + interim).trim();
+      sessionFinal = fin;
+      liveEl.textContent = (finalText + fin + interim).replace(/\s+/g, " ").trim();
     };
     r.onerror = (e) => {
       if (e.error === "not-allowed" || e.error === "service-not-allowed" || e.error === "audio-capture") {
@@ -661,6 +667,9 @@ function setupVoice(verse, stage) {
       }
     };
     r.onend = () => {
+      // 세션 확정분을 누적(재시작 사이 유실 방지)
+      finalText = (finalText + " " + sessionFinal).replace(/\s+/g, " ").trim();
+      sessionFinal = "";
       if (!stopped) {
         try { rec = newSession(); rec.start(); return; } catch (e) {}
       }
