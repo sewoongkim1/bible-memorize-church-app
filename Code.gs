@@ -85,11 +85,6 @@ function doGet(e) {
       return json({ ok: true, progress: getProgressFor_(p) });
     }
 
-    // 진단용: 시트 원본 값 그대로 반환 (저장 값 vs 조회 키 대조)
-    if (p.action === 'dump') {
-      return json({ ok: true, rows: getSheet_().getDataRange().getValues() });
-    }
-
     if (p.test === '1') {
       appendRow_({ type: '교구', gu: '사랑', mok: '0', name: 'GET테스트', no: 0, stage: 1, mode: 'test', cid: 'gettest' });
       return json({ ok: true, wrote: true });
