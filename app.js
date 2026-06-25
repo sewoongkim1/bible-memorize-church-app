@@ -712,6 +712,9 @@ function setupAutoCheck(verse, stage) {
   // NFC(완성형)로 정규화한 뒤 비교해야 정답 판정이 된다.
   const norm = (s) => String(s || "").trim().normalize("NFC");
   const len = (s) => Array.from(s).length;
+  // 아이폰 천지인 등은 조합 중 낱자모(ㆍ U+318D, ㄱ~ㅣ 등 호환 자모)가 칸에 남는다.
+  // 이게 남아 있으면 "아직 조합 중"으로 보고 오답 삭제를 하지 않는다.
+  const isComposingJamo = (s) => /[ㄱ-ㆎᄀ-ᇿ]/.test(String(s || ""));
 
   function accept(input, idx) {
     input.value = norm(input.dataset.answer);
@@ -760,25 +763,29 @@ function setupAutoCheck(verse, stage) {
       return false;
     }
 
-    // 오답 처리는 "입력이 멈춘 뒤"에만, 그리고 글자 수가 정답보다 '많을 때'만.
-    // (한글 받침을 채우는 동안 같은 글자 수의 중간 상태가 생겨도 지우지 않도록)
+    // 오답 처리는 "입력이 멈춘 뒤"에만, 그리고
+    //  - 칸에 조합 중 낱자모가 없고(천지인 등 조합 완료),
+    //  - 글자 수가 정답보다 '많을 때'만 지운다.
+    // (한글 받침/모음을 채우는 동안의 동일 글자수 중간 상태는 절대 지우지 않음)
     function scheduleWrongCheck() {
       clearTimeout(timer);
       timer = setTimeout(() => {
         if (input.disabled) return;
+        if (checkAccept()) return;
+        if (isComposingJamo(input.value)) return; // 아직 조합 중
         const val = norm(input.value);
         const answer = norm(input.dataset.answer);
-        if (val === answer) return accept(input, idx);
         if (val && len(val) > len(answer)) markWrong(input);
-      }, 600);
+      }, 700);
     }
 
-    input.addEventListener("compositionend", () => {
+    // 입력/조합완료/키업 모두에서 정답을 확인(아이폰은 완료 신호가 늦거나 누락될 수 있음)
+    function onChange() {
       if (!checkAccept()) scheduleWrongCheck();
-    });
-    input.addEventListener("input", () => {
-      if (!checkAccept()) scheduleWrongCheck();
-    });
+    }
+    input.addEventListener("compositionend", onChange);
+    input.addEventListener("input", onChange);
+    input.addEventListener("keyup", onChange);
     input.addEventListener("focus", () => scrollIntoCenter(input));
   });
 
