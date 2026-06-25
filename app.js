@@ -744,7 +744,7 @@ function setupAutoCheck(verse, stage) {
     setTimeout(() => {
       const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
       const top = input.getBoundingClientRect().top;
-      const target = vh / 2 - 40; // 화면 중앙보다 약 1cm(40px) 위
+      const target = vh / 2 - 80; // 화면 중앙보다 약 2cm(80px) 위
       window.scrollBy({ top: top - target, behavior: "smooth" });
     }, 250);
   }
