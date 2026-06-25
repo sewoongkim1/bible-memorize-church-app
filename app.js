@@ -550,29 +550,60 @@ function collapseRepeats(s) {
   return a.join(" ");
 }
 
+// 배열 LCS 길이
+function lcsLen(a, b) {
+  const n = a.length, m = b.length;
+  const dp = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
+  for (let i = 1; i <= n; i++) {
+    for (let j = 1; j <= m; j++) {
+      dp[i][j] = a[i - 1] === b[j - 1]
+        ? dp[i - 1][j - 1] + 1
+        : Math.max(dp[i - 1][j], dp[i][j - 1]);
+    }
+  }
+  return dp[n][m];
+}
+
+// 두 단어의 음절 유사도(0~1). 음성 인식의 유사 발음 오인 허용에 사용
+function wordSim(a, b) {
+  const A = Array.from(a), B = Array.from(b);
+  if (!A.length && !B.length) return 1;
+  return (2 * lcsLen(A, B)) / (A.length + B.length);
+}
+
+const WORD_SIM_PASS = 0.5; // 이 이상 비슷하면 같은 단어로 인정(마크 초록)
+
 function scoreSpoken(answerText, spokenText) {
   const ans = normalizeWords(answerText);
   const said = normalizeWords(spokenText);
   const n = ans.length;
   const m = said.length;
+
+  // 단어 정렬(LCS) — 단, 완전일치가 아니라 '유사하면' 일치로 본다(마크용)
   const dp = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
   for (let i = 1; i <= n; i++) {
     for (let j = 1; j <= m; j++) {
-      dp[i][j] =
-        ans[i - 1] === said[j - 1]
-          ? dp[i - 1][j - 1] + 1
-          : Math.max(dp[i - 1][j], dp[i][j - 1]);
+      dp[i][j] = wordSim(ans[i - 1], said[j - 1]) >= WORD_SIM_PASS
+        ? dp[i - 1][j - 1] + 1
+        : Math.max(dp[i - 1][j], dp[i][j - 1]);
     }
   }
   const marks = new Array(n).fill(false);
   let i = n;
   let j = m;
   while (i > 0 && j > 0) {
-    if (ans[i - 1] === said[j - 1]) { marks[i - 1] = true; i--; j--; }
+    if (wordSim(ans[i - 1], said[j - 1]) >= WORD_SIM_PASS) { marks[i - 1] = true; i--; j--; }
     else if (dp[i - 1][j] >= dp[i][j - 1]) i--;
     else j--;
   }
-  const accuracy = n ? Math.round((dp[n][m] / n) * 100) : 0;
+
+  // 정확도는 음절(글자) 단위 LCS로 산정 → 1~2글자 오인은 부분 감점만(거의 같으면 높은 점수)
+  const ansSyl = Array.from(ans.join(""));
+  const saidSyl = Array.from(said.join(""));
+  const accuracy = ansSyl.length
+    ? Math.round((lcsLen(ansSyl, saidSyl) / ansSyl.length) * 100)
+    : 0;
+
   return { accuracy, marks, ansWords: ans };
 }
 
