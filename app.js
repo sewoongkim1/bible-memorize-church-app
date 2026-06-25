@@ -44,10 +44,60 @@ async function loadVerses() {
   }
 }
 
-// 사용자 정보가 있으면 본인 기록 요약, 없으면 진입(식별) 화면
+// 사용자 정보가 있으면 (서버 기록 동기화 후) 본인 기록 요약, 없으면 진입 화면
 function routeAfterLoad() {
-  if (loadUser()) renderSummary();
+  if (loadUser()) enterAfterLogin();
   else renderEntryScreen();
+}
+
+// 로그인 직후: 서버 기록을 로컬에 병합한 뒤 요약 화면을 보여준다.
+async function enterAfterLogin() {
+  const appEl = document.getElementById("app");
+  appEl.innerHTML = "<p style='text-align:center;padding:40px'>내 기록 불러오는 중...</p>";
+  await syncProgress();
+  renderSummary();
+}
+
+// 서버(시트)의 본인 기록을 받아 로컬 진행과 더 높은 단계로 병합.
+// 이를 통해 다른 기기/브라우저에서 로그인해도 진도가 따라온다.
+async function syncProgress() {
+  const u = loadUser();
+  if (!u || !POST_URL) return;
+
+  const params = new URLSearchParams({ action: "progress", type: u.type, name: u.name });
+  if (u.type === "교구") {
+    params.set("gu", u.gu);
+    params.set("mok", u.mok);
+  } else {
+    params.set("bu", u.bu);
+    params.set("grade", u.grade);
+  }
+
+  try {
+    const res = await fetch(POST_URL + "?" + params.toString(), { cache: "no-cache" });
+    const data = await res.json();
+    if (!data.ok || !data.progress) return;
+
+    const local = loadProgress();
+    let changed = false;
+    Object.keys(data.progress).forEach((no) => {
+      const serverStage = Number(data.progress[no]);
+      const cur = local[no]?.stage || 0;
+      if (serverStage > cur) {
+        local[no] = { stage: serverStage, passed: true };
+        changed = true;
+      }
+    });
+    if (changed) {
+      try {
+        localStorage.setItem(PROGRESS_KEY, JSON.stringify(local));
+      } catch {
+        /* 저장 실패 무시 */
+      }
+    }
+  } catch {
+    /* 네트워크/CORS 오류 시 로컬 기록만으로 진행 */
+  }
 }
 
 // ------------------------------------------------------------
@@ -258,7 +308,7 @@ function renderEntryScreen() {
     const prev = loadUser();
     if (prev && prev.cid) user.cid = prev.cid; // 기존 기기 식별자 유지
     saveUser(user);
-    renderSummary();
+    enterAfterLogin(); // 서버 기록 동기화 후 요약 화면
   });
 }
 

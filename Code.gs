@@ -75,19 +75,52 @@ function doPost(e) {
   }
 }
 
-/** 점검 + 테스트 기록 */
+/** 점검 + 테스트 기록 + 본인 진행 조회 */
 function doGet(e) {
   try {
-    if (e && e.parameter && e.parameter.test === '1') {
+    var p = (e && e.parameter) || {};
+
+    // 본인 기록 조회: 식별 조합으로 필터 → 구절별 최고 단계 반환
+    if (p.action === 'progress') {
+      return json({ ok: true, progress: getProgressFor_(p) });
+    }
+
+    if (p.test === '1') {
       appendRow_({ type: '교구', gu: '사랑', mok: '0', name: 'GET테스트', no: 0, stage: 1, mode: 'test', cid: 'gettest' });
       return json({ ok: true, wrote: true });
     }
+
     var sheet = getSheet_();
     var ss = sheet.getParent();
     return json({ ok: true, ss: ss.getName(), url: ss.getUrl(), rows: sheet.getLastRow() });
   } catch (err) {
     return json({ ok: false, error: String(err) });
   }
+}
+
+/** 식별 조합과 일치하는 행을 모아 { 구절No: 최고단계 } 로 반환 */
+function getProgressFor_(p) {
+  var type = String(p.type || '');
+  var sosok = String(p.gu || p.bu || '');     // 소속 = 교구명 또는 부서명
+  var sebu = String(p.mok || p.grade || '');  // 세부 = 목장 또는 학년
+  var name = String(p.name || '');
+  if (!type || !sosok || !sebu || !name) return {};
+
+  var values = getSheet_().getDataRange().getValues(); // 0행은 헤더
+  var out = {};
+  for (var i = 1; i < values.length; i++) {
+    var r = values[i];
+    // 열: 0 일시, 1 구분, 2 소속, 3 세부, 4 성명, 5 구절No, 6 단계
+    if (String(r[1]) === type && String(r[2]) === sosok &&
+        String(r[3]) === sebu && String(r[4]) === name) {
+      var no = r[5];
+      var stage = parseInt(r[6], 10);
+      if ((no === '' && no !== 0) || isNaN(stage)) continue;
+      var key = String(no);
+      if (!out[key] || stage > out[key]) out[key] = stage;
+    }
+  }
+  return out;
 }
 
 function json(obj) {
