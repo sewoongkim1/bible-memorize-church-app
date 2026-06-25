@@ -246,7 +246,7 @@ function renderEntryScreen() {
                 </label>`).join("")}
             </div>
           </div>
-          <div class="entry-field">
+          <div class="entry-field inline">
             <div class="entry-label">목장</div>
             <input class="entry-input" id="mok" inputmode="numeric" placeholder="예: 3" value="${u.mok || ""}"/>
           </div>
@@ -264,13 +264,13 @@ function renderEntryScreen() {
                 </label>`).join("")}
             </div>
           </div>
-          <div class="entry-field">
+          <div class="entry-field inline">
             <div class="entry-label">학년</div>
             <input class="entry-input" id="grade" placeholder="예: 3학년" value="${u.grade || ""}"/>
           </div>
         </div>
 
-        <div class="entry-field">
+        <div class="entry-field inline">
           <div class="entry-label">성명</div>
           <input class="entry-input" id="name" placeholder="이름" value="${u.name || ""}"/>
         </div>

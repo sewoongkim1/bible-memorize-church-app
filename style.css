@@ -527,6 +527,10 @@ h1 {
 .entry-label {
   font-weight: 700; color: var(--navy); font-size: .85rem; margin-bottom: 5px;
 }
+/* 라벨 + 입력칸을 한 줄에 (목장·학년·성명) */
+.entry-field.inline { display: flex; align-items: center; gap: 10px; }
+.entry-field.inline .entry-label { margin-bottom: 0; flex: 0 0 auto; min-width: 42px; }
+.entry-field.inline .entry-input { flex: 1 1 auto; }
 .entry-input {
   width: 100%; padding: 9px 12px; font-size: .95rem;
   border: 1px solid var(--border); border-radius: 10px; background: var(--cream);
@@ -535,13 +539,18 @@ h1 {
 .entry-input:focus { outline: none; border-color: var(--navy); background: #fff; }
 
 .radio-row { display: flex; gap: 6px; }
-.radio-row.wrap { flex-wrap: wrap; }
+/* 교구·부서 칩은 4열 그리드로 고정(좁은 화면에서도 한 줄에 4개) */
+.radio-row.wrap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
 .radio-chip { position: relative; cursor: pointer; }
 .radio-chip input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
 .radio-chip span {
   display: inline-block; padding: 7px 12px; border-radius: 999px;
   border: 1px solid var(--border); background: var(--cream);
   font-size: .85rem; color: #444; transition: all .15s; user-select: none;
+}
+/* 그리드 칸을 가득 채우도록 */
+.radio-row.wrap .radio-chip span {
+  display: block; text-align: center; padding: 7px 4px;
 }
 .radio-chip input:checked + span {
   background: var(--navy); color: #fff; border-color: var(--navy); font-weight: 700;
