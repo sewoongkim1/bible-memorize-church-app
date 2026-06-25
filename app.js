@@ -523,6 +523,7 @@ const VOICE_PASS = 90;
 
 function normalizeWords(s) {
   return String(s || "")
+    .normalize("NFC") // 분리형(NFD) 한글도 완성형으로 맞춰 가-힣 범위에 매칭되게
     .replace(/[^가-힣a-zA-Z0-9\s]/g, " ")
     .trim()
     .split(/\s+/)
@@ -709,8 +710,10 @@ function setupAutoCheck(verse, stage) {
 
   function evaluate(input, idx, isComposing) {
     if (input.disabled) return;
-    const val = input.value.trim();
-    const answer = input.dataset.answer;
+    // 모바일 키보드(3벌식·iOS 등)는 한글을 NFD(자모 분리형)로 입력할 수 있어
+    // NFC(완성형)로 정규화한 뒤 비교해야 정답 판정이 된다.
+    const val = input.value.trim().normalize("NFC");
+    const answer = (input.dataset.answer || "").normalize("NFC");
 
     if (val === answer) {
       input.value = answer;
