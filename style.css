@@ -611,4 +611,4 @@ h1 {
   font-family: inherit; font-weight: 500;
 }
 .nav-btn:hover { background: var(--white); }
-.nav-user { font-size: .82rem; color: var(--gray); }
+.nav-user { font-size: .98rem; /* 기존 .82rem의 1.2배 */ color: var(--navy); font-weight: 700; }
