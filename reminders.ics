@@ -1,0 +1,738 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//고척교회 제자양육부//말씀 암송 리마인드//KO
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:오직 성경, 말씀이 답이다!
+X-WR-TIMEZONE:Asia/Seoul
+REFRESH-INTERVAL;VALUE=DURATION:P1D
+X-PUBLISHED-TTL:P1D
+BEGIN:VEVENT
+UID:week-1@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260104T070000
+DTEND:20260104T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 오직 성경, 말씀이 답이다! (시 119:105)
+DESCRIPTION:주의 말씀은 내 발의 등이요 내 길에 빛이니이다\n\n— 시편 119편 105절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=1\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-2@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260111T070000
+DTEND:20260111T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 새해 복이 되세요 (창 12:2)
+DESCRIPTION:내가 네 이름을 창대하게 하리니 너는 복이 될지라\n\n— 창세기 12장 2절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=2\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-3@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260118T070000
+DTEND:20260118T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이 율법책을 떠나지 말게 하라 (수 1:8)
+DESCRIPTION:이 율법책을 네 입에서 떠나지 말게하며 다 지켜 행하라 그리하면 네가 형통하리라\n\n— 여호수아 1장 8절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=3\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-4@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260125T070000
+DTEND:20260125T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 믿고 가는 길 (출 13:22)
+DESCRIPTION:낮에는 구름기둥, 밤에는 불기둥이 백성 앞에서 떠나지 아니하리라\n\n— 출애굽기 13장 22절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=4\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-5@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260201T070000
+DTEND:20260201T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 거룩하게 삽시다 (레 20:26)
+DESCRIPTION:내가 또 너희를 나의 소유로 삼으려고 너희를 만민 중에서 구별하였음이니라\n\n— 레위기 20장 26절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=5\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-6@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260208T070000
+DTEND:20260208T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 주 예수를 믿으라 (행 16:31)
+DESCRIPTION:주 예수를 믿으라 그리하면 너와 네집이 구원을 받으리라\n\n— 사도행전 16장 31절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=6\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-7@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260215T070000
+DTEND:20260215T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 마음을 여시는 하나님 (행 16:14)
+DESCRIPTION:주께서 그 마음을 열어 바울의 말을 따르게 하신지라\n\n— 사도행전 16장 14절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=7\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-8@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260222T070000
+DTEND:20260222T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 광야의 세 가지 질문 (눅 4:8)
+DESCRIPTION:주 너의 하나님께 경배하고 다만 그를 섬가라\n\n— 누가복음 4장 8절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=8\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-9@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260301T070000
+DTEND:20260301T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 기억하고 선포하고 순종하라 (신 8:6)
+DESCRIPTION:네 하나님 여호와의 명령을 지켜 그의 길을 따라가며 그를 경외할지라\n\n— 신명기 8장 6절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=9\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-10@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260308T070000
+DTEND:20260308T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 아름다운 엉망진창 (막 12:17)
+DESCRIPTION:가이사의 것은 가이사에게, 하나님의 것은 하나님께 바치라\n\n— 마가복음 12장 17절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=10\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-11@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260315T070000
+DTEND:20260315T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 1도의 위험 (삿 8:23)
+DESCRIPTION:내가 너희를 다스리지 아니하겠고 여호와께서 너희를 다스리시리라\n\n— 사사기 8장 23절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=11\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-12@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260322T070000
+DTEND:20260322T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 그리스도인이란 (벧전 4:16)
+DESCRIPTION:만일 그리스도인으로 고난을 받으면 그 이름으로 하나님께 영광을 돌리라\n\n— 베드로전서 4장 16절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=12\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-13@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260329T070000
+DTEND:20260329T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 주가 쓰시겠다 하라 (막 11:3)
+DESCRIPTION:주가 쓰시겠다 하라 그리하면 즉시 이리로 보내리라\n\n— 마가복음 11장 3절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=13\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-14@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260405T070000
+DTEND:20260405T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 빈 손, 빈 무덤 (막 16:6)
+DESCRIPTION:너희가 십자가에 못 박히신 나사렛 예수를 찾는구나 그가 살아나셨고 여기 계시지 아니하니라\n\n— 마가복음 16장 6절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=14\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-15@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260412T070000
+DTEND:20260412T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 갈렙처럼 보고 먹고 따르라 (민 14:24)
+DESCRIPTION:그러나 내 종 갈렙은 그 마음이 그들과 달라서 나를 온전히 따랐은즉 … 그의 자손이 그 땅을 차지하리라\n\n— 민수기 14장 24절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=15\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-16@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260419T070000
+DTEND:20260419T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 으른입니까, 어른입니까? (삼상 26:24)
+DESCRIPTION:오늘 왕의 생명을 내가 중히 여긴 것 같이 내 생명을 여호와께서 중히 여기셔서 모든 환란에서 나를 구하여 내시기를 바라나이다\n\n— 사무엘상 26장 24절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=16\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-17@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260426T070000
+DTEND:20260426T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 예수님을 대하는 법 (잠 4:6)
+DESCRIPTION:지혜를 버리지 말라 그가 너를 보호하리라 그를 사랑하라 그가 너를 지키리라\n\n— 잠언 4장 6절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=17\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-18@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260503T070000
+DTEND:20260503T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 다윗처럼 축복합니다 (대상 22:12)
+DESCRIPTION:여호와께서 네게 지혜와 총명을 주사… 네 하나님 여호와의 율법을 지키게 하시기를 더욱 원하로라\n\n— 역대상 22장 12절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=18\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-19@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260510T070000
+DTEND:20260510T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 은혜를 받은 자여 (눅 1:28)
+DESCRIPTION:은혜를 받은 자여 평안할지어다 주께서 너와 함께하시도다\n\n— 누가복음 1장 28절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=19\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-20@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260517T070000
+DTEND:20260517T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 천만인이 에워싸도 기도 (시 3:6)
+DESCRIPTION:천만인이 나를 에워싸 진 친다 하여도 나를 두려워하지 아니하리이다\n\n— 시편 3장 6절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=20\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-21@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260524T070000
+DTEND:20260524T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 성령의 언어 (살전 5:16-18)
+DESCRIPTION:항상 기뻐하라 쉬지 말고 기도하라 범사에 감사하라\n\n— 데살로니가전서 5장 16-18절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=21\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-22@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260531T070000
+DTEND:20260531T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 아버지와 아들과 성령의 이름 안으로 (마 28:19)
+DESCRIPTION:너희는 가서 모든 민족을 제자로 삼아 아버지와 아들과 성령의 이름으로 세례를 베풀고\n\n— 마태복음 28장 19절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=22\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-23@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260607T070000
+DTEND:20260607T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 건너와서 도우라 (행 16:10)
+DESCRIPTION:이는 하나님이 저 사람들에게 복음을 전하라고 우리를 부르신 줄로 인정함이러라\n\n— 사도행전 16장 10절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=23\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-24@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260614T070000
+DTEND:20260614T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 건너와서 도우시는 하나님 (시 116:1)
+DESCRIPTION:여호와께서 내 음성과 내 간구를 들으시므로 내가 그를 사랑하는도다\n\n— 시편 116편 1절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=24\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-25@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260621T070000
+DTEND:20260621T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 교회에 왔더니 예수만 보여요 (계 2:7)
+DESCRIPTION:이기는 그에게는 내가 하나님의 낙원에 있는 생명나무의 열매를 주어 먹게 하리라\n\n— 요한계시록 2장 7절\n📺 설교 영상: https://sewoongkim1.github.io/bible-memorize-app/go/?no=25\n📝 암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-26@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260628T070000
+DTEND:20260628T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-27@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260705T070000
+DTEND:20260705T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-28@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260712T070000
+DTEND:20260712T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-29@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260719T070000
+DTEND:20260719T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-30@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260726T070000
+DTEND:20260726T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-31@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260802T070000
+DTEND:20260802T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-32@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260809T070000
+DTEND:20260809T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-33@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260816T070000
+DTEND:20260816T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-34@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260823T070000
+DTEND:20260823T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-35@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260830T070000
+DTEND:20260830T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-36@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260906T070000
+DTEND:20260906T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-37@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260913T070000
+DTEND:20260913T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-38@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260920T070000
+DTEND:20260920T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-39@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20260927T070000
+DTEND:20260927T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-40@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20261004T070000
+DTEND:20261004T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-41@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20261011T070000
+DTEND:20261011T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-42@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20261018T070000
+DTEND:20261018T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-43@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20261025T070000
+DTEND:20261025T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-44@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20261101T070000
+DTEND:20261101T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-45@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20261108T070000
+DTEND:20261108T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-46@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20261115T070000
+DTEND:20261115T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-47@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20261122T070000
+DTEND:20261122T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-48@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20261129T070000
+DTEND:20261129T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-49@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20261206T070000
+DTEND:20261206T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-50@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20261213T070000
+DTEND:20261213T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-51@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20261220T070000
+DTEND:20261220T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:week-52@bible-memorize-app
+DTSTAMP:20260101T000000Z
+DTSTART:20261227T070000
+DTEND:20261227T071500
+RRULE:FREQ=DAILY;COUNT=7
+SUMMARY:📖 이번 주 암송 말씀을 확인하세요
+DESCRIPTION:이번 주 암송 말씀을 확인하고 암송해 보세요.\n\n암송 테스트: https://sewoongkim1.github.io/bible-memorize-app/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:이번 주 암송 말씀
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+END:VCALENDAR

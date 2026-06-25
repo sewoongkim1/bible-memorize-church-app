@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>오직 성경, 말씀이 답이다! | 고척교회</title>
+  <link rel="icon" href="favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@700;800&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root { --navy:#1a3a6b; --navy-dark:#0d1b3e; --gold:#c8a84b; --cream:#fdf8f0; --gray:#6b7280; --border:#ddd6c8; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Noto Sans KR", sans-serif; background: var(--cream); color: #222; }
+    .page-header { background: linear-gradient(135deg,#0d1b3e 0%,#1a3a6b 40%,#0d4a7a 100%); color:#fff; text-align:center; padding:24px 20px; }
+    .page-header h1 { font-family:"Nanum Myeongjo",serif; font-size:20px; }
+    .page-header p { font-size:13px; color:rgba(255,255,255,0.7); margin-top:6px; }
+    main { max-width:440px; margin:0 auto; padding:20px 18px 60px; }
+    .card { background:#fff; border:1px solid var(--border); border-radius:14px; padding:22px; box-shadow:0 2px 12px rgba(26,58,107,0.08); }
+    .lead { font-size:15px; line-height:1.8; color:#333; margin-bottom:18px; text-align:center; }
+    .lead b { color:var(--navy); }
+
+    /* 카카오톡 등 인앱 브라우저 경고 */
+    #kakao-warn { display:none; background:#fff5d6; border:1px solid #f0d264; border-radius:10px; padding:14px; margin-bottom:18px; }
+    #kakao-warn b { color:#8a6d00; }
+    #kakao-warn p { font-size:13px; color:#7a5e00; line-height:1.7; }
+    #kakao-warn .open-ext { display:block; text-align:center; margin-top:10px; background:#8a6d00; color:#fff; text-decoration:none; font-weight:700; padding:11px; border-radius:8px; font-size:14px; }
+
+    .btn { display:block; width:100%; text-align:center; text-decoration:none; font-weight:800; font-size:15px; padding:14px; border-radius:10px; margin-bottom:10px; }
+    .btn-primary { background:var(--navy); color:#fff; }
+    .btn-google { background:#fff; color:var(--navy); border:1.5px solid var(--navy); }
+    .btn-copy { background:#eef1f8; color:var(--navy); border:1.5px solid var(--border); font-weight:700; font-size:14px; cursor:pointer; }
+    .btn-file { display:block; text-align:center; margin-top:6px; font-size:13px; color:var(--gray); }
+
+    .guide { margin-top:22px; border-top:1px solid var(--border); padding-top:18px; }
+    .guide h2 { font-size:13px; color:var(--gold); letter-spacing:1px; margin-bottom:10px; }
+    .guide p { font-size:13px; color:#444; line-height:1.8; margin-bottom:10px; }
+    .badge { display:inline-block; font-size:11px; font-weight:700; color:#fff; background:var(--navy); padding:2px 8px; border-radius:8px; margin-right:4px; }
+    .url-box { font-size:12px; color:#555; background:var(--cream); border:1px dashed var(--border); border-radius:8px; padding:8px 10px; word-break:break-all; margin-top:8px; }
+  </style>
+  <script src="kakao-redirect.js"></script>
+</head>
+<body>
+  <div class="page-header">
+    <h1>오직 성경, 말씀이 답이다!</h1>
+    <p>제자양육부 신앙운동팀</p>
+  </div>
+
+  <main>
+    <div class="card">
+      <div id="kakao-warn">
+        <b>⚠️ 카카오톡 안에서는 구독이 안 됩니다</b>
+        <p>오른쪽 아래(또는 위) <b>⋮ / 공유</b> 버튼 → <b>“다른 브라우저로 열기”</b>(Safari·Chrome)로 연 뒤 구독해 주세요.</p>
+        <a class="open-ext" id="openExt" href="#">🔗 외부 브라우저로 열기</a>
+      </div>
+
+      <p class="lead">
+        휴대폰 캘린더에 <b>매일 아침 7시</b><br />
+        그 주의 암송 구절 알림을 받아보세요.<br />
+        <b>앱 설치·알림 권한 없이</b> 한 번만 구독하면 됩니다.
+      </p>
+
+      <a class="btn btn-primary" id="subApple" href="#">📅 아이폰 캘린더에 구독</a>
+      <a class="btn btn-google" id="subGoogle" href="#" target="_blank" rel="noopener">📆 Google 캘린더에 추가 (안드로이드·PC)</a>
+      <button class="btn btn-copy" id="copyBtn">🔗 구독 주소 복사</button>
+      <a class="btn-file" id="dlFile" href="reminders.ics">또는 파일로 한 번만 가져오기 (.ics)</a>
+
+      <div class="guide">
+        <h2>구독 방법</h2>
+        <p><span class="badge">아이폰</span> <b>아이폰 캘린더에 구독</b> → “구독” → 캘린더 앱에 추가(자동 갱신).</p>
+        <p><span class="badge">안드로이드</span> <b>Google 캘린더에 추가</b> 버튼 → Google 캘린더에서 “추가”. 안 되면 <b>구독 주소 복사</b> 후 Google 캘린더 → 다른 캘린더 → <b>URL로 추가</b>에 붙여넣기.</p>
+        <p style="color:var(--gray);">※ 반드시 Safari·Chrome 같은 <b>일반 브라우저</b>에서 열어야 동작합니다(카카오톡 내장 브라우저 ✕).</p>
+        <div class="url-box" id="urlBox"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const host = location.host;
+    const path = location.pathname.replace(/reminders\.html$/, "") + "reminders.ics";
+    const httpsIcs = location.protocol + "//" + host + path;
+    const webcalIcs = "webcal://" + host + path;
+    const gcal = "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(httpsIcs);
+
+    document.getElementById("subApple").href = webcalIcs;
+    document.getElementById("subGoogle").href = gcal;
+    document.getElementById("urlBox").textContent = httpsIcs;
+
+    // 구독 주소 복사
+    document.getElementById("copyBtn").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(httpsIcs);
+        const b = document.getElementById("copyBtn");
+        b.textContent = "✓ 복사됨! Google 캘린더에 붙여넣기";
+        setTimeout(() => (b.textContent = "🔗 구독 주소 복사"), 2500);
+      } catch (e) {
+        prompt("아래 주소를 복사하세요:", httpsIcs);
+      }
+    });
+
+    // 카카오톡/네이버 등 인앱 브라우저 감지 → 경고 표시 + 외부 열기
+    const ua = navigator.userAgent || "";
+    const inApp = /KAKAOTALK|NAVER|Instagram|FBAN|FBAV|Line\//i.test(ua);
+    if (inApp) {
+      document.getElementById("kakao-warn").style.display = "block";
+      const target = location.href;
+      const ext = document.getElementById("openExt");
+      if (/KAKAOTALK/i.test(ua)) {
+        // 카카오톡 전용: 외부 브라우저로 열기
+        ext.href = "kakaotalk://web/openExternal?url=" + encodeURIComponent(target);
+      } else {
+        ext.style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>
