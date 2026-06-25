@@ -548,7 +548,7 @@ h1 {
 }
 .summary-hello {
   font-family: "Nanum Myeongjo", serif; color: var(--navy);
-  font-size: 1.3rem; line-height: 1.45; margin-bottom: 22px;
+  font-size: 0.91rem; /* 기존 1.3rem의 0.7배 */ line-height: 1.45; margin-bottom: 22px;
 }
 .gauge-wrap { margin-bottom: 24px; }
 .gauge-pct {
