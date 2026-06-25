@@ -343,9 +343,6 @@ function renderSummary() {
   const done = counts[3];
   const pct = total ? Math.round((done / total) * 100) : 0;
 
-  // 다음에 도전할 구절(미완료 중 가장 앞 회차)
-  const next = verses.find((v) => getPassedStage(v.no) < 3);
-
   const appEl = document.getElementById("app");
   appEl.innerHTML = `
     <div class="summary-screen">
@@ -363,8 +360,6 @@ function renderSummary() {
           <div class="stat-box status-s1"><div class="stat-num">${counts[1]}</div><div class="stat-lbl">1단계</div></div>
           <div class="stat-box status-none"><div class="stat-num">${counts[0]}</div><div class="stat-lbl">미시도</div></div>
         </div>
-
-        ${next ? `<div class="summary-next">다음 도전: <b>${next.refShort}</b></div>` : `<div class="summary-next">🎉 모든 구절을 완료했어요!</div>`}
 
         <button class="summary-go" id="go-list">암송하러 가기</button>
         <a class="remind-cta" href="reminders.html">🔔 매일 암송 구절 알림 받기</a>
