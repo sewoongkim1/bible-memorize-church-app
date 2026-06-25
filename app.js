@@ -727,6 +727,17 @@ function setupAutoCheck(verse, stage) {
     else checkAllComplete(inputs, verse, stage);
   }
 
+  function markWrong(input) {
+    input.classList.add("wrong");
+    input.classList.remove("correct");
+    setTimeout(() => {
+      input.blur();
+      input.value = "";
+      input.classList.remove("wrong");
+      input.focus();
+    }, 400);
+  }
+
   // 모바일 키보드에 가리지 않도록, 포커스된 입력 칸을 화면 중앙보다 약간 위로 올린다.
   function scrollIntoCenter(input) {
     // 키보드가 올라온 뒤 위치가 잡히도록 약간 지연
@@ -739,52 +750,43 @@ function setupAutoCheck(verse, stage) {
   }
 
   inputs.forEach((input, idx) => {
-    let poll = null;
+    let timer = null;
 
-    // 정답이면 통과. (입력을 절대 지우지 않는다)
+    // 정답이면 즉시 통과(조합 상태와 무관). 매 입력마다 검사.
     function checkAccept() {
       if (input.disabled) return false;
       if (norm(input.value) === norm(input.dataset.answer)) {
+        clearTimeout(timer);
         accept(input, idx);
         return true;
       }
       return false;
     }
 
-    // 비파괴적 오답 표시: 조합 낱자모가 없고 글자 수가 정답보다 많을 때만 빨강(지우지 않음)
-    function updateWrongStyle() {
-      if (input.disabled) return;
-      const val = norm(input.value);
-      const answer = norm(input.dataset.answer);
-      if (!isComposingJamo(input.value) && val && len(val) > len(answer)) {
-        input.classList.add("wrong");
-      } else {
-        input.classList.remove("wrong");
-      }
+    // 오답 처리는 "입력이 멈춘 뒤"에만, 그리고
+    //  - 칸에 조합 중 낱자모가 없고(천지인 등 조합 완료),
+    //  - 글자 수가 정답보다 '많을 때'만 지운다.
+    // (한글 받침/모음을 채우는 동안의 동일 글자수 중간 상태는 절대 지우지 않음)
+    function scheduleWrongCheck() {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (input.disabled) return;
+        if (checkAccept()) return;
+        if (isComposingJamo(input.value)) return; // 아직 조합 중
+        const val = norm(input.value);
+        const answer = norm(input.dataset.answer);
+        if (val && len(val) > len(answer)) markWrong(input);
+      }, 700);
     }
 
-    // 포커스 동안 값을 직접 폴링 → iOS 천지인 등에서 조합 이벤트가 누락돼도
-    // 정답이 완성되는 순간을 놓치지 않고 통과시킨다.
-    function startPoll() {
-      stopPoll();
-      poll = setInterval(() => {
-        if (input.disabled) return stopPoll();
-        if (checkAccept()) return stopPoll();
-        updateWrongStyle();
-      }, 150);
-    }
-    function stopPoll() {
-      if (poll) { clearInterval(poll); poll = null; }
-    }
-
+    // 입력/조합완료/키업 모두에서 정답을 확인(아이폰은 완료 신호가 늦거나 누락될 수 있음)
     function onChange() {
-      if (!checkAccept()) updateWrongStyle();
+      if (!checkAccept()) scheduleWrongCheck();
     }
     input.addEventListener("compositionend", onChange);
     input.addEventListener("input", onChange);
     input.addEventListener("keyup", onChange);
-    input.addEventListener("focus", () => { scrollIntoCenter(input); startPoll(); });
-    input.addEventListener("blur", stopPoll);
+    input.addEventListener("focus", () => scrollIntoCenter(input));
   });
 
   if (inputs[0]) inputs[0].focus();
