@@ -49,7 +49,7 @@ body {
 .logo-wrap img { width: 50px; height: auto; display: block; flex-shrink: 0; }
 .logo-tagline { display: flex; flex-direction: column; gap: 2px; }
 .logo-tagline .tagline-main {
-  font-size: 14.4px; /* 기존 16px의 0.9배 */ font-weight: 800; color: #0d1b3e;
+  font-size: 13px; font-weight: 800; color: #0d1b3e;
   letter-spacing: -0.3px; line-height: 1.3;
 }
 .logo-tagline .tagline-sub {
@@ -616,4 +616,4 @@ h1 {
   font-family: inherit; font-weight: 500;
 }
 .nav-btn:hover { background: var(--white); }
-.nav-user { font-size: .98rem; /* 기존 .82rem의 1.2배 */ color: var(--navy); font-weight: 700; }
+.nav-user { font-size: .8rem; color: var(--navy); font-weight: 700; white-space: nowrap; }
