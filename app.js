@@ -739,11 +739,14 @@ function setupAutoCheck(verse, stage) {
     }
   }
 
-  // 모바일 키보드에 가리지 않도록, 포커스된 입력 칸을 화면 중앙으로 올린다.
+  // 모바일 키보드에 가리지 않도록, 포커스된 입력 칸을 화면 중앙보다 약간 위로 올린다.
   function scrollIntoCenter(input) {
     // 키보드가 올라온 뒤 위치가 잡히도록 약간 지연
     setTimeout(() => {
-      input.scrollIntoView({ block: "center", behavior: "smooth" });
+      const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+      const top = input.getBoundingClientRect().top;
+      const target = vh / 2 - 40; // 화면 중앙보다 약 1cm(40px) 위
+      window.scrollBy({ top: top - target, behavior: "smooth" });
     }, 250);
   }
 
