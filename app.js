@@ -708,35 +708,31 @@ function pickBlankIndices(tokens, ratio) {
 function setupAutoCheck(verse, stage) {
   const inputs = Array.from(document.querySelectorAll(".word-input"));
 
-  function evaluate(input, idx, isComposing) {
-    if (input.disabled) return;
-    // 모바일 키보드(3벌식·iOS 등)는 한글을 NFD(자모 분리형)로 입력할 수 있어
-    // NFC(완성형)로 정규화한 뒤 비교해야 정답 판정이 된다.
-    const val = input.value.trim().normalize("NFC");
-    const answer = (input.dataset.answer || "").normalize("NFC");
+  // 모바일 키보드(3벌식·iOS 등)는 한글을 NFD(자모 분리형)로 입력할 수 있어
+  // NFC(완성형)로 정규화한 뒤 비교해야 정답 판정이 된다.
+  const norm = (s) => String(s || "").trim().normalize("NFC");
+  const len = (s) => Array.from(s).length;
 
-    if (val === answer) {
-      input.value = answer;
-      input.classList.add("correct");
+  function accept(input, idx) {
+    input.value = norm(input.dataset.answer);
+    input.classList.add("correct");
+    input.classList.remove("wrong");
+    input.disabled = true;
+
+    const next = inputs.slice(idx + 1).find((inp) => !inp.disabled);
+    if (next) next.focus();
+    else checkAllComplete(inputs, verse, stage);
+  }
+
+  function markWrong(input) {
+    input.classList.add("wrong");
+    input.classList.remove("correct");
+    setTimeout(() => {
+      input.blur();
+      input.value = "";
       input.classList.remove("wrong");
-      input.disabled = true;
-
-      const next = inputs.slice(idx + 1).find((inp) => !inp.disabled);
-      if (next) {
-        next.focus();
-      } else {
-        checkAllComplete(inputs, verse, stage);
-      }
-    } else if (!isComposing && Array.from(val).length >= Array.from(answer).length) {
-      input.classList.add("wrong");
-      input.classList.remove("correct");
-      setTimeout(() => {
-        input.blur();
-        input.value = "";
-        input.classList.remove("wrong");
-        input.focus();
-      }, 400);
-    }
+      input.focus();
+    }, 400);
   }
 
   // 모바일 키보드에 가리지 않도록, 포커스된 입력 칸을 화면 중앙보다 약간 위로 올린다.
@@ -751,14 +747,37 @@ function setupAutoCheck(verse, stage) {
   }
 
   inputs.forEach((input, idx) => {
-    let composing = false;
-    input.addEventListener("compositionstart", () => { composing = true; });
+    let timer = null;
+
+    // 정답이면 즉시 통과(조합 상태와 무관). 매 입력마다 검사.
+    function checkAccept() {
+      if (input.disabled) return false;
+      if (norm(input.value) === norm(input.dataset.answer)) {
+        clearTimeout(timer);
+        accept(input, idx);
+        return true;
+      }
+      return false;
+    }
+
+    // 오답 처리는 "입력이 멈춘 뒤"에만, 그리고 글자 수가 정답보다 '많을 때'만.
+    // (한글 받침을 채우는 동안 같은 글자 수의 중간 상태가 생겨도 지우지 않도록)
+    function scheduleWrongCheck() {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (input.disabled) return;
+        const val = norm(input.value);
+        const answer = norm(input.dataset.answer);
+        if (val === answer) return accept(input, idx);
+        if (val && len(val) > len(answer)) markWrong(input);
+      }, 600);
+    }
+
     input.addEventListener("compositionend", () => {
-      composing = false;
-      evaluate(input, idx, false);
+      if (!checkAccept()) scheduleWrongCheck();
     });
-    input.addEventListener("input", (e) => {
-      evaluate(input, idx, composing || e.isComposing);
+    input.addEventListener("input", () => {
+      if (!checkAccept()) scheduleWrongCheck();
     });
     input.addEventListener("focus", () => scrollIntoCenter(input));
   });
