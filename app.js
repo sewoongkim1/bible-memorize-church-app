@@ -202,7 +202,10 @@ function renderEntryScreen() {
   const appEl = document.getElementById("app");
 
   appEl.innerHTML = `
-    <h2 class="tagline-main">성경말씀 암송 프로그램 </h2>
+    <div class="entry-header">
+      <h2 class="entry-main-title">성경말씀 암송하기</h2>
+      <p class="entry-sub-title">내가 주의 말씀을 내 마음에 두었나이다</p>
+    </div>
     <div class="entry-screen">
       <div class="entry-card">
 
