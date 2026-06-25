@@ -49,7 +49,7 @@ body {
 .logo-wrap img { width: 50px; height: auto; display: block; flex-shrink: 0; }
 .logo-tagline { display: flex; flex-direction: column; gap: 2px; }
 .logo-tagline .tagline-main {
-  font-size: 16px; font-weight: 800; color: #0d1b3e;
+  font-size: 14.4px; /* 기존 16px의 0.9배 */ font-weight: 800; color: #0d1b3e;
   letter-spacing: -0.3px; line-height: 1.3;
 }
 .logo-tagline .tagline-sub {
