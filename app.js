@@ -664,10 +664,11 @@ function setupVoice(verse, stage) {
     const r = new SR();
     r.lang = "ko-KR";
     r.interimResults = true;
-    r.continuous = true;
+    // continuous=false: 안드로이드 크롬의 continuous 모드는 확정 결과를 누적·반복 전송해
+    // 같은 말이 중복된다. 짧은 구절 1회 인식이 목적이므로 단일 인식 모드를 쓴다.
+    r.continuous = false;
 
     // 이 세션에서 확정된 텍스트. 매 onresult마다 results 전체로부터 '다시 구성'한다.
-    // (안드로이드 크롬은 continuous 모드에서 확정 결과를 반복 전송 → += 누적 시 중복됨)
     let sessionFinal = "";
 
     r.onresult = (e) => {
