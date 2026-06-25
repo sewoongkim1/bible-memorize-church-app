@@ -98,11 +98,11 @@ h1 {
 
 .error { color: var(--error); }
 
-/* 메인 화면 '알림 구독' 버튼 */
+/* '매일 암송 구절 알림 받기' 버튼 — 요약 카드 안에서 다른 버튼과 같은 너비 */
 .remind-cta {
   display: block;
-  max-width: 340px;
-  margin: 0 auto 18px;
+  width: 100%;
+  margin: 0 0 10px;
   text-align: center;
   background: #eef1f8;
   border: 1.5px solid var(--navy);
@@ -110,7 +110,7 @@ h1 {
   font-weight: 700;
   text-decoration: none;
   padding: 11px 16px;
-  border-radius: 22px;
+  border-radius: 12px;
   font-size: 14px;
   transition: background 0.15s, color 0.15s;
 }

@@ -367,10 +367,9 @@ function renderSummary() {
         ${next ? `<div class="summary-next">다음 도전: <b>${next.refShort}</b></div>` : `<div class="summary-next">🎉 모든 구절을 완료했어요!</div>`}
 
         <button class="summary-go" id="go-list">암송하러 가기</button>
+        <a class="remind-cta" href="reminders.html">🔔 매일 암송 구절 알림 받기</a>
         <button class="summary-change" id="change-user">정보 변경</button>
       </div>
-
-      <a class="remind-cta" href="reminders.html">🔔 매일 암송 구절 알림 받기</a>
     </div>
   `;
 
