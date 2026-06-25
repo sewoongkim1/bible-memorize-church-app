@@ -567,21 +567,21 @@ h1 {
 }
 .summary-hello {
   font-family: "Nanum Myeongjo", serif; color: var(--navy);
-  font-size: 0.91rem; /* 기존 1.3rem의 0.7배 */ line-height: 1.4; margin-bottom: 12px;
+  font-size: 0.91rem; /* 기존 1.3rem의 0.7배 */ line-height: 1.35; margin-bottom: 6px;
 }
 /* 인사 문구 내 로그인 정보(이름·소속) 강조 */
 .summary-hello .summary-user {
   font-size: 1rem; /* 기존 1.25rem의 0.8배 */ font-weight: 800; color: var(--navy);
   letter-spacing: -0.3px;
 }
-.gauge-wrap { margin-bottom: 12px; }
+.gauge-wrap { margin-bottom: 6px; }
 .gauge-pct {
   font-size: 2.6rem; font-weight: 800; color: var(--gold);
   font-family: "Nanum Myeongjo", serif; line-height: 1;
 }
 .gauge-bar {
   height: 12px; background: var(--light); border-radius: 999px;
-  overflow: hidden; margin: 0 0 8px;
+  overflow: hidden; margin: 0 0 4px;
 }
 .gauge-fill {
   height: 100%; background: linear-gradient(90deg, var(--gold), #e0c674);
