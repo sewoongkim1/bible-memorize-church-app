@@ -664,23 +664,32 @@ function setupVoice(verse, stage) {
     const r = new SR();
     r.lang = "ko-KR";
     r.interimResults = true;
-    // continuous=false: 안드로이드 크롬의 continuous 모드는 확정 결과를 누적·반복 전송해
-    // 같은 말이 중복된다. 짧은 구절 1회 인식이 목적이므로 단일 인식 모드를 쓴다.
-    r.continuous = false;
+    r.continuous = true; // 계속 듣기(말이 끝나기 전에 멈추지 않도록)
 
-    // 이 세션에서 확정된 텍스트. 매 onresult마다 results 전체로부터 '다시 구성'한다.
+    // 이 세션의 확정 텍스트. 확정 결과들을 '병합'해 중복을 막는다.
     let sessionFinal = "";
 
     r.onresult = (e) => {
-      let fin = "";
+      const finals = [];
       let interim = "";
       for (let i = 0; i < e.results.length; i++) {
-        const t = e.results[i][0].transcript;
-        if (e.results[i].isFinal) fin += t + " ";
-        else interim += t;
+        const t = e.results[i][0].transcript.trim();
+        if (e.results[i].isFinal) {
+          if (t) finals.push(t);
+        } else {
+          interim += e.results[i][0].transcript;
+        }
       }
-      sessionFinal = fin;
-      liveEl.textContent = (finalText + fin + interim).replace(/\s+/g, " ").trim();
+      // 안드로이드는 확정 결과가 '점점 길어지며' 누적됨 → 앞을 포함하면 덮어쓰고,
+      // 새 구간이면 이어붙여 중복을 제거한다.
+      let merged = "";
+      for (const f of finals) {
+        if (!merged) merged = f;
+        else if (f.startsWith(merged)) merged = f; // 성장형 → 대체
+        else if (!merged.endsWith(f)) merged = (merged + " " + f).trim(); // 새 구간 → 추가
+      }
+      sessionFinal = merged;
+      liveEl.textContent = (finalText + " " + merged + " " + interim).replace(/\s+/g, " ").trim();
     };
     r.onerror = (e) => {
       if (e.error === "not-allowed" || e.error === "service-not-allowed" || e.error === "audio-capture") {
@@ -689,11 +698,13 @@ function setupVoice(verse, stage) {
       }
     };
     r.onend = () => {
-      // 세션 확정분을 누적
-      finalText = (finalText + " " + sessionFinal).replace(/\s+/g, " ").trim();
+      // 세션 확정분 누적 후 반복 정리(세션 경계 중복까지 제거)
+      finalText = collapseRepeats((finalText + " " + sessionFinal).replace(/\s+/g, " ").trim());
       sessionFinal = "";
-      // 재시작 루프는 사용하지 않는다(세션 간 음성 중복 인식 방지).
-      // 인식이 끝나면(자동 종료 또는 '암송 종료') 곧바로 채점.
+      // 사용자가 '암송 종료'를 누르기 전까지는 자동 재시작해 계속 듣는다.
+      if (!stopped) {
+        try { rec = newSession(); rec.start(); return; } catch (e) {}
+      }
       setRunning(false);
       evaluateAndShow();
     };
