@@ -820,6 +820,40 @@ function checkAllComplete(inputs, verse, stage) {
 }
 
 // ------------------------------------------------------------
+// 카카오톡 인앱 브라우저 → 기본(외부) 브라우저로 열기 유도
+//   안드로이드: 자동 전환(세션당 1회). 아이폰: 자동이 막히면 배너 버튼으로.
+// ------------------------------------------------------------
+function promptOpenExternal() {
+  const ua = navigator.userAgent || "";
+  if (!/KAKAOTALK/i.test(ua)) return; // 카톡 인앱 브라우저일 때만
+
+  const ext = "kakaotalk://web/openExternal?url=" + encodeURIComponent(location.href);
+
+  // 1) 세션당 1회 자동 전환 시도(실패 시 무한 리다이렉트 방지)
+  try {
+    if (!sessionStorage.getItem("kakaoExtTried")) {
+      sessionStorage.setItem("kakaoExtTried", "1");
+      location.href = ext;
+    }
+  } catch {
+    location.href = ext;
+  }
+
+  // 2) 상단 안내 배너(자동 전환이 막힌 경우 수동 버튼/가이드)
+  const isIOS = /iphone|ipad|ipod/i.test(ua);
+  const bar = document.createElement("div");
+  bar.className = "kakao-ext-bar";
+  bar.innerHTML = `
+    <span class="kakao-ext-msg">카카오톡에서는 음성 암송 등 일부 기능이 제한돼요.</span>
+    <a class="kakao-ext-open" href="${ext}">기본 브라우저로 열기</a>
+    <button type="button" class="kakao-ext-close" aria-label="닫기">✕</button>
+    <span class="kakao-ext-hint">안 열리면 우측 ${isIOS ? "하단 공유 → ‘Safari로 열기’" : "⋮ → ‘다른 브라우저로 열기’"}</span>`;
+  document.body.prepend(bar);
+  bar.querySelector(".kakao-ext-close").addEventListener("click", () => bar.remove());
+}
+
+// ------------------------------------------------------------
 // 시작
 // ------------------------------------------------------------
+promptOpenExternal();
 loadVerses();
