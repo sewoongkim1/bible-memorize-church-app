@@ -340,7 +340,7 @@ function renderSummary() {
   appEl.innerHTML = `
     <div class="summary-screen">
       <div class="summary-card">
-        <div class="summary-hello">${userLabel(u)} 성도님,<br>환영합니다 🙌</div>
+        <div class="summary-hello"><span class="summary-user">${userLabel(u)} 성도님</span>,<br>환영합니다 🙌</div>
 
         <div class="gauge-wrap">
           <div class="gauge-pct">${pct}%</div>

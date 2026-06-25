@@ -550,6 +550,11 @@ h1 {
   font-family: "Nanum Myeongjo", serif; color: var(--navy);
   font-size: 0.91rem; /* 기존 1.3rem의 0.7배 */ line-height: 1.45; margin-bottom: 22px;
 }
+/* 인사 문구 내 로그인 정보(이름·소속) 강조 */
+.summary-hello .summary-user {
+  font-size: 1.25rem; font-weight: 800; color: var(--navy);
+  letter-spacing: -0.3px;
+}
 .gauge-wrap { margin-bottom: 24px; }
 .gauge-pct {
   font-size: 2.6rem; font-weight: 800; color: var(--gold);
