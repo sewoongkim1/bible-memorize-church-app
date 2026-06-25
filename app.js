@@ -92,7 +92,7 @@ async function syncProgress() {
     });
     if (changed) {
       try {
-        localStorage.setItem(PROGRESS_KEY, JSON.stringify(local));
+        localStorage.setItem(progressKey(), JSON.stringify(local));
       } catch {
         /* 저장 실패 무시 */
       }
@@ -154,13 +154,26 @@ function userLines(u) {
 
 // ------------------------------------------------------------
 // 진행 상태 (localStorage) + 서버 백업
-//   key: "memorize-progress" → { "1": { stage: 2, passed: true }, ... }
+//   사용자(신원)별로 분리 저장한다. 키 = "memorize-progress::" + 신원식별자
+//   신원식별자: 교구  → g|교구|목장|이름,  교회학교 → s|부서|학년|이름
+//   → 로그인 정보를 바꾸면 다른 사람의 기록이 보이지 않는다.
 // ------------------------------------------------------------
 const PROGRESS_KEY = "memorize-progress";
 
+// 현재 사용자 신원에 해당하는 진행 기록 저장 키
+function progressKey() {
+  const u = loadUser();
+  if (!u) return PROGRESS_KEY; // 사용자 없으면 기본 키(폴백)
+  const id =
+    u.type === "교구"
+      ? `g|${u.gu}|${u.mok}|${u.name}`
+      : `s|${u.bu}|${u.grade}|${u.name}`;
+  return PROGRESS_KEY + "::" + id;
+}
+
 function loadProgress() {
   try {
-    return JSON.parse(localStorage.getItem(PROGRESS_KEY)) || {};
+    return JSON.parse(localStorage.getItem(progressKey())) || {};
   } catch {
     return {};
   }
@@ -172,7 +185,7 @@ function saveProgress(no, stage, mode = "typing") {
   if (stage > prev) {
     progress[no] = { stage, passed: true };
     try {
-      localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+      localStorage.setItem(progressKey(), JSON.stringify(progress));
     } catch {
       /* 저장 실패(시크릿 모드 등) 무시 */
     }
