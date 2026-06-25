@@ -343,7 +343,6 @@ function renderSummary() {
         <div class="summary-hello"><span class="summary-user">${userLabel(u)} 성도님</span>,<br>환영합니다 🙌</div>
 
         <div class="gauge-wrap">
-          <div class="gauge-pct">${pct}%</div>
           <div class="gauge-bar"><div class="gauge-fill" style="width:${pct}%"></div></div>
           <div class="gauge-sub">전체 ${total}구절 중 <b>${done}구절</b> 암송 완료</div>
         </div>
