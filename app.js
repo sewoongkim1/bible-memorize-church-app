@@ -739,6 +739,14 @@ function setupAutoCheck(verse, stage) {
     }
   }
 
+  // 모바일 키보드에 가리지 않도록, 포커스된 입력 칸을 화면 중앙으로 올린다.
+  function scrollIntoCenter(input) {
+    // 키보드가 올라온 뒤 위치가 잡히도록 약간 지연
+    setTimeout(() => {
+      input.scrollIntoView({ block: "center", behavior: "smooth" });
+    }, 250);
+  }
+
   inputs.forEach((input, idx) => {
     let composing = false;
     input.addEventListener("compositionstart", () => { composing = true; });
@@ -749,6 +757,7 @@ function setupAutoCheck(verse, stage) {
     input.addEventListener("input", (e) => {
       evaluate(input, idx, composing || e.isComposing);
     });
+    input.addEventListener("focus", () => scrollIntoCenter(input));
   });
 
   if (inputs[0]) inputs[0].focus();
