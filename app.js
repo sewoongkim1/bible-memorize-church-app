@@ -495,7 +495,7 @@ function renderTestScreen(verse, stage) {
 
   setupAnswerToggle();
   setupAutoCheck(verse, stage);
-  setupVoice(verse);
+  setupVoice(verse, stage);
 }
 
 function setupAnswerToggle() {
@@ -555,7 +555,7 @@ function scoreSpoken(answerText, spokenText) {
   return { accuracy, marks, ansWords: ans };
 }
 
-function setupVoice(verse) {
+function setupVoice(verse, stage) {
   const toggleBtn = document.getElementById("voice-toggle");
   const panel = document.getElementById("voice-panel");
   const statusEl = document.getElementById("voice-status");
@@ -607,13 +607,32 @@ function setupVoice(verse) {
       .map((w, i) => `<span class="${marks[i] ? "v-ok" : "v-no"}">${w}</span>`)
       .join(" ");
     const passed = accuracy >= VOICE_PASS;
-    if (passed) saveProgress(verse.no, 3, "voice");
+    if (passed) saveProgress(verse.no, stage, "voice"); // 현재 단계 기준으로 저장
+
+    // 통과 시 빈칸 테스트와 동일하게 다음 단계로 진행(마지막 단계면 완료)
+    const nav = !passed
+      ? ""
+      : stage < 3
+      ? `<button class="next-btn" id="voice-next-stage">${stage + 1}단계로</button>`
+      : `<div class="complete-badge">암송 완료 🙌</div>
+         <button class="next-btn" id="voice-to-summary">내 기록 보기</button>`;
 
     resultEl.innerHTML = `
       <div class="voice-summary"><span class="voice-pct ${passed ? "pass" : "fail"}">${accuracy}%</span> ${passed ? "음성 암송 통과! 🎉" : `조금 더! (통과 ${VOICE_PASS}%)`}</div>
       <div class="voice-words">${wordsHtml}</div>
       <div class="voice-heard">들린 내용: ${finalText ? finalText : "(인식 안 됨)"}</div>
+      ${nav}
     `;
+
+    if (passed && stage < 3) {
+      document
+        .getElementById("voice-next-stage")
+        .addEventListener("click", () => renderTestScreen(verse, stage + 1));
+    } else if (passed) {
+      document
+        .getElementById("voice-to-summary")
+        .addEventListener("click", renderSummary);
+    }
   }
 
   function newSession() {
