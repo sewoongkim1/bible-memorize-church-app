@@ -1,0 +1,598 @@
+/* ============================================================
+   말씀 한 절 암송 테스트 — 등록 시스템과 동일한 톤
+   ============================================================ */
+:root {
+  --navy: #1a3a6b;
+  --navy-dark: #0d1b3e;
+  --gold: #c8a84b;
+  --cream: #fdf8f0;
+  --white: #ffffff;
+  --gray: #6b7280;
+  --light: #f3f0ea;
+  --border: #ddd6c8;
+  --green: #2c5f2d;
+  --error: #c0392b;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  background: var(--cream);
+  color: #222;
+  min-height: 100vh;
+}
+
+/* ---------- 브랜드 헤더 ---------- */
+.page-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(135deg, #0d1b3e 0%, #1a3a6b 40%, #0d4a7a 100%);
+  padding: 12px 20px 16px;
+  width: 100%;
+}
+.logo-wrap {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 20px;
+  padding: 16px 28px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+  width: 100%;
+  max-width: 480px;
+}
+.logo-wrap img { width: 50px; height: auto; display: block; flex-shrink: 0; }
+.logo-tagline { display: flex; flex-direction: column; gap: 2px; }
+.logo-tagline .tagline-main {
+  font-size: 16px; font-weight: 800; color: #0d1b3e;
+  letter-spacing: -0.3px; line-height: 1.3;
+}
+.logo-tagline .tagline-sub {
+  font-size: 12px; font-weight: 500; color: #1a5276; letter-spacing: 0.5px;
+}
+.hero-subtitle {
+  font-size: 13px; font-weight: 500;
+  color: rgba(255, 255, 255, 0.65); letter-spacing: 3px;
+}
+
+/* ---------- 본문 래퍼 ---------- */
+#app {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 22px 16px 60px;
+}
+
+h1 {
+  font-family: "Nanum Myeongjo", serif;
+  font-size: 12.6px; /* 기존 18px의 0.7배 */
+  font-weight: 800;
+  color: var(--navy);
+  text-align: center;
+  letter-spacing: -0.3px;
+  margin-bottom: 20px;
+}
+
+.error { color: var(--error); }
+
+/* 메인 화면 '알림 구독' 버튼 */
+.remind-cta {
+  display: block;
+  max-width: 340px;
+  margin: 0 auto 18px;
+  text-align: center;
+  background: #eef1f8;
+  border: 1.5px solid var(--navy);
+  color: var(--navy);
+  font-weight: 700;
+  text-decoration: none;
+  padding: 11px 16px;
+  border-radius: 22px;
+  font-size: 14px;
+  transition: background 0.15s, color 0.15s;
+}
+.remind-cta:hover { background: var(--navy); color: #fff; }
+
+/* 본문 상단 제목 (가운데 정렬) */
+.page-title {
+  display: block;
+  text-align: center;
+  font-family: "Noto Sans KR", sans-serif; /* 헤더 tagline-main과 동일 폰트 */
+  font-size: 12.8px;
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: -0.3px;
+  margin-bottom: 20px;
+}
+
+/* ---------- 화면 1: 구절 목록 ---------- */
+.verse-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 가로로 긴 카드(한 줄 = 한 구절) */
+.verse-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 18px;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(26, 58, 107, 0.08);
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.verse-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(26, 58, 107, 0.14);
+}
+.verse-card.status-done {
+  border-color: var(--gold);
+  background: #fffdf6;
+}
+
+.verse-no {
+  font-family: "Nanum Myeongjo", serif;
+  color: var(--gold);
+  font-size: 15px;
+  font-weight: 800;
+  min-width: 30px;
+  text-align: center;
+}
+.verse-ref {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--navy);
+  white-space: nowrap;
+}
+.verse-hint {
+  flex: 1;
+  color: var(--gray);
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 진행 상태 배지 */
+.verse-status {
+  flex-shrink: 0;
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+.verse-status.status-none { color: var(--gray); background: var(--light); }
+.verse-status.status-s1 { color: var(--navy); background: #e7ecf5; }
+.verse-status.status-s2 { color: var(--white); background: var(--navy); }
+.verse-status.status-done { color: var(--navy-dark); background: #f4e3ad; }
+
+/* ---------- 화면 2: 테스트 ---------- */
+.test-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.test-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 정답 보기 + 음성 암송 버튼을 한 줄에 */
+.btn-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.btn-row .answer-btn,
+.btn-row .voice-btn,
+.btn-row .voice-stop {
+  margin-top: 0;
+  flex: 1 1 0;
+  max-width: 170px;
+  justify-content: center;
+  padding: 11px 12px;
+}
+.btn-row .voice-stop { border-radius: 22px; }
+.voice-btn:disabled,
+.voice-stop:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.back-btn,
+.answer-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #eef1f8; /* 옅은 네이비 톤 */
+  border: 1.5px solid var(--navy);
+  color: var(--navy);
+  font-weight: 700;
+  cursor: pointer;
+  padding: 7px 15px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s;
+}
+.back-btn:hover,
+.answer-btn:hover { background: var(--navy); color: var(--white); }
+
+.test-screen {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.test-card {
+  padding: 24px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(26, 58, 107, 0.08);
+}
+
+/* 단계 위 설교 영상 링크 */
+.sermon-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #0d1b3e 0%, #1a3a6b 100%);
+  color: var(--white);
+  text-decoration: none;
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-top: 18px;
+}
+.sermon-banner:hover { filter: brightness(1.1); }
+.sermon-banner-icon {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--navy-dark);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sermon-banner-text { display: flex; flex-direction: column; gap: 1px; line-height: 1.35; }
+.sermon-banner-title { font-size: 14px; font-weight: 700; }
+.sermon-banner-pastor { font-size: 11px; color: rgba(255, 255, 255, 0.7); }
+
+.test-stage {
+  display: inline-block;
+  background: var(--navy);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 12px;
+  border-radius: 12px;
+  letter-spacing: 1px;
+}
+.test-ref {
+  font-family: "Nanum Myeongjo", serif;
+  font-weight: 800;
+  font-size: 22px;
+  color: var(--navy);
+  letter-spacing: 0.3px;
+  padding-left: 10px;
+  border-left: 3px solid var(--gold);
+  line-height: 1.1;
+}
+.test-sentence {
+  font-family: "Gowun Batang", serif;
+  font-weight: 700;
+  font-size: 19px;
+  line-height: 2.1;
+  margin-bottom: 20px;
+  color: #1a1a1a;
+}
+.word-fixed { margin-right: 4px; }
+
+.word-input {
+  text-align: center;
+  font-family: "Gowun Batang", serif;
+  font-weight: 700;
+  font-size: 19px;
+  min-width: 2.5em;
+  margin: 0 3px;
+  padding: 0 2px;
+  border: none;
+  border-bottom: 2px solid var(--border);
+  outline: none;
+  background: transparent;
+  color: #222;
+}
+.word-input:focus { border-bottom-color: var(--navy); }
+.word-input.correct { border-bottom-color: var(--green); color: var(--green); }
+.word-input.wrong {
+  border-bottom-color: var(--error);
+  color: var(--error);
+  animation: shake 0.2s;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+
+/* ---------- 정답 보기 ---------- */
+/* .answer-btn 스타일은 .back-btn과 통일 (위쪽 공통 규칙 참고) */
+
+.answer-panel {
+  margin-top: 14px;
+  padding: 16px;
+  background: var(--light);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.answer-panel[hidden] { display: none; }
+.answer-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.answer-text {
+  font-family: "Gowun Batang", serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.95;
+  color: #1a1a1a;
+}
+.answer-text .ans-word {
+  color: var(--navy);
+  background: #f4e3ad;
+  border-radius: 3px;
+  padding: 0 3px;
+  font-weight: 700;
+}
+.back-to-test-btn {
+  margin-top: 14px;
+  background: var(--navy);
+  color: var(--white);
+  border: none;
+  padding: 9px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: inherit;
+}
+.back-to-test-btn:hover { background: #16315c; }
+
+/* ---------- 음성 암송 ---------- */
+.voice-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 14px;
+  background: var(--gold);
+  color: var(--navy-dark);
+  border: none;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 10px 18px;
+  border-radius: 22px;
+  font-size: 14px;
+  font-family: inherit;
+}
+.voice-btn:hover { filter: brightness(1.05); }
+
+.voice-panel {
+  margin-top: 14px;
+  padding: 16px;
+  background: var(--light);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  text-align: center;
+}
+.voice-panel[hidden] { display: none; }
+.voice-status { font-size: 13px; color: var(--navy); font-weight: 700; }
+.voice-live { margin: 10px 0; min-height: 22px; font-size: 15px; color: #333; line-height: 1.6; }
+.voice-stop {
+  background: var(--error); color: #fff; border: none; font-weight: 700;
+  padding: 9px 18px; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 13px;
+}
+
+.voice-result { margin-top: 14px; }
+.voice-result:empty { display: none; }
+.voice-summary { font-size: 14px; color: var(--gray); margin-bottom: 10px; }
+.voice-pct { font-weight: 800; }
+.voice-pct.pass { color: var(--green); }
+.voice-pct.fail { color: var(--error); }
+.voice-words { font-size: 17px; line-height: 1.9; margin-bottom: 10px; }
+.voice-words .v-ok { color: var(--green); font-weight: 700; }
+.voice-words .v-no { color: var(--error); text-decoration: line-through; opacity: 0.7; }
+.voice-heard { font-size: 12px; color: var(--gray); background: var(--cream); border: 1px dashed var(--border); border-radius: 8px; padding: 8px 10px; margin-bottom: 10px; }
+.voice-msg { font-size: 13px; color: var(--gray); line-height: 1.7; margin-top: 12px; }
+
+/* ---------- 결과 ---------- */
+#result-area { margin-top: 14px; text-align: center; }
+#result-area:empty { display: none; }
+.result-score {
+  font-family: "Nanum Myeongjo", serif;
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--navy);
+  margin-top: 20px;
+}
+.result-label { color: var(--gray); margin-top: 2px; }
+.result-actions { margin-top: 14px; }
+
+.next-btn {
+  background: var(--navy);
+  color: var(--white);
+  border: none;
+  padding: 10px 22px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+}
+.next-btn:hover { background: #16315c; }
+
+.complete-badge {
+  display: inline-block;
+  background: var(--navy);
+  color: var(--gold);
+  font-weight: 800;
+  font-size: 16px;
+  padding: 9px 20px;
+  border-radius: 24px;
+  margin-bottom: 12px;
+  font-family: "Nanum Myeongjo", serif;
+}
+.sermon-link {
+  display: block;
+  margin-top: 8px;
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.sermon-link:hover { text-decoration: underline; }
+
+/* ============================================================
+   회원 버전 — 진입(식별)·요약·목록 네비
+   ============================================================ */
+
+/* ---------- 진입(식별) 화면 ---------- */
+.entry-screen { padding: 18px 14px 40px; }
+.entry-card {
+  max-width: 460px; margin: 0 auto; background: var(--white);
+  border: 1px solid var(--border); border-radius: 16px;
+  padding: 26px 22px; box-shadow: 0 6px 20px rgba(13,27,62,.06);
+}
+.entry-title {
+  font-family: "Nanum Myeongjo", serif; color: var(--navy);
+  font-size: 1.35rem; text-align: center; margin-bottom: 8px;
+}
+.entry-sub {
+  color: var(--gray); font-size: .82rem; text-align: center;
+  line-height: 1.5; margin-bottom: 22px;
+}
+.entry-field { margin-bottom: 18px; }
+.entry-label {
+  font-weight: 700; color: var(--navy); font-size: .9rem; margin-bottom: 8px;
+}
+.entry-input {
+  width: 100%; padding: 11px 13px; font-size: 1rem;
+  border: 1px solid var(--border); border-radius: 10px; background: var(--cream);
+  font-family: inherit;
+}
+.entry-input:focus { outline: none; border-color: var(--navy); background: #fff; }
+
+.radio-row { display: flex; gap: 8px; }
+.radio-row.wrap { flex-wrap: wrap; }
+.radio-chip { position: relative; cursor: pointer; }
+.radio-chip input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.radio-chip span {
+  display: inline-block; padding: 9px 14px; border-radius: 999px;
+  border: 1px solid var(--border); background: var(--cream);
+  font-size: .9rem; color: #444; transition: all .15s; user-select: none;
+}
+.radio-chip input:checked + span {
+  background: var(--navy); color: #fff; border-color: var(--navy); font-weight: 700;
+}
+
+.entry-error {
+  color: var(--error); font-size: .85rem; text-align: center;
+  margin-bottom: 12px; font-weight: 500;
+}
+.entry-submit {
+  width: 100%; padding: 14px; font-size: 1.05rem; font-weight: 700;
+  color: #fff; background: var(--navy); border: none; border-radius: 12px;
+  cursor: pointer; font-family: inherit; transition: background .15s;
+}
+.entry-submit:hover { background: var(--navy-dark); }
+
+/* ---------- 본인 기록 요약 화면 ---------- */
+.summary-screen { padding: 18px 14px 40px; }
+.summary-card {
+  max-width: 460px; margin: 0 auto; background: var(--white);
+  border: 1px solid var(--border); border-radius: 16px;
+  padding: 28px 22px; box-shadow: 0 6px 20px rgba(13,27,62,.06); text-align: center;
+}
+.summary-hello {
+  font-family: "Nanum Myeongjo", serif; color: var(--navy);
+  font-size: 1.3rem; line-height: 1.45; margin-bottom: 22px;
+}
+.gauge-wrap { margin-bottom: 24px; }
+.gauge-pct {
+  font-size: 2.6rem; font-weight: 800; color: var(--gold);
+  font-family: "Nanum Myeongjo", serif; line-height: 1;
+}
+.gauge-bar {
+  height: 12px; background: var(--light); border-radius: 999px;
+  overflow: hidden; margin: 12px 0 8px;
+}
+.gauge-fill {
+  height: 100%; background: linear-gradient(90deg, var(--gold), #e0c674);
+  border-radius: 999px; transition: width .5s ease;
+}
+.gauge-sub { color: var(--gray); font-size: .85rem; }
+.gauge-sub b { color: var(--navy); }
+
+.stat-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 8px; margin-bottom: 20px;
+}
+.stat-box {
+  border-radius: 12px; padding: 12px 6px; border: 1px solid var(--border);
+  background: var(--cream);
+}
+.stat-num { font-size: 1.5rem; font-weight: 800; color: var(--navy); }
+.stat-lbl { font-size: .72rem; color: var(--gray); margin-top: 2px; }
+.stat-box.status-done { background: #eaf5ec; border-color: #bcdfc1; }
+.stat-box.status-done .stat-num { color: var(--green); }
+.stat-box.status-s2 { background: #fff6e0; border-color: #ecd9a0; }
+.stat-box.status-s1 { background: #f0f4fb; border-color: #c9d8ef; }
+
+.summary-next {
+  font-size: .92rem; color: #444; margin-bottom: 20px;
+  padding: 10px; background: var(--cream); border-radius: 10px;
+}
+.summary-next b { color: var(--navy); }
+
+.summary-go {
+  width: 100%; padding: 14px; font-size: 1.05rem; font-weight: 700;
+  color: #fff; background: var(--navy); border: none; border-radius: 12px;
+  cursor: pointer; font-family: inherit; margin-bottom: 10px; transition: background .15s;
+}
+.summary-go:hover { background: var(--navy-dark); }
+.summary-change {
+  width: 100%; padding: 11px; font-size: .9rem; font-weight: 500;
+  color: var(--gray); background: transparent; border: 1px solid var(--border);
+  border-radius: 12px; cursor: pointer; font-family: inherit;
+}
+.summary-change:hover { background: var(--cream); }
+
+/* ---------- 목록 상단 네비 ---------- */
+.list-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  max-width: 720px; margin: 0 auto 4px; padding: 6px 4px;
+}
+.nav-btn {
+  background: transparent; border: 1px solid var(--border); border-radius: 999px;
+  padding: 7px 14px; font-size: .85rem; color: var(--navy); cursor: pointer;
+  font-family: inherit; font-weight: 500;
+}
+.nav-btn:hover { background: var(--white); }
+.nav-user { font-size: .82rem; color: var(--gray); }
