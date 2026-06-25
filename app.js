@@ -142,6 +142,16 @@ function userLabel(u) {
     : `${u.bu} ${u.name}`;
 }
 
+// 로그인 정보를 2줄로: { l1: 소속, l2: 이름 + "성도님" }
+function userLines(u) {
+  if (!u) return { l1: "", l2: "" };
+  const l1 =
+    u.type === "교구"
+      ? `${u.gu}교구 ${u.mok}목장`
+      : `${u.bu}${u.grade ? " " + u.grade : ""}`;
+  return { l1, l2: `${u.name} 성도님` };
+}
+
 // ------------------------------------------------------------
 // 진행 상태 (localStorage) + 서버 백업
 //   key: "memorize-progress" → { "1": { stage: 2, passed: true }, ... }
@@ -375,7 +385,7 @@ function renderVerseList() {
   appEl.innerHTML = `
     <div class="list-nav">
       <button class="nav-btn" id="to-summary">← 내 기록</button>
-      <span class="nav-user">${userLabel(u)} 성도님</span>
+      <span class="nav-user"><span class="nav-user-l1">${userLines(u).l1}</span><span class="nav-user-l2">${userLines(u).l2}</span></span>
     </div>
     <span class="page-title">오직 성경(Sola Scriptura), 오직 은혜(Sola Gratia)</span>
     <div id="verse-list" class="verse-grid"></div>
