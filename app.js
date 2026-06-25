@@ -519,7 +519,7 @@ function setupAnswerToggle() {
 // ------------------------------------------------------------
 // 음성 암송 (익명 버전과 동일, 통과 시 3단계 저장)
 // ------------------------------------------------------------
-const VOICE_PASS = 80;
+const VOICE_PASS = 85;
 
 function normalizeWords(s) {
   return String(s || "")
@@ -622,8 +622,11 @@ function setupVoice(verse, stage) {
       <div class="voice-summary"><span class="voice-pct ${passed ? "pass" : "fail"}">${accuracy}%</span> ${passed ? "음성 암송 통과! 🎉" : `조금 더! (통과 ${VOICE_PASS}%)`}</div>
       <div class="voice-words">${wordsHtml}</div>
       <div class="voice-heard">들린 내용: ${finalText ? finalText : "(인식 안 됨)"}</div>
-      ${nav}
     `;
+
+    // 다음단계 버튼은 빈칸 테스트와 동일하게 상단(result-area) 한 곳으로 통일
+    const topArea = document.getElementById("result-area");
+    if (topArea) topArea.innerHTML = nav;
 
     if (passed && stage < 3) {
       document
