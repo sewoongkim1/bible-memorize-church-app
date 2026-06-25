@@ -530,6 +530,26 @@ function normalizeWords(s) {
     .filter(Boolean);
 }
 
+// 인식기가 같은 말을 반복 출력하는 경우 대비: 연속 중복 단어/구를 정리
+function collapseRepeats(s) {
+  const a = [];
+  String(s || "").trim().split(/\s+/).filter(Boolean).forEach((w) => {
+    if (a[a.length - 1] !== w) a.push(w); // 연속 동일 단어 제거
+  });
+  // 직전과 동일한 2~4단어 구가 바로 반복되면 제거
+  for (let k = 4; k >= 2; k--) {
+    let i = 0;
+    while (i + 2 * k <= a.length) {
+      if (a.slice(i, i + k).join(" ") === a.slice(i + k, i + 2 * k).join(" ")) {
+        a.splice(i + k, k);
+      } else {
+        i++;
+      }
+    }
+  }
+  return a.join(" ");
+}
+
 function scoreSpoken(answerText, spokenText) {
   const ans = normalizeWords(answerText);
   const said = normalizeWords(spokenText);
@@ -603,7 +623,8 @@ function setupVoice(verse, stage) {
   }
 
   function evaluateAndShow() {
-    const { accuracy, marks, ansWords } = scoreSpoken(verse.text, finalText);
+    const heard = collapseRepeats(finalText); // 반복 정리된 인식 결과
+    const { accuracy, marks, ansWords } = scoreSpoken(verse.text, heard);
     const wordsHtml = ansWords
       .map((w, i) => `<span class="${marks[i] ? "v-ok" : "v-no"}">${w}</span>`)
       .join(" ");
@@ -621,7 +642,7 @@ function setupVoice(verse, stage) {
     resultEl.innerHTML = `
       <div class="voice-summary"><span class="voice-pct ${passed ? "pass" : "fail"}">${accuracy}%</span> ${passed ? "음성 암송 통과! 🎉" : `조금 더! (통과 ${VOICE_PASS}%)`}</div>
       <div class="voice-words">${wordsHtml}</div>
-      <div class="voice-heard">들린 내용: ${finalText ? finalText : "(인식 안 됨)"}</div>
+      <div class="voice-heard">들린 내용: ${heard ? heard : "(인식 안 됨)"}</div>
     `;
 
     // 다음단계 버튼은 빈칸 테스트와 동일하게 상단(result-area) 한 곳으로 통일
@@ -667,12 +688,11 @@ function setupVoice(verse, stage) {
       }
     };
     r.onend = () => {
-      // 세션 확정분을 누적(재시작 사이 유실 방지)
+      // 세션 확정분을 누적
       finalText = (finalText + " " + sessionFinal).replace(/\s+/g, " ").trim();
       sessionFinal = "";
-      if (!stopped) {
-        try { rec = newSession(); rec.start(); return; } catch (e) {}
-      }
+      // 재시작 루프는 사용하지 않는다(세션 간 음성 중복 인식 방지).
+      // 인식이 끝나면(자동 종료 또는 '암송 종료') 곧바로 채점.
       setRunning(false);
       evaluateAndShow();
     };
