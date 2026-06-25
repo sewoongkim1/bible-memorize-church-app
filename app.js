@@ -50,19 +50,21 @@ function routeAfterLoad() {
   else renderEntryScreen();
 }
 
-// 로그인 직후: 서버 기록을 로컬에 병합한 뒤 요약 화면을 보여준다.
+// 로그인 직후: 로컬 기록으로 요약 화면을 즉시 띄우고,
+// 서버 동기화는 백그라운드로 진행한다(Apps Script 콜드 스타트로 화면이 지연되지 않도록).
 async function enterAfterLogin() {
-  const appEl = document.getElementById("app");
-  appEl.innerHTML = "<p style='text-align:center;padding:40px'>내 기록 불러오는 중...</p>";
-  await syncProgress();
-  renderSummary();
+  renderSummary(); // 로컬 진행 기록으로 곧바로 표시
+
+  // 서버에 더 높은 진도가 있으면 병합 후, 요약 화면이 아직 떠 있을 때만 갱신
+  const changed = await syncProgress();
+  if (changed && document.getElementById("go-list")) renderSummary();
 }
 
 // 서버(시트)의 본인 기록을 받아 로컬 진행과 더 높은 단계로 병합.
 // 이를 통해 다른 기기/브라우저에서 로그인해도 진도가 따라온다.
 async function syncProgress() {
   const u = loadUser();
-  if (!u || !POST_URL) return;
+  if (!u || !POST_URL) return false;
 
   const params = new URLSearchParams({ action: "progress", type: u.type, name: u.name });
   if (u.type === "교구") {
@@ -76,7 +78,7 @@ async function syncProgress() {
   try {
     const res = await fetch(POST_URL + "?" + params.toString(), { cache: "no-cache" });
     const data = await res.json();
-    if (!data.ok || !data.progress) return;
+    if (!data.ok || !data.progress) return false;
 
     const local = loadProgress();
     let changed = false;
@@ -95,8 +97,10 @@ async function syncProgress() {
         /* 저장 실패 무시 */
       }
     }
+    return changed;
   } catch {
     /* 네트워크/CORS 오류 시 로컬 기록만으로 진행 */
+    return false;
   }
 }
 
@@ -336,7 +340,7 @@ function renderSummary() {
   appEl.innerHTML = `
     <div class="summary-screen">
       <div class="summary-card">
-        <div class="summary-hello">${userLabel(u)} 님,<br>환영합니다 🙌</div>
+        <div class="summary-hello">${userLabel(u)} 성도님,<br>환영합니다 🙌</div>
 
         <div class="gauge-wrap">
           <div class="gauge-pct">${pct}%</div>
@@ -372,7 +376,7 @@ function renderVerseList() {
   appEl.innerHTML = `
     <div class="list-nav">
       <button class="nav-btn" id="to-summary">← 내 기록</button>
-      <span class="nav-user">${userLabel(u)} 님</span>
+      <span class="nav-user">${userLabel(u)} 성도님</span>
     </div>
     <span class="page-title">오직 성경(Sola Scriptura), 오직 은혜(Sola Gratia)</span>
     <div id="verse-list" class="verse-grid"></div>
