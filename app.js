@@ -827,12 +827,25 @@ function promptOpenExternal() {
   const ua = navigator.userAgent || "";
   if (!/KAKAOTALK/i.test(ua)) return; // 카톡 인앱 브라우저일 때만
 
-  const ext = "kakaotalk://web/openExternal?url=" + encodeURIComponent(location.href);
+  const url = location.href;
+  const isIOS = /iphone|ipad|ipod/i.test(ua);
+  const isAndroid = /android/i.test(ua);
+
+  // 안드로이드: 크롬 intent 스킴(자동 전환 성공률 높음, 미설치 시 fallback)
+  const androidIntent =
+    "intent://" +
+    url.replace(/^https?:\/\//, "") +
+    "#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=" +
+    encodeURIComponent(url) +
+    ";end";
+  // iOS·기타: 카카오 공식 외부 열기 스킴(기본 브라우저)
+  const kakaoExt = "kakaotalk://web/openExternal?url=" + encodeURIComponent(url);
+  const ext = isAndroid ? androidIntent : kakaoExt;
 
   // 1) 세션당 1회 자동 전환 시도(실패 시 무한 리다이렉트 방지)
   try {
-    if (!sessionStorage.getItem("kakaoExtTried")) {
-      sessionStorage.setItem("kakaoExtTried", "1");
+    if (!sessionStorage.getItem("kakaoExtTried2")) {
+      sessionStorage.setItem("kakaoExtTried2", "1");
       location.href = ext;
     }
   } catch {
@@ -840,7 +853,6 @@ function promptOpenExternal() {
   }
 
   // 2) 상단 안내 배너(자동 전환이 막힌 경우 수동 버튼/가이드)
-  const isIOS = /iphone|ipad|ipod/i.test(ua);
   const bar = document.createElement("div");
   bar.className = "kakao-ext-bar";
   bar.innerHTML = `
