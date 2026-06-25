@@ -204,8 +204,7 @@ function renderEntryScreen() {
   appEl.innerHTML = `
     <div class="entry-screen">
       <div class="entry-card">
-        <h2 class="entry-title">암송을 시작하기 전에</h2>
-        <p class="entry-sub">진행 상태를 저장하기 위해 정보를 입력해 주세요.<br>교구·교회학교·이름은 내부 관리 용도로만 사용됩니다.</p>
+        <h2 class="entry-title">성경 암송</h2>
 
         <div class="entry-field">
           <div class="entry-label">구분</div>
