@@ -223,7 +223,7 @@ function renderEntryScreen() {
     <div class="entry-screen">
       <div class="entry-card">
 
-        <div class="entry-field">
+        <div class="entry-field inline">
           <div class="entry-label">구분</div>
           <div class="radio-row" id="type-row">
             ${["교구", "교회학교"].map((t) => `
