@@ -148,7 +148,7 @@ h1 {
 .verse-grid {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
 }
 
 /* 가로로 긴 카드(한 줄 = 한 구절) */
@@ -160,7 +160,7 @@ h1 {
   background: var(--white);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 14px 14px;
+  padding: 7px 14px;
   cursor: pointer;
   box-shadow: 0 2px 12px rgba(26, 58, 107, 0.08);
   transition: transform 0.12s, box-shadow 0.12s;
@@ -216,10 +216,10 @@ h1 {
 /* 구절 목록 카드 '듣기' 버튼(아이콘, 한 줄 유지) */
 .card-listen {
   flex-shrink: 0;
-  width: 32px; height: 32px; padding: 0;
+  width: 30px; height: 30px; padding: 0;
   display: flex; align-items: center; justify-content: center;
   background: #eef1f8; border: 1px solid var(--border);
-  border-radius: 999px; font-size: 15px; cursor: pointer;
+  border-radius: 999px; font-size: 14px; cursor: pointer;
   transition: background 0.15s;
 }
 .card-listen:hover { background: #dde4f2; }
@@ -657,7 +657,7 @@ h1 {
 /* ---------- 목록 상단 네비 ---------- */
 .list-nav {
   display: flex; align-items: center; justify-content: space-between;
-  max-width: 720px; margin: 0 auto 10px; padding: 2px 0;
+  max-width: 720px; margin: 0 auto 6px; padding: 2px 0;
 }
 .nav-btn {
   background: transparent; border: 1px solid var(--border); border-radius: 999px;
