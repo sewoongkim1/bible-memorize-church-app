@@ -394,7 +394,7 @@ function renderVerseList() {
   const appEl = document.getElementById("app");
   appEl.innerHTML = `
     <div class="list-nav">
-      <button class="remind-cta nav-record" id="to-summary">← ${userLabel(u)} 성도님 기록</button>
+      <button class="remind-cta nav-record" id="to-summary">← ${userLabel(u)} 성도님 기록보기</button>
     </div>
     <div id="verse-list" class="verse-grid"></div>
   `;
