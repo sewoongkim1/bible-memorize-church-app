@@ -237,22 +237,25 @@ h1 {
   gap: 10px;
 }
 
-/* 정답 보기 + 음성 암송 버튼을 한 줄에 */
+/* 정답 보기 + 음성 암송 버튼을 한 줄에 (줄넘김 방지) */
 .btn-row {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap;
+  gap: 6px;
+  flex-wrap: nowrap;
 }
 .btn-row .answer-btn,
 .btn-row .voice-btn,
 .btn-row .voice-stop {
   margin-top: 0;
   flex: 1 1 0;
+  min-width: 0;
   max-width: 170px;
   justify-content: center;
-  padding: 11px 12px;
+  padding: 9px 6px;
+  font-size: 12px;
+  white-space: nowrap;
 }
 .btn-row .voice-stop { border-radius: 22px; }
 .voice-btn:disabled,

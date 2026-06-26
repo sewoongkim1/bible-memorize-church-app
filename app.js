@@ -544,7 +544,7 @@ function speakText(text, onEnd) {
   window.speechSynthesis.cancel(); // 중복 재생 방지
   const ut = new SpeechSynthesisUtterance(text);
   ut.lang = "ko-KR";
-  ut.rate = 1.0;
+  ut.rate = 0.8;
   ut.pitch = 1;
   if (onEnd) {
     ut.onend = onEnd;
