@@ -345,6 +345,7 @@ function renderEntryScreen() {
 // 화면 1: 본인 기록 요약 (로그인 직후)
 // ------------------------------------------------------------
 function renderSummary() {
+  stopSpeaking(); // 화면 전환 시 읽어주기 정지
   const u = loadUser();
   if (!u) return renderEntryScreen();
 
@@ -430,6 +431,7 @@ function startTest(verse) {
 }
 
 function renderTestScreen(verse, stage) {
+  stopSpeaking(); // 화면 전환 시 읽어주기 정지
   const appEl = document.getElementById("app");
   const tokens = verse.text.trim().split(/\s+/);
 
@@ -478,6 +480,7 @@ function renderTestScreen(verse, stage) {
         <div class="test-sentence">${wordsHtml}</div>
         <div class="btn-row">
           <button class="answer-btn" id="show-answer-btn">정답 보기</button>
+          <button class="answer-btn" id="listen-answer-btn" aria-label="정답 음성으로 듣기">🔊 정답 듣기</button>
           <button class="voice-btn" id="voice-toggle">🎤 암송 시작</button>
         </div>
         <div id="result-area"></div>
@@ -500,11 +503,52 @@ function renderTestScreen(verse, stage) {
 
   document
     .getElementById("back-to-list-btn")
-    .addEventListener("click", renderVerseList);
+    .addEventListener("click", () => { stopSpeaking(); renderVerseList(); });
+
+  // 시각장애인 등을 위한 '정답 듣기'(TTS): 출처 + 본문을 음성으로 읽어준다.
+  const listenBtn = document.getElementById("listen-answer-btn");
+  if (listenBtn) {
+    listenBtn.addEventListener("click", () => {
+      if (window.speechSynthesis && window.speechSynthesis.speaking) {
+        stopSpeaking(); // 재생 중이면 정지(토글)
+        listenBtn.textContent = "🔊 정답 듣기";
+        return;
+      }
+      listenBtn.textContent = "⏹ 정지";
+      speakText(`${verse.refFull}. ${verse.text}`, () => {
+        listenBtn.textContent = "🔊 정답 듣기";
+      });
+    });
+  }
 
   setupAnswerToggle();
   setupAutoCheck(verse, stage);
   setupVoice(verse, stage);
+}
+
+// ------------------------------------------------------------
+// 음성 합성(TTS) — 구절을 한국어로 읽어준다(설치·권한 불필요)
+// ------------------------------------------------------------
+function speakText(text, onEnd) {
+  if (!("speechSynthesis" in window)) {
+    alert("이 브라우저는 읽어주기(음성 합성)를 지원하지 않습니다.\n크롬·사파리에서 이용해 주세요.");
+    if (onEnd) onEnd();
+    return;
+  }
+  window.speechSynthesis.cancel(); // 중복 재생 방지
+  const ut = new SpeechSynthesisUtterance(text);
+  ut.lang = "ko-KR";
+  ut.rate = 0.95;
+  ut.pitch = 1;
+  if (onEnd) {
+    ut.onend = onEnd;
+    ut.onerror = onEnd;
+  }
+  window.speechSynthesis.speak(ut);
+}
+
+function stopSpeaking() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
 }
 
 function setupAnswerToggle() {
