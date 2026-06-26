@@ -156,11 +156,11 @@ h1 {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   background: var(--white);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 14px 18px;
+  padding: 14px 14px;
   cursor: pointer;
   box-shadow: 0 2px 12px rgba(26, 58, 107, 0.08);
   transition: transform 0.12s, box-shadow 0.12s;
@@ -190,6 +190,7 @@ h1 {
 }
 .verse-hint {
   flex: 1;
+  min-width: 0; /* flex 항목이 줄어들며 ellipsis 되도록(한 줄 유지) */
   color: var(--gray);
   font-size: 13px;
   white-space: nowrap;
@@ -211,6 +212,17 @@ h1 {
 .verse-status.status-s1 { color: var(--navy); background: #e7ecf5; }
 .verse-status.status-s2 { color: var(--white); background: var(--navy); }
 .verse-status.status-done { color: var(--navy-dark); background: #f4e3ad; }
+
+/* 구절 목록 카드 '듣기' 버튼(아이콘, 한 줄 유지) */
+.card-listen {
+  flex-shrink: 0;
+  width: 32px; height: 32px; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: #eef1f8; border: 1px solid var(--border);
+  border-radius: 999px; font-size: 15px; cursor: pointer;
+  transition: background 0.15s;
+}
+.card-listen:hover { background: #dde4f2; }
 
 /* ---------- 화면 2: 테스트 ---------- */
 .test-top {

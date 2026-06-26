@@ -415,8 +415,14 @@ function renderVerseList() {
       <div class="verse-ref">${v.refShort}</div>
       <div class="verse-hint">${v.hintText || ""}</div>
       <div class="verse-status ${status.cls}">${status.text}</div>
+      <button class="card-listen" aria-label="${v.refShort} 듣기" title="듣기">🔊</button>
     `;
     card.addEventListener("click", () => startTest(v));
+    // 듣기 버튼: 카드 클릭(테스트 시작)으로 번지지 않게 막고 본문을 읽어준다.
+    card.querySelector(".card-listen").addEventListener("click", (e) => {
+      e.stopPropagation();
+      speakText(`${v.refFull}. ${v.text}`);
+    });
     listEl.appendChild(card);
   });
 }
@@ -538,7 +544,7 @@ function speakText(text, onEnd) {
   window.speechSynthesis.cancel(); // 중복 재생 방지
   const ut = new SpeechSynthesisUtterance(text);
   ut.lang = "ko-KR";
-  ut.rate = 0.95;
+  ut.rate = 1.1;
   ut.pitch = 1;
   if (onEnd) {
     ut.onend = onEnd;
