@@ -394,8 +394,7 @@ function renderVerseList() {
   const appEl = document.getElementById("app");
   appEl.innerHTML = `
     <div class="list-nav">
-      <button class="nav-btn" id="to-summary">← 내 기록</button>
-      <span class="nav-user"><span class="nav-user-l1">${userLines(u).l1}</span><span class="nav-user-l2">${userLines(u).l2}</span></span>
+      <button class="nav-btn nav-record" id="to-summary">← ${userLabel(u)} 성도님 기록</button>
     </div>
     <span class="page-title">오직 성경(Sola Scriptura), 오직 은혜(Sola Gratia)</span>
     <div id="verse-list" class="verse-grid"></div>
