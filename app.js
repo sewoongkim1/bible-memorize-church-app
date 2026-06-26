@@ -479,9 +479,9 @@ function renderTestScreen(verse, stage) {
         </div>
         <div class="test-sentence">${wordsHtml}</div>
         <div class="btn-row">
-          <button class="answer-btn" id="show-answer-btn">정답 보기</button>
-          <button class="answer-btn" id="listen-answer-btn" aria-label="정답 음성으로 듣기">🔊 정답 듣기</button>
-          <button class="voice-btn" id="voice-toggle">🎤 암송 시작</button>
+          <button class="answer-btn" id="show-answer-btn">보기</button>
+          <button class="answer-btn" id="listen-answer-btn" aria-label="정답 음성으로 듣기">🔊 듣기</button>
+          <button class="voice-btn" id="voice-toggle">🎤 암송시작</button>
         </div>
         <div id="result-area"></div>
         <div id="answer-panel" class="answer-panel" hidden>
@@ -511,12 +511,12 @@ function renderTestScreen(verse, stage) {
     listenBtn.addEventListener("click", () => {
       if (window.speechSynthesis && window.speechSynthesis.speaking) {
         stopSpeaking(); // 재생 중이면 정지(토글)
-        listenBtn.textContent = "🔊 정답 듣기";
+        listenBtn.textContent = "🔊 듣기";
         return;
       }
       listenBtn.textContent = "⏹ 정지";
       speakText(`${verse.refFull}. ${verse.text}`, () => {
-        listenBtn.textContent = "🔊 정답 듣기";
+        listenBtn.textContent = "🔊 듣기";
       });
     });
   }
@@ -700,7 +700,7 @@ function setupVoice(verse, stage) {
       toggleBtn.classList.remove("voice-btn");
       toggleBtn.classList.add("voice-stop");
     } else {
-      toggleBtn.textContent = "🎤 암송 시작";
+      toggleBtn.textContent = "🎤 암송시작";
       toggleBtn.classList.remove("voice-stop");
       toggleBtn.classList.add("voice-btn");
     }
