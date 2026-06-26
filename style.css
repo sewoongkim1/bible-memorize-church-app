@@ -639,9 +639,14 @@ h1 {
 .summary-go {
   width: 100%; padding: 12px; font-size: .98rem; font-weight: 700;
   color: #fff; background: var(--navy); border: 1.5px solid var(--navy); border-radius: 12px;
-  cursor: pointer; font-family: inherit; margin-bottom: 8px; transition: background .15s;
+  cursor: pointer; font-family: inherit; margin-bottom: 8px;
+  transition: background .15s, transform .12s, box-shadow .15s;
 }
-.summary-go:hover { background: var(--navy-dark); border-color: var(--navy-dark); }
+.summary-go:hover {
+  background: var(--navy-dark); border-color: var(--navy-dark);
+  transform: translateY(-2px); box-shadow: 0 6px 16px rgba(13,27,62,.28);
+}
+.summary-go:active { transform: translateY(0); box-shadow: 0 2px 8px rgba(13,27,62,.22); }
 .summary-change {
   width: 100%; padding: 12px; font-size: .98rem; font-weight: 600;
   color: var(--gray); background: #fff; border: 1.5px solid var(--border);
