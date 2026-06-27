@@ -359,31 +359,80 @@ function renderSummary() {
 
   const appEl = document.getElementById("app");
   appEl.innerHTML = `
-    <div class="summary-screen">
-      <div class="summary-card">
-        <div class="summary-hello"><span class="summary-user">${userLabel(u)} 성도님</span>,<br>주의 이름으로 축복하고 환영합니다. 🙌</div>
-
-        <div class="gauge-wrap">
-          <div class="gauge-bar"><div class="gauge-fill" style="width:${pct}%"></div></div>
-          <div class="gauge-sub">전체 ${total}구절 중 <b>${done}구절</b> 암송 완료</div>
-        </div>
-
-        <div class="stat-grid">
-          <div class="stat-box status-done"><div class="stat-num">${counts[3]}</div><div class="stat-lbl">완료</div></div>
-          <div class="stat-box status-s2"><div class="stat-num">${counts[2]}</div><div class="stat-lbl">2단계</div></div>
-          <div class="stat-box status-s1"><div class="stat-num">${counts[1]}</div><div class="stat-lbl">1단계</div></div>
-          <div class="stat-box status-none"><div class="stat-num">${counts[0]}</div><div class="stat-lbl">미시도</div></div>
-        </div>
-
-        <button class="summary-go" id="go-list">📖 암송하러 가기</button>
-        <a class="remind-cta" href="reminders.html">🔔 매일 암송 구절 알림 받기</a>
-        <button class="summary-change" id="change-user">⚙️ 로그인 정보변경</button>
-      </div>
+<div class="summary-screen">
+  <div class="summary-card">
+    <div class="summary-hello"><span class="summary-user">${userLabel(u)} 성도님</span>,<br>주의 이름으로 축복하고 환영합니다. 🙌</div>
+    <div class="gauge-wrap">
+      <div class="gauge-bar"><div class="gauge-fill" style="width:${pct}%"></div></div>
+      <div class="gauge-sub">전체 ${total}구절 중 <b>${done}구절</b> 암송 완료</div>
     </div>
-  `;
+    <div class="stat-grid">
+      <div class="stat-box status-done"><div class="stat-num">${counts[3]}</div><div class="stat-lbl">완료</div></div>
+      <div class="stat-box status-s2"><div class="stat-num">${counts[2]}</div><div class="stat-lbl">2단계</div></div>
+      <div class="stat-box status-s1"><div class="stat-num">${counts[1]}</div><div class="stat-lbl">1단계</div></div>
+      <div class="stat-box status-none"><div class="stat-num">${counts[0]}</div><div class="stat-lbl">미시도</div></div>
+    </div>
+    <button class="summary-go" id="go-list">📖 암송하러 가기</button>
+    <a class="remind-cta" href="reminders.html">🔔 매일 암송 구절 알림 받기</a>
+    <button class="summary-install" id="install-btn">⛪ 성경암송 — 홈 화면에 추가</button>
+    <button class="summary-change" id="change-user">⚙️ 로그인 정보변경</button>
+  </div>
+</div>
+`;
 
   document.getElementById("go-list").addEventListener("click", renderVerseList);
   document.getElementById("change-user").addEventListener("click", renderEntryScreen);
+
+  // ---- PWA 홈 화면 추가 버튼 로직 ----
+  const installBtn = document.getElementById("install-btn");
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isInStandaloneMode =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone;
+
+  if (isInStandaloneMode) {
+    // 이미 설치된 상태 → 버튼 숨김
+    installBtn.hidden = true;
+  } else if (isIOS) {
+    // iOS Safari: 공유 버튼 통한 수동 안내
+    installBtn.addEventListener("click", () => {
+      alert(
+        "📱 홈 화면에 추가하는 방법\n\n" +
+        "① 하단 공유 버튼(□↑)을 누르세요\n" +
+        "② 목록에서 \"홈 화면에 추가\"를 선택하세요\n" +
+        "③ 오른쪽 위 \"추가\"를 눌러 완료!"
+      );
+    });
+  } else if (window.__pwaInstallPrompt) {
+    // Android/Chrome: beforeinstallprompt 이미 캡처된 경우
+    installBtn.addEventListener("click", async () => {
+      window.__pwaInstallPrompt.prompt();
+      const { outcome } = await window.__pwaInstallPrompt.userChoice;
+      if (outcome === "accepted") {
+        installBtn.hidden = true;
+        window.__pwaInstallPrompt = null;
+      }
+    });
+  } else {
+    // beforeinstallprompt 아직 미발생 or 지원 안 함 → 공통 안내
+    installBtn.addEventListener("click", () => {
+      const ua = navigator.userAgent || "";
+      if (/android/i.test(ua)) {
+        alert(
+          "📱 홈 화면에 추가하는 방법\n\n" +
+          "① 브라우저 우측 상단 메뉴(⋮)를 누르세요\n" +
+          "② \"홈 화면에 추가\"를 선택하세요\n" +
+          "③ \"추가\"를 눌러 완료!"
+        );
+      } else {
+        alert(
+          "📱 홈 화면에 추가하는 방법\n\n" +
+          "• iOS Safari: 공유 버튼(□↑) → 홈 화면에 추가\n" +
+          "• Android Chrome: 메뉴(⋮) → 홈 화면에 추가"
+        );
+      }
+    });
+  }
 }
 
 // ------------------------------------------------------------
@@ -1015,5 +1064,20 @@ function promptOpenExternal() {
 // ------------------------------------------------------------
 // 시작
 // ------------------------------------------------------------
+// ----  PWA 홈 화면 추가: beforeinstallprompt 캡처 ----
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  window.__pwaInstallPrompt = e;
+  // 요약 화면이 이미 렌더링된 상태라면 버튼을 바로 활성화
+  const btn = document.getElementById("install-btn");
+  if (btn) btn.hidden = false;
+});
+
+window.addEventListener("appinstalled", () => {
+  window.__pwaInstallPrompt = null;
+  const btn = document.getElementById("install-btn");
+  if (btn) btn.hidden = true;
+});
+
 promptOpenExternal();
 loadVerses();
