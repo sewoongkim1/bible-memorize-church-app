@@ -1112,3 +1112,4 @@ window.addEventListener("appinstalled", () => {
 
 promptOpenExternal();
 loadVerses();
+// end
