@@ -704,3 +704,88 @@ h1 {
 }
 .nav-user .nav-user-l1 { font-size: .82rem; white-space: nowrap; }
 .nav-user .nav-user-l2 { font-size: .9rem; white-space: nowrap; }
+
+
+/* ---------- 홈 화면 추가 인라인 안내 모달 ---------- */
+.install-guide-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+.install-guide-card {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 28px 24px 22px;
+  max-width: 340px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(26, 58, 107, 0.22);
+  text-align: center;
+}
+.install-guide-title {
+  font-family: "Nanum Myeongjo", serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 18px;
+}
+.install-guide-steps {
+  list-style: none;
+  counter-reset: step-counter;
+  padding: 0;
+  margin: 0 0 16px;
+  text-align: left;
+}
+.install-guide-step {
+  counter-increment: step-counter;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.92rem;
+  color: #333;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+.install-guide-step::before {
+  content: counter(step-counter);
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: var(--white);
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+.install-guide-hint {
+  font-size: 0.82rem;
+  color: var(--gray);
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+.install-guide-close {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: var(--navy);
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: "Noto Sans KR", sans-serif;
+  margin-top: 4px;
+  transition: background 0.15s;
+}
+.install-guide-close:hover {
+  background: var(--navy-dark);
+}
