@@ -654,6 +654,33 @@ h1 {
 }
 .summary-change:hover { background: var(--cream); }
 
+/* ---- 홈 화면 추가(설치) 버튼 ---- */
+.summary-install {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin: 0 0 8px;
+  padding: 13px;
+  border-radius: 12px;
+  border: 2px solid var(--gold);
+  background: linear-gradient(135deg, #fffbf0, #fdf3d0);
+  color: var(--navy-dark);
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: -0.3px;
+  transition: background 0.15s, transform 0.1s;
+}
+.summary-install:hover {
+  background: linear-gradient(135deg, #f9e87f, #f5d87a);
+  transform: scale(1.01);
+}
+.summary-install:active {
+  transform: scale(0.98);
+}
+
 /* ---------- 목록 상단 네비 ---------- */
 .list-nav {
   display: flex; align-items: center; justify-content: space-between;
