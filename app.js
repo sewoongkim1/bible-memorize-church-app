@@ -390,17 +390,48 @@ function renderSummary() {
     window.matchMedia("(display-mode: standalone)").matches ||
     window.navigator.standalone;
 
+  // 인라인 안내 모달을 띄우는 헬퍼
+  function showInstallGuide(steps, hint) {
+    // 이미 열려 있으면 닫기
+    const existing = document.getElementById("install-guide-modal");
+    if (existing) { existing.remove(); return; }
+
+    const stepsHtml = steps
+      .map((s) => `<li class="install-guide-step">${s}</li>`)
+      .join("");
+    const hintHtml = hint
+      ? `<p class="install-guide-hint">${hint}</p>`
+      : "";
+
+    const modal = document.createElement("div");
+    modal.id = "install-guide-modal";
+    modal.className = "install-guide-modal";
+    modal.innerHTML = `
+      <div class="install-guide-card">
+        <div class="install-guide-title">📱 홈 화면에 추가하는 방법</div>
+        <ol class="install-guide-steps">${stepsHtml}</ol>
+        ${hintHtml}
+        <button class="install-guide-close" id="install-guide-close-btn">확인</button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    document.getElementById("install-guide-close-btn").addEventListener("click", () => modal.remove());
+    modal.addEventListener("click", (e) => { if (e.target === modal) modal.remove(); });
+  }
+
   if (isInStandaloneMode) {
     // 이미 설치된 상태 → 버튼 숨김
     installBtn.hidden = true;
   } else if (isIOS) {
     // iOS Safari: 공유 버튼 통한 수동 안내
     installBtn.addEventListener("click", () => {
-      alert(
-        "📱 홈 화면에 추가하는 방법\n\n" +
-        "① 하단 공유 버튼(□↑)을 누르세요\n" +
-        "② 목록에서 \"홈 화면에 추가\"를 선택하세요\n" +
-        "③ 오른쪽 위 \"추가\"를 눌러 완료!"
+      showInstallGuide(
+        [
+          "하단 <strong>공유 버튼(□↑)</strong>을 누르세요",
+          "목록에서 <strong>'홈 화면에 추가'</strong>를 선택하세요",
+          "오른쪽 위 <strong>'추가'</strong>를 눌러 완료!",
+        ],
+        null
       );
     });
   } else if (window.__pwaInstallPrompt) {
@@ -418,24 +449,25 @@ function renderSummary() {
     installBtn.addEventListener("click", () => {
       const ua = navigator.userAgent || "";
       if (/android/i.test(ua)) {
-        alert(
-          "📱 홈 화면에 추가하는 방법\n\n" +
-          "① 브라우저 우측 상단 메뉴(⋮)를 누르세요\n" +
-          "② \"홈 화면에 추가\"를 선택하세요\n" +
-          "③ \"추가\"를 눌러 완료!"
+        showInstallGuide(
+          [
+            "브라우저 우측 상단 <strong>메뉴(⋮)</strong>를 누르세요",
+            "<strong>'홈 화면에 추가'</strong>를 선택하세요",
+            "<strong>'추가'</strong>를 눌러 완료!",
+          ],
+          null
         );
       } else {
-        alert(
-          "📱 홈 화면에 추가하는 방법\n\n" +
-          "• iOS Safari: 공유 버튼(□↑) → 홈 화면에 추가\n" +
-          "• Android Chrome: 메뉴(⋮) → 홈 화면에 추가"
+        showInstallGuide(
+          [
+            "<strong>iOS Safari</strong>: 공유 버튼(□↑) → 홈 화면에 추가",
+            "<strong>Android Chrome</strong>: 메뉴(⋮) → 홈 화면에 추가",
+          ],
+          null
         );
       }
     });
-  }
-}
-
-// ------------------------------------------------------------
+  }// ------------------------------------------------------------
 // 화면 2: 구절 목록
 // ------------------------------------------------------------
 function renderVerseList() {
