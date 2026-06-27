@@ -1,0 +1,35 @@
+name: 주간 구절 데이터 갱신
+
+on:
+  schedule:
+    # 매주 일요일 18:00 UTC = 월요일 03:00 KST 에 자동 실행
+    - cron: "0 18 * * 0"
+  workflow_dispatch: {} # 필요할 때 수동 실행 버튼
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 시트에서 데이터 가져오기
+        run: |
+          curl -sSL "https://script.google.com/macros/s/AKfycbzO4GDAy0hJBbZ-L3hVuZQI4cqnjiZdy2afUujnxmmAr8NAh1lJURhrfT37PaFanPR4PA/exec" -o verses.new.json
+          # 유효성 검사: JSON 파싱 + verses 배열 존재
+          python3 -c "import json; d=json.load(open('verses.new.json')); assert d.get('verses'), 'verses 없음'; print('구절 수:', len(d['verses']))"
+          mv verses.new.json verses.json
+
+      - name: 변경 있으면 커밋·푸시
+        run: |
+          if git diff --quiet -- verses.json; then
+            echo "변경 없음 — 커밋 생략"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add verses.json
+            git commit -m "주간 구절 데이터 자동 갱신"
+            git push
+          fi
