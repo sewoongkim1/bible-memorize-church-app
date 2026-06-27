@@ -417,9 +417,18 @@ function renderVerseList() {
     `;
     card.addEventListener("click", () => startTest(v));
     // 듣기 버튼: 카드 클릭(테스트 시작)으로 번지지 않게 막고 본문을 읽어준다.
-    card.querySelector(".card-listen").addEventListener("click", (e) => {
+    // 빠르게 N번 클릭하면 N번 반복해서 읽어준다(2번 클릭 → 2번 듣기).
+    const listenBtn = card.querySelector(".card-listen");
+    let clickCount = 0;
+    let clickTimer = null;
+    listenBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      speakText(`${v.refFull}. ${v.text}`);
+      clickCount++;
+      if (clickTimer) clearTimeout(clickTimer);
+      clickTimer = setTimeout(() => {
+        speakText(`${v.refFull}. ${v.text}`, null, clickCount);
+        clickCount = 0;
+      }, 350); // 350ms 안에 연속 클릭한 횟수만큼 반복
     });
     listEl.appendChild(card);
   });
@@ -533,22 +542,29 @@ function renderTestScreen(verse, stage) {
 // ------------------------------------------------------------
 // 음성 합성(TTS) — 구절을 한국어로 읽어준다(설치·권한 불필요)
 // ------------------------------------------------------------
-function speakText(text, onEnd) {
+const SPEAK_RATE = 0.7; // 읽기 속도(낮을수록 느림)
+
+// text 를 times 번 연속해서 읽어준다. (빠르게 N번 클릭하면 N번 반복)
+function speakText(text, onEnd, times = 1) {
   if (!("speechSynthesis" in window)) {
     alert("이 브라우저는 읽어주기(음성 합성)를 지원하지 않습니다.\n크롬·사파리에서 이용해 주세요.");
     if (onEnd) onEnd();
     return;
   }
   window.speechSynthesis.cancel(); // 중복 재생 방지
-  const ut = new SpeechSynthesisUtterance(text);
-  ut.lang = "ko-KR";
-  ut.rate = 0.8;
-  ut.pitch = 1;
-  if (onEnd) {
-    ut.onend = onEnd;
-    ut.onerror = onEnd;
+  const n = Math.max(1, times);
+  for (let i = 0; i < n; i++) {
+    const ut = new SpeechSynthesisUtterance(text);
+    ut.lang = "ko-KR";
+    ut.rate = SPEAK_RATE;
+    ut.pitch = 1;
+    if (onEnd && i === n - 1) {
+      // 마지막 반복이 끝났을 때만 콜백
+      ut.onend = onEnd;
+      ut.onerror = onEnd;
+    }
+    window.speechSynthesis.speak(ut); // speak 는 큐에 쌓이므로 순서대로 N번 재생
   }
-  window.speechSynthesis.speak(ut);
 }
 
 function stopSpeaking() {
