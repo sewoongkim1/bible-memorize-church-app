@@ -397,29 +397,28 @@ function renderSummary() {
     if (existing) { existing.remove(); return; }
 
     const stepsHtml = steps
-      .map((s) => `<li class="install-guide-step">${s}</li>`)
+      .map(function(s) { return '<li class="install-guide-step">' + s + '</li>'; })
       .join("");
     const hintHtml = hint
-      ? `<p class="install-guide-hint">${hint}</p>`
+      ? '<p class="install-guide-hint">' + hint + '</p>'
       : "";
 
     const modal = document.createElement("div");
     modal.id = "install-guide-modal";
     modal.className = "install-guide-modal";
-    modal.innerHTML = `
-      <div class="install-guide-card">
-        <div class="install-guide-title">📱 홈 화면에 추가하는 방법</div>
-        <ol class="install-guide-steps">${stepsHtml}</ol>
-        ${hintHtml}
-        <button class="install-guide-close" id="install-guide-close-btn">확인</button>
-      </div>
-    `;
+    modal.innerHTML =
+      '<div class="install-guide-card">' +
+        '<div class="install-guide-title">📱 홈 화면에 추가하는 방법</div>' +
+        '<ol class="install-guide-steps">' + stepsHtml + '</ol>' +
+        hintHtml +
+        '<button class="install-guide-close" id="install-guide-close-btn">확인</button>' +
+      '</div>';
     document.body.appendChild(modal);
-    document.getElementById("install-guide-close-btn").addEventListener("click", () => modal.remove());
-    modal.addEventListener("click", (e) => { if (e.target === modal) modal.remove(); });
+    document.getElementById("install-guide-close-btn").addEventListener("click", function() { modal.remove(); });
+    modal.addEventListener("click", function(e) { if (e.target === modal) modal.remove(); });
   }
 
-  if (isInStandaloneMode) {
+    if (isInStandaloneMode) {
     // 이미 설치된 상태 → 버튼 숨김
     installBtn.hidden = true;
   } else if (isIOS) {
