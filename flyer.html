@@ -28,14 +28,14 @@
     border-top:6px solid var(--gold);
   }
 
-  /* ---- 상단 헤더 (흰 배경, 로고 왼쪽) ---- */
+  /* ---- 상단 헤더 (흰 배경, 로고 왼쪽 · 타이틀 가운데) ---- */
   .f-header{
     background:#fff; padding:14mm 16mm 10mm;
-    display:flex; align-items:center; gap:18px;
+    position:relative; text-align:center;
     border-bottom:2px solid var(--border);
   }
-  .f-logo{ width:88px; height:auto; flex-shrink:0; }
-  .f-head-tx{ text-align:left; }
+  .f-logo{ position:absolute; left:16mm; top:50%; transform:translateY(-50%); width:84px; height:auto; }
+  .f-head-tx{ text-align:center; }
   .f-church{ font-size:13pt; letter-spacing:2px; color:var(--gray); font-weight:600; }
   .f-title{
     font-family:"Nanum Myeongjo",serif; font-weight:800; font-size:42pt;
