@@ -711,6 +711,7 @@ h1 {
 }
 
 .summary-change {
+  margin-bottom: 8px;
   width: 100%; padding: 12px; font-size: .98rem; font-weight: 600;
   color: var(--gray); background: #fff; border: 1.5px solid var(--border);
   border-radius: 12px; cursor: pointer; font-family: inherit;
