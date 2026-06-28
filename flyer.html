@@ -91,8 +91,11 @@
   /* ---- 푸터 (밝게: 흰 배경 + 네이비 글씨) ---- */
   .f-footer{
     background:#fff; color:var(--navy); border-top:2px solid var(--border);
-    text-align:center; font-size:12pt; letter-spacing:3px; padding:6mm 8mm; font-weight:600;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    font-size:11pt; letter-spacing:2px; padding:6mm 16mm; font-weight:600;
   }
+  .f-footer .foot-motto{ color:var(--gray); }
+  .f-footer .foot-org{ color:var(--navy); font-weight:700; }
 
   /* ---- 인쇄 버튼(화면 전용) ---- */
   .toolbar{ display:flex; gap:10px; }
@@ -124,7 +127,6 @@
     <div class="f-header">
       <img class="f-logo" src="https://sewoongkim1.github.io/summer-bible/logo3.png" alt="고척교회" />
       <div class="f-head-tx">
-        <div class="f-church">고척교회 제자양육부 신앙운동팀</div>
         <div class="f-title">성경말씀 <span class="accent">암송</span></div>
         <div class="f-tag">오직 성경, 말씀이 답이다!</div>
       </div>
@@ -170,13 +172,15 @@
         <div class="qtx">
           <div class="big">📱 지금 바로 시작하기</div>
           <div class="sm">휴대폰 카메라로 QR을 비추세요</div>
-          <span class="url">sewoongkim1.github.io/bible-memorize-church-app</span>
         </div>
       </div>
     </div>
 
     <!-- 푸터 -->
-    <div class="f-footer">오직 성경(Sola Scriptura) · 오직 은혜(Sola Gratia)</div>
+    <div class="f-footer">
+      <span class="foot-motto">오직 성경(Sola Scriptura) · 오직 은혜(Sola Gratia)</span>
+      <span class="foot-org">고척교회 제자양육부 신앙운동팀</span>
+    </div>
   </div>
 
 </body>
