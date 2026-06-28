@@ -375,6 +375,7 @@ function renderSummary() {
       <div class="stat-box status-none"><div class="stat-num">${counts[0]}</div><div class="stat-lbl">미시도</div></div>
     </div>
     <button class="summary-go" id="go-list">📖 암송하러 가기</button>
+<button class="summary-help" id="open-help-summary">❓ 도움말 보기</button>
 <button class="summary-change" id="change-user">⚙️ 로그인 정보변경</button>
 <a class="remind-cta" href="reminders.html">🔔 매일 암송 구절 알림 받기</a>
 <button class="summary-install" id="install-btn">⛪ 성경암송 — 홈 화면에 추가</button>
@@ -386,6 +387,8 @@ function renderSummary() {
   document.getElementById("go-list").addEventListener("click", renderVerseList);
   document.getElementById("change-user").addEventListener("click", renderEntryScreen);
   document.getElementById("share-btn").addEventListener("click", shareApp);
+  // 도움말: 닫으면 요약 화면으로 돌아온다
+  document.getElementById("open-help-summary").addEventListener("click", () => renderHelp(renderSummary));
 
   // ---- PWA 홈 화면 추가 버튼 로직 ----
   const installBtn = document.getElementById("install-btn");

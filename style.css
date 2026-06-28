@@ -718,6 +718,15 @@ h1 {
 }
 .summary-change:hover { background: var(--cream); }
 
+/* 요약 화면 도움말 버튼 (한 줄 전체) */
+.summary-help {
+  width: 100%; padding: 12px; font-size: .98rem; font-weight: 700;
+  color: var(--navy); background: #eef1f8; border: 1.5px solid var(--navy);
+  border-radius: 12px; cursor: pointer; font-family: inherit; margin-bottom: 8px;
+  transition: background .15s, color .15s;
+}
+.summary-help:hover { background: var(--navy); color: #fff; }
+
 /* ---------- 목록 상단 네비 ---------- */
 .list-nav {
   display: flex; align-items: center; justify-content: space-between;
