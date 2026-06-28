@@ -729,9 +729,12 @@ h1 {
 
 /* ---------- 목록 상단 네비 ---------- */
 .list-nav {
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; flex-direction: column; align-items: stretch; gap: 8px;
   max-width: 720px; margin: 0 auto 6px; padding: 2px 0;
 }
+/* 두 버튼을 각각 한 줄 전체로 */
+.list-nav .nav-record { max-width: none; width: 100%; text-align: center; }
+.list-nav .help-btn { width: 100%; }
 .nav-btn {
   background: transparent; border: 1px solid var(--border); border-radius: 999px;
   padding: 7px 14px; font-size: .85rem; color: var(--navy); cursor: pointer;
