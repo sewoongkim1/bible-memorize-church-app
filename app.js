@@ -373,15 +373,17 @@ function renderSummary() {
       <div class="stat-box status-none"><div class="stat-num">${counts[0]}</div><div class="stat-lbl">미시도</div></div>
     </div>
     <button class="summary-go" id="go-list">📖 암송하러 가기</button>
-    <a class="remind-cta" href="reminders.html">🔔 매일 암송 구절 알림 받기</a>
-    <button class="summary-install" id="install-btn">⛪ 성경암송 — 홈 화면에 추가</button>
-    <button class="summary-change" id="change-user">⚙️ 로그인 정보변경</button>
+<button class="summary-change" id="change-user">⚙️ 로그인 정보변경</button>
+<a class="remind-cta" href="reminders.html">🔔 매일 암송 구절 알림 받기</a>
+<button class="summary-install" id="install-btn">⛪ 성경암송 — 홈 화면에 추가</button>
+<button class="summary-share" id="share-btn">🔗 성경암송 — 공유하기</button>
   </div>
 </div>
 `;
 
   document.getElementById("go-list").addEventListener("click", renderVerseList);
   document.getElementById("change-user").addEventListener("click", renderEntryScreen);
+  document.getElementById("share-btn").addEventListener("click", shareApp);
 
   // ---- PWA 홈 화면 추가 버튼 로직 ----
   const installBtn = document.getElementById("install-btn");
@@ -1014,6 +1016,56 @@ function checkAllComplete(inputs, verse, stage) {
       .getElementById("to-summary-btn")
       .addEventListener("click", renderSummary);
   }
+}
+
+// ------------------------------------------------------------
+// 공유하기 — Web Share API(모바일) 우선, 미지원 시 URL 복사
+// ------------------------------------------------------------
+function shareApp() {
+  const shareUrl = "https://sewoongkim1.github.io/bible-memorize-church-app/";
+  const shareTitle = "성경말씀 암송 — 오직 성경, 말씀이 답이다!";
+  const shareText = "고척교회 제자양육부 성경 암송 앱입니다. 함께 말씀을 암송해요!";
+
+  if (navigator.share) {
+    navigator.share({ title: shareTitle, text: shareText, url: shareUrl }).catch(function() {});
+    return;
+  }
+  // 클립보드 복사 폴백
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(shareUrl).then(function() {
+      showShareToast("링크가 클립보드에 복사되었습니다! 📋");
+    }).catch(function() {
+      showShareToast(shareUrl);
+    });
+  } else {
+    // execCommand 폴백 (구형 브라우저)
+    const ta = document.createElement("textarea");
+    ta.value = shareUrl;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try { document.execCommand("copy"); showShareToast("링크가 클립보드에 복사되었습니다! 📋"); }
+    catch (e) { showShareToast(shareUrl); }
+    document.body.removeChild(ta);
+  }
+}
+
+// 공유 결과 토스트 메시지
+function showShareToast(msg) {
+  const existing = document.getElementById("share-toast");
+  if (existing) existing.remove();
+  const toast = document.createElement("div");
+  toast.id = "share-toast";
+  toast.className = "share-toast";
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(function() { toast.classList.add("share-toast-show"); }, 10);
+  setTimeout(function() {
+    toast.classList.remove("share-toast-show");
+    setTimeout(function() { toast.remove(); }, 400);
+  }, 2800);
 }
 
 // ------------------------------------------------------------
