@@ -1023,8 +1023,8 @@ function checkAllComplete(inputs, verse, stage) {
 // ------------------------------------------------------------
 function shareApp() {
   const shareUrl = "https://sewoongkim1.github.io/bible-memorize-church-app/";
-  const shareTitle = "성경말씀 암송 — 오직 성경, 말씀이 답이다!";
-  const shareText = "고척교회 제자양육부 성경 암송 앱입니다. 함께 말씀을 암송해요!";
+  const shareTitle = "고척교회 — 오직 성경, 말씀이 답이다!";
+  const shareText = "말씀암송 앱입니다. 함께 말씀을 암송해요!";
 
   if (navigator.share) {
     navigator.share({ title: shareTitle, text: shareText, url: shareUrl }).catch(function() {});
