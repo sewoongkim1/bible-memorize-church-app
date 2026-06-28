@@ -34,8 +34,8 @@
     position:relative; text-align:center;
     border-bottom:2px solid var(--border);
   }
-  .f-logo{ position:absolute; left:16mm; top:50%; transform:translateY(-50%); width:84px; height:auto; }
-  .f-head-tx{ text-align:center; }
+  .f-logo{ position:absolute; left:12mm; top:50%; transform:translateY(-50%); width:78px; height:auto; }
+  .f-head-tx{ text-align:center; padding-left:14mm; }
   .f-church{ font-size:13pt; letter-spacing:2px; color:var(--gray); font-weight:600; }
   .f-title{
     font-family:"Nanum Myeongjo",serif; font-weight:800; font-size:42pt;
@@ -91,8 +91,16 @@
   /* ---- 푸터 (밝게: 흰 배경 + 네이비 글씨) ---- */
   .f-footer{
     background:#fff; color:var(--navy); border-top:2px solid var(--border);
+    display:flex; flex-direction:column; gap:6px;
+    padding:5mm 16mm; font-weight:600;
+  }
+  .f-footer .foot-contact{
+    text-align:center; font-size:10.5pt; color:#444; font-weight:500; line-height:1.5;
+  }
+  .f-footer .foot-contact b{ color:var(--navy); font-weight:700; }
+  .f-footer .foot-row{
     display:flex; align-items:center; justify-content:space-between; gap:10px;
-    font-size:11pt; letter-spacing:2px; padding:6mm 16mm; font-weight:600;
+    font-size:10.5pt; letter-spacing:1px;
   }
   .f-footer .foot-motto{ color:var(--gray); }
   .f-footer .foot-org{ color:var(--navy); font-weight:700; }
@@ -178,8 +186,11 @@
 
     <!-- 푸터 -->
     <div class="f-footer">
-      <span class="foot-motto">오직 성경(Sola Scriptura) · 오직 은혜(Sola Gratia)</span>
-      <span class="foot-org">고척교회 제자양육부 신앙운동팀</span>
+      <div class="foot-contact">문의사항은 <b>교구 목사님</b> 또는 <b>고척교회 제자양육부 신앙운동팀</b>에게 연락 주세요.</div>
+      <div class="foot-row">
+        <span class="foot-motto">오직 성경(Sola Scriptura) · 오직 은혜(Sola Gratia)</span>
+        <span class="foot-org">고척교회 제자양육부 신앙운동팀</span>
+      </div>
     </div>
   </div>
 
