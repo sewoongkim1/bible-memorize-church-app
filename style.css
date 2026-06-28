@@ -666,6 +666,50 @@ h1 {
 }
 .summary-install:hover { background: #dce3f5; }
 
+/* ---------- 공유하기 버튼 ---------- */
+.summary-share {
+  display: block;
+  width: 100%;
+  margin: 0 0 8px;
+  text-align: center;
+  background: #eef5ee;
+  border: 1.5px solid var(--green);
+  color: var(--green);
+  font-weight: 700;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: .98rem;
+  cursor: pointer;
+  font-family: "Noto Sans KR", sans-serif;
+  transition: background 0.15s;
+}
+.summary-share:hover { background: #d6ecd6; }
+
+/* ---------- 공유 토스트 ---------- */
+.share-toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(26, 58, 107, 0.93);
+  color: #fff;
+  padding: 12px 22px;
+  border-radius: 24px;
+  font-size: .92rem;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 9999;
+  pointer-events: none;
+  max-width: 90vw;
+  word-break: keep-all;
+}
+.share-toast.share-toast-show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 .summary-change {
   width: 100%; padding: 12px; font-size: .98rem; font-weight: 600;
   color: var(--gray); background: #fff; border: 1.5px solid var(--border);
