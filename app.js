@@ -1239,7 +1239,7 @@ function renderHelp(onClose) {
 
         <section class="help-section">
           <h3>📲 공유 & 홈 화면 추가</h3>
-          <p>요약 화면의 <b>공유하기</b>로 가족·지체에게 링크를 보낼 수 있고, <b>홈 화면에 추가</b>로 앱처럼 바로 열 수 있어요.</p>
+          <p>요약 화면의 <b>공유하기</b>로 가족·목장원들에게 링크를 보낼 수 있고, <b>홈 화면에 추가</b>로 앱처럼 바로 열 수 있어요.</p>
         </section>
 
         <button class="help-go" id="help-go">닫고 시작하기</button>
