@@ -824,8 +824,9 @@ h1 {
 .help-close {
   background: transparent; border: 1px solid var(--border); border-radius: 999px;
   padding: 6px 13px; font-size: 0.85rem; color: var(--gray); cursor: pointer; font-family: inherit;
+  transition: background .15s, color .15s, border-color .15s;
 }
-.help-close:hover { background: var(--cream); }
+.help-close:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
 .help-section { padding: 16px 2px; border-bottom: 1px solid var(--light); }
 .help-section h3 {
   font-size: 1.02rem; color: var(--navy); margin: 0 0 8px;
@@ -838,6 +839,7 @@ h1 {
 .help-go {
   display: block; width: 100%; margin-top: 20px; padding: 14px;
   border: none; border-radius: 12px; background: var(--navy); color: #fff;
-  font-weight: 700; font-size: 1.02rem; cursor: pointer; font-family: inherit; transition: background 0.15s;
+  font-weight: 700; font-size: 1.02rem; cursor: pointer; font-family: inherit;
+  transition: background .15s, transform .12s, box-shadow .15s;
 }
-.help-go:hover { background: var(--navy-dark); }
+.help-go:hover { background: var(--navy-dark); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(13,27,62,.28); }
