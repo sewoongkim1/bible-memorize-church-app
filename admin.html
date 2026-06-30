@@ -173,20 +173,20 @@ function renderMenu(){
         <div class="ti">기간별 사용현황</div>
         <div class="de">기간을 정해 구분·소속별 신규/참여 인원과 타이핑·음성 횟수를 봅니다.</div>
       </div>
-      <div class="rep-card soon">
-        <div class="ic">📖</div>
-        <div class="ti">구절별 완료현황</div>
-        <div class="de">구절마다 몇 명이 완료했는지(예정).</div>
-        <span class="badge-soon">추가 예정</span>
-      </div>
       <div class="rep-card" id="rep-participants">
         <div class="ic">👥</div>
         <div class="ti">참여자 현황</div>
         <div class="de">기간·구분·소속으로 걸러 개인별 타이핑·음성·총횟수를 봅니다.</div>
       </div>
+      <div class="rep-card" id="rep-verses">
+        <div class="ic">📖</div>
+        <div class="ti">구절별 현황</div>
+        <div class="de">기간 내 구절마다 참여자 수와 참여횟수를 봅니다.</div>
+      </div>
     </div>`;
   document.getElementById("rep-usage").addEventListener("click", renderUsageReport);
   document.getElementById("rep-participants").addEventListener("click", renderParticipants);
+  document.getElementById("rep-verses").addEventListener("click", renderVerses);
 }
 
 // ---------- 리포트 1: 기간별 사용현황 ----------
@@ -404,6 +404,95 @@ async function runParticipants(){
         <td></td><td class="l">합계</td><td></td><td></td><td></td>
         <td>${sum.typing}</td><td>${sum.voice}</td><td>${sum.total}</td>
       </tr></tfoot>
+    </table></div>`;
+}
+
+// ---------- 리포트 3: 구절별 현황 ----------
+let VERSE_MAP=null;
+async function loadVerseMap(){
+  if(VERSE_MAP) return VERSE_MAP;
+  VERSE_MAP={};
+  try{
+    const res=await fetch("verses.json",{cache:"no-cache"});
+    const d=await res.json();
+    (d.verses||[]).forEach(v=>{ VERSE_MAP[String(v.no)]=v.refShort || ("No."+v.no); });
+  }catch{ /* 매핑 실패 시 순번만 표시 */ }
+  return VERSE_MAP;
+}
+
+async function callVerses(from,to){
+  const params=new URLSearchParams({action:"verses",pw:getPw()});
+  if(from)params.set("from",from);
+  if(to)params.set("to",to);
+  const res=await fetch(API+"?"+params.toString(),{cache:"no-cache"});
+  return res.json();
+}
+
+function renderVerses(){
+  const today=new Date();
+  const monthStart=new Date(today.getFullYear(),today.getMonth(),1);
+  app.innerHTML=`
+    <div class="rep-head">
+      <button class="back-btn" id="back">← 메뉴</button>
+      <h2>📖 구절별 현황</h2>
+    </div>
+    <div class="filters">
+      <div class="fld"><label>시작일 (From)</label><input type="date" id="from" value="${ymd(monthStart)}"></div>
+      <div class="fld"><label>종료일 (To)</label><input type="date" id="to" value="${ymd(today)}"></div>
+      <button class="go" id="go">조회</button>
+      <div class="quick">
+        <button data-q="all">전체기간</button>
+        <button data-q="month">이번 달</button>
+        <button data-q="week">최근 7일</button>
+      </div>
+    </div>
+    <div id="result"><div class="msg">기간을 선택하고 <b>조회</b>를 누르세요.</div></div>`;
+  document.getElementById("back").addEventListener("click",renderMenu);
+  document.getElementById("go").addEventListener("click",runVerses);
+  document.querySelectorAll(".quick button").forEach(b=>b.addEventListener("click",()=>{
+    const q=b.dataset.q,f=document.getElementById("from"),t=document.getElementById("to"),now=new Date();
+    if(q==="all"){f.value="";t.value="";}
+    else if(q==="month"){f.value=ymd(new Date(now.getFullYear(),now.getMonth(),1));t.value=ymd(now);}
+    else if(q==="week"){const w=new Date(now);w.setDate(w.getDate()-6);f.value=ymd(w);t.value=ymd(now);}
+    runVerses();
+  }));
+  runVerses();
+}
+
+async function runVerses(){
+  const from=document.getElementById("from").value;
+  const to=document.getElementById("to").value;
+  const result=document.getElementById("result");
+  result.innerHTML=`<div class="msg">불러오는 중...</div>`;
+  const [map,data]=await Promise.all([
+    loadVerseMap(),
+    callVerses(from,to).catch(()=>({ok:false,error:"network"}))
+  ]);
+  if(!data.ok){
+    if(data.error==="unauthorized"){sessionStorage.removeItem(PW_KEY);renderLogin();return;}
+    result.innerHTML=`<div class="msg err">조회 실패: ${data.error||"오류"}</div>`;return;
+  }
+  const list=data.list||[];
+  if(!list.length){result.innerHTML=`<div class="msg">해당 기간에 기록이 없습니다.</div>`;return;}
+  const sum=list.reduce((a,r)=>({count:a.count+r.count}),{count:0});
+  const rangeTxt=(from||to)?`${from||"처음"} ~ ${to||"오늘"}`:"전체 기간";
+  const rows=list.map(r=>`
+    <tr>
+      <td>${r.no}</td>
+      <td class="l">${map[String(r.no)]||"-"}</td>
+      <td>${r.participants}</td>
+      <td><b>${r.count}</b></td>
+    </tr>`).join("");
+  result.innerHTML=`
+    <div class="summary-row">
+      <div class="kpi"><div class="n">${list.length}</div><div class="l">사용된 구절 수</div></div>
+      <div class="kpi"><div class="n">${sum.count}</div><div class="l">총 참여횟수</div></div>
+    </div>
+    <div style="font-size:.82rem;color:var(--gray);margin:2px 2px 10px;">기간: <b>${rangeTxt}</b></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>말씀 순번</th><th class="l">말씀</th><th>참여자</th><th>참여횟수</th></tr></thead>
+      <tbody>${rows}</tbody>
+      <tfoot><tr><td></td><td class="l">합계</td><td></td><td>${sum.count}</td></tr></tfoot>
     </table></div>`;
 }
 

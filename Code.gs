@@ -95,6 +95,11 @@ function doGet(e) {
       return json(getParticipants(p));
     }
 
+    // 관리자 통계 - 구절별 현황 (비밀번호 필요)
+    if (p.action === 'verses') {
+      return json(getVerseStats(p));
+    }
+
     if (p.test === '1') {
       appendRow_({ type: '교구', gu: '사랑', mok: '0', name: 'GET테스트', no: 0, stage: 1, mode: 'test', cid: 'gettest' });
       return json({ ok: true, wrote: true });
@@ -257,6 +262,46 @@ function getParticipants(p) {
     if (a.sebu !== b.sebu) return a.sebu < b.sebu ? -1 : 1;
     return a.name < b.name ? -1 : (a.name > b.name ? 1 : 0);
   });
+  return { ok: true, list: list };
+}
+
+/**
+ * 구절별 현황 — 구절No별 집계.
+ * 파라미터: pw, from, to(선택)
+ * 반환 list 항목: { no, participants(고유 인원), count(참여횟수) }
+ */
+function getVerseStats(p) {
+  var pw = PropertiesService.getScriptProperties().getProperty('ADMIN_PW');
+  if (!pw) return { ok: false, error: 'no-password-set' };
+  if (String(p.pw || '') !== pw) return { ok: false, error: 'unauthorized' };
+
+  var from = p.from ? new Date(p.from + 'T00:00:00') : null;
+  var to = p.to ? new Date(p.to + 'T23:59:59') : null;
+
+  var values = getSheet_().getDataRange().getValues();
+  var groups = {};
+  for (var i = 1; i < values.length; i++) {
+    var r = values[i];
+    var mode = String(r[7] || '');
+    if (mode === 'test') continue;
+    var when = (r[0] instanceof Date) ? r[0] : new Date(r[0]);
+    if (from && when < from) continue;
+    if (to && when > to) continue;
+
+    var no = r[5];
+    if (no === '' || no === null || no === undefined) continue; // 구절No 없는 행 제외
+    var nokey = String(no);
+    var pkey = r[1] + '|' + r[2] + '|' + r[3] + '|' + r[4];
+    if (!groups[nokey]) groups[nokey] = { no: no, participants: {}, count: 0 };
+    groups[nokey].participants[pkey] = true;
+    groups[nokey].count++;
+  }
+
+  var list = Object.keys(groups).map(function (k) {
+    var g = groups[k];
+    return { no: g.no, participants: Object.keys(g.participants).length, count: g.count };
+  });
+  list.sort(function (a, b) { return Number(a.no) - Number(b.no); });
   return { ok: true, list: list };
 }
 
