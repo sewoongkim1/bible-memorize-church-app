@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>관리자 통계 | 성경암송</title>
+<link rel="icon" href="favicon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@700;800&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --navy:#1a3a6b; --navy-dark:#0d1b3e; --gold:#c8a84b;
+    --cream:#fdf8f0; --gray:#6b7280; --border:#ddd6c8; --light:#f3f0ea;
+    --green:#2c5f2d; --error:#c0392b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:"Noto Sans KR",sans-serif;background:var(--cream);color:#222;min-height:100vh;}
+  .topbar{
+    background:linear-gradient(135deg,#0d1b3e 0%,#1a3a6b 100%); color:#fff;
+    padding:16px 20px; display:flex; align-items:center; justify-content:space-between;
+  }
+  .topbar h1{font-family:"Nanum Myeongjo",serif;font-size:1.2rem;font-weight:800;letter-spacing:.5px;}
+  .topbar .logout{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);color:#fff;
+    border-radius:999px;padding:6px 13px;font-size:.82rem;cursor:pointer;font-family:inherit;}
+  .topbar .logout:hover{background:rgba(255,255,255,.28);}
+  main{max-width:900px;margin:0 auto;padding:22px 16px 60px;}
+
+  /* 로그인 */
+  .login-card{max-width:360px;margin:8vh auto 0;background:#fff;border:1px solid var(--border);
+    border-radius:16px;padding:30px 24px;box-shadow:0 6px 20px rgba(13,27,62,.07);text-align:center;}
+  .login-card h2{font-family:"Nanum Myeongjo",serif;color:var(--navy);font-size:1.3rem;margin-bottom:8px;}
+  .login-card p{color:var(--gray);font-size:.85rem;margin-bottom:20px;}
+  .login-card input{width:100%;padding:12px 13px;font-size:1rem;border:1px solid var(--border);
+    border-radius:10px;background:var(--cream);font-family:inherit;margin-bottom:12px;}
+  .login-card input:focus{outline:none;border-color:var(--navy);background:#fff;}
+  .login-card button{width:100%;padding:13px;font-size:1.02rem;font-weight:700;color:#fff;background:var(--navy);
+    border:none;border-radius:12px;cursor:pointer;font-family:inherit;transition:background .15s;}
+  .login-card button:hover{background:var(--navy-dark);}
+  .login-err{color:var(--error);font-size:.85rem;margin-bottom:10px;min-height:1.1em;}
+
+  /* 카드 메뉴 */
+  .section-title{font-weight:800;color:var(--navy);font-size:1.05rem;margin:6px 2px 14px;}
+  .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}
+  .rep-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px 18px;
+    cursor:pointer;transition:transform .12s,box-shadow .12s;box-shadow:0 2px 10px rgba(26,58,107,.06);}
+  .rep-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(26,58,107,.14);}
+  .rep-card .ic{font-size:26px;}
+  .rep-card .ti{font-weight:800;color:var(--navy);margin-top:8px;font-size:1.02rem;}
+  .rep-card .de{color:var(--gray);font-size:.83rem;margin-top:4px;line-height:1.45;}
+  .rep-card.soon{opacity:.55;cursor:default;}
+  .rep-card.soon:hover{transform:none;box-shadow:0 2px 10px rgba(26,58,107,.06);}
+  .badge-soon{display:inline-block;margin-top:10px;font-size:.72rem;color:var(--gray);
+    background:var(--light);border-radius:999px;padding:2px 9px;}
+
+  /* 리포트 */
+  .rep-head{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+  .back-btn{background:#eef1f8;border:1.5px solid var(--navy);color:var(--navy);border-radius:999px;
+    padding:7px 14px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;}
+  .back-btn:hover{background:var(--navy);color:#fff;}
+  .rep-head h2{font-family:"Nanum Myeongjo",serif;color:var(--navy);font-size:1.2rem;}
+
+  .filters{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px;background:#fff;border:1px solid var(--border);
+    border-radius:12px;padding:14px 16px;margin-bottom:16px;}
+  .filters .fld{display:flex;flex-direction:column;gap:5px;}
+  .filters label{font-size:.8rem;color:var(--gray);font-weight:600;}
+  .filters input[type=date]{padding:9px 11px;border:1px solid var(--border);border-radius:9px;
+    background:var(--cream);font-family:inherit;font-size:.92rem;}
+  .filters .go{padding:10px 20px;font-weight:700;color:#fff;background:var(--navy);border:none;
+    border-radius:10px;cursor:pointer;font-family:inherit;}
+  .filters .go:hover{background:var(--navy-dark);}
+  .filters .quick{display:flex;gap:6px;}
+  .filters .quick button{font-size:.78rem;padding:7px 10px;border:1px solid var(--border);background:#fff;
+    color:var(--navy);border-radius:8px;cursor:pointer;font-family:inherit;}
+  .filters .quick button:hover{background:var(--cream);}
+
+  .summary-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;}
+  .kpi{flex:1;min-width:120px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px 14px;text-align:center;}
+  .kpi .n{font-size:1.5rem;font-weight:800;color:var(--navy);}
+  .kpi .l{font-size:.76rem;color:var(--gray);margin-top:2px;}
+
+  .table-wrap{overflow-x:auto;background:#fff;border:1px solid var(--border);border-radius:12px;}
+  table{width:100%;border-collapse:collapse;min-width:560px;}
+  th,td{padding:11px 12px;text-align:center;font-size:.9rem;border-bottom:1px solid var(--light);white-space:nowrap;}
+  thead th{background:var(--navy);color:#fff;font-weight:700;position:sticky;top:0;}
+  tbody tr:hover{background:var(--cream);}
+  td.l,th.l{text-align:left;}
+  tfoot td{font-weight:800;color:var(--navy);background:var(--light);border-top:2px solid var(--border);}
+  .gubun-tag{display:inline-block;font-size:.78rem;font-weight:700;padding:2px 9px;border-radius:999px;}
+  .gubun-교구{background:#e7ecf5;color:var(--navy);}
+  .gubun-교회학교{background:#f4e3ad;color:var(--navy-dark);}
+  .msg{text-align:center;color:var(--gray);padding:30px;}
+  .err{color:var(--error);}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <h1>📊 성경암송 관리자 통계</h1>
+    <button class="logout" id="logout" hidden>로그아웃</button>
+  </div>
+  <main id="app"></main>
+
+<script>
+const API = "https://script.google.com/macros/s/AKfycbwT_ttuV6_wGGqqnmz7-D9ubnSuEmemmkSm7jwOQh0R9xoK97VPthUrAzkHbza7pIJ-Zw/exec";
+const PW_KEY = "admin-pw";
+const app = document.getElementById("app");
+const logoutBtn = document.getElementById("logout");
+
+logoutBtn.addEventListener("click", () => {
+  sessionStorage.removeItem(PW_KEY);
+  logoutBtn.hidden = true;
+  renderLogin();
+});
+
+function getPw(){ return sessionStorage.getItem(PW_KEY) || ""; }
+
+async function callStats(from, to){
+  const params = new URLSearchParams({ action:"stats", pw:getPw() });
+  if (from) params.set("from", from);
+  if (to) params.set("to", to);
+  const res = await fetch(API + "?" + params.toString(), { cache:"no-cache" });
+  return res.json();
+}
+
+// ---------- 로그인 ----------
+function renderLogin(){
+  logoutBtn.hidden = true;
+  app.innerHTML = `
+    <div class="login-card">
+      <h2>🔒 관리자 로그인</h2>
+      <p>통계를 보려면 관리자 비밀번호를 입력하세요.</p>
+      <div class="login-err" id="lerr"></div>
+      <input type="password" id="pw" placeholder="비밀번호" autocomplete="current-password" />
+      <button id="login">로그인</button>
+    </div>`;
+  const pwInput = document.getElementById("pw");
+  const err = document.getElementById("lerr");
+  async function tryLogin(){
+    const pw = pwInput.value.trim();
+    if(!pw){ err.textContent="비밀번호를 입력하세요."; return; }
+    err.textContent = "확인 중...";
+    sessionStorage.setItem(PW_KEY, pw);
+    const data = await callStats("","").catch(()=>({ok:false,error:"network"}));
+    if(data.ok){ logoutBtn.hidden=false; renderMenu(); }
+    else {
+      sessionStorage.removeItem(PW_KEY);
+      err.textContent = data.error==="unauthorized" ? "비밀번호가 올바르지 않습니다."
+        : data.error==="no-password-set" ? "서버에 비밀번호가 설정되지 않았습니다(관리자 설정 필요)."
+        : "연결 오류입니다. 잠시 후 다시 시도하세요.";
+    }
+  }
+  document.getElementById("login").addEventListener("click", tryLogin);
+  pwInput.addEventListener("keydown", e=>{ if(e.key==="Enter") tryLogin(); });
+  pwInput.focus();
+}
+
+// ---------- 카드 메뉴 ----------
+function renderMenu(){
+  logoutBtn.hidden = false;
+  app.innerHTML = `
+    <div class="section-title">통계 리포트</div>
+    <div class="card-grid">
+      <div class="rep-card" id="rep-usage">
+        <div class="ic">📅</div>
+        <div class="ti">기간별 사용현황</div>
+        <div class="de">기간을 정해 구분·소속별 신규/참여 인원과 타이핑·음성 횟수를 봅니다.</div>
+      </div>
+      <div class="rep-card soon">
+        <div class="ic">📖</div>
+        <div class="ti">구절별 완료현황</div>
+        <div class="de">구절마다 몇 명이 완료했는지(예정).</div>
+        <span class="badge-soon">추가 예정</span>
+      </div>
+      <div class="rep-card soon">
+        <div class="ic">🏆</div>
+        <div class="ti">개인별 진도</div>
+        <div class="de">개인별 단계 진행 현황(예정).</div>
+        <span class="badge-soon">추가 예정</span>
+      </div>
+    </div>`;
+  document.getElementById("rep-usage").addEventListener("click", renderUsageReport);
+}
+
+// ---------- 리포트 1: 기간별 사용현황 ----------
+function ymd(d){
+  const z=n=>String(n).padStart(2,"0");
+  return d.getFullYear()+"-"+z(d.getMonth()+1)+"-"+z(d.getDate());
+}
+function renderUsageReport(){
+  const today = new Date();
+  const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+  app.innerHTML = `
+    <div class="rep-head">
+      <button class="back-btn" id="back">← 메뉴</button>
+      <h2>📅 기간별 사용현황</h2>
+    </div>
+    <div class="filters">
+      <div class="fld"><label>시작일 (From)</label><input type="date" id="from" value="${ymd(monthStart)}"></div>
+      <div class="fld"><label>종료일 (To)</label><input type="date" id="to" value="${ymd(today)}"></div>
+      <button class="go" id="go">조회</button>
+      <div class="quick">
+        <button data-q="all">전체</button>
+        <button data-q="month">이번 달</button>
+        <button data-q="week">최근 7일</button>
+      </div>
+    </div>
+    <div id="result"><div class="msg">기간을 선택하고 <b>조회</b>를 누르세요.</div></div>`;
+
+  document.getElementById("back").addEventListener("click", renderMenu);
+  document.getElementById("go").addEventListener("click", runUsage);
+  document.querySelectorAll(".quick button").forEach(b=>b.addEventListener("click",()=>{
+    const q=b.dataset.q, f=document.getElementById("from"), t=document.getElementById("to");
+    const now=new Date();
+    if(q==="all"){ f.value=""; t.value=""; }
+    else if(q==="month"){ f.value=ymd(new Date(now.getFullYear(),now.getMonth(),1)); t.value=ymd(now); }
+    else if(q==="week"){ const w=new Date(now); w.setDate(w.getDate()-6); f.value=ymd(w); t.value=ymd(now); }
+    runUsage();
+  }));
+  runUsage();
+}
+
+async function runUsage(){
+  const from=document.getElementById("from").value;
+  const to=document.getElementById("to").value;
+  const result=document.getElementById("result");
+  result.innerHTML = `<div class="msg">불러오는 중...</div>`;
+  const data = await callStats(from,to).catch(()=>({ok:false,error:"network"}));
+  if(!data.ok){
+    if(data.error==="unauthorized"){ sessionStorage.removeItem(PW_KEY); renderLogin(); return; }
+    result.innerHTML = `<div class="msg err">조회 실패: ${data.error||"오류"}</div>`;
+    return;
+  }
+  const list=data.list||[];
+  if(!list.length){ result.innerHTML=`<div class="msg">해당 기간에 기록이 없습니다.</div>`; return; }
+
+  const sum=list.reduce((a,r)=>({newCount:a.newCount+r.newCount,participants:a.participants+r.participants,
+    typing:a.typing+r.typing,voice:a.voice+r.voice,total:a.total+r.total}),
+    {newCount:0,participants:0,typing:0,voice:0,total:0});
+
+  const rangeTxt = (from||to) ? `${from||"처음"} ~ ${to||"오늘"}` : "전체 기간";
+
+  let rows = list.map(r=>`
+    <tr>
+      <td class="l"><span class="gubun-tag gubun-${r.gubun}">${r.gubun}</span></td>
+      <td class="l">${r.sosok||"-"}</td>
+      <td>${r.newCount}</td>
+      <td>${r.participants}</td>
+      <td>${r.typing}</td>
+      <td>${r.voice}</td>
+      <td><b>${r.total}</b></td>
+    </tr>`).join("");
+
+  result.innerHTML = `
+    <div class="summary-row">
+      <div class="kpi"><div class="n">${sum.participants}</div><div class="l">참여인원(합)</div></div>
+      <div class="kpi"><div class="n">${sum.newCount}</div><div class="l">신규인원(합)</div></div>
+      <div class="kpi"><div class="n">${sum.typing}</div><div class="l">타이핑</div></div>
+      <div class="kpi"><div class="n">${sum.voice}</div><div class="l">음성</div></div>
+      <div class="kpi"><div class="n">${sum.total}</div><div class="l">총횟수</div></div>
+    </div>
+    <div style="font-size:.82rem;color:var(--gray);margin:2px 2px 10px;">기간: <b>${rangeTxt}</b> · 그룹 ${list.length}개</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th class="l">구분</th><th class="l">교구/교회학교</th>
+          <th>신규인원</th><th>참여인원</th><th>타이핑횟수</th><th>음성횟수</th><th>총횟수</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+        <tfoot><tr>
+          <td class="l">합계</td><td></td>
+          <td>${sum.newCount}</td><td>${sum.participants}</td>
+          <td>${sum.typing}</td><td>${sum.voice}</td><td>${sum.total}</td>
+        </tr></tfoot>
+      </table>
+    </div>`;
+}
+
+// ---------- 시작 ----------
+if(getPw()) { logoutBtn.hidden=false; renderMenu(); } else { renderLogin(); }
+</script>
+</body>
+</html>
