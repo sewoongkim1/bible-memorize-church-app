@@ -72,6 +72,13 @@
   .filters .quick button{font-size:.78rem;padding:7px 10px;border:1px solid var(--border);background:#fff;
     color:var(--navy);border-radius:8px;cursor:pointer;font-family:inherit;}
   .filters .quick button:hover{background:var(--cream);}
+  .chk-box{display:flex;flex-wrap:wrap;gap:6px;padding:8px;border:1px solid var(--border);
+    border-radius:9px;background:var(--cream);min-width:240px;}
+  .chk{display:inline-flex;align-items:center;gap:5px;font-size:.85rem;background:#fff;
+    border:1px solid var(--border);border-radius:999px;padding:5px 11px;cursor:pointer;user-select:none;}
+  .chk input{cursor:pointer;margin:0;}
+  .chk.all{font-weight:700;color:var(--navy);}
+  .chk-hint{font-size:.82rem;color:var(--gray);padding:2px 4px;}
 
   .summary-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;}
   .kpi{flex:1;min-width:120px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px 14px;text-align:center;}
@@ -299,25 +306,36 @@ function renderParticipants(){
       <div class="fld"><label>시작일 (From)</label><input type="date" id="from" value="${ymd(monthStart)}"></div>
       <div class="fld"><label>종료일 (To)</label><input type="date" id="to" value="${ymd(today)}"></div>
       <div class="fld"><label>구분</label><select id="gubun"><option>전체</option><option>교구</option><option>교회학교</option></select></div>
-      <div class="fld"><label>교구/교회학교</label><select id="sosok"><option>전체</option></select></div>
       <button class="go" id="go">조회</button>
       <div class="quick">
         <button data-q="all">전체기간</button>
         <button data-q="month">이번 달</button>
         <button data-q="week">최근 7일</button>
       </div>
+      <div class="fld" style="flex-basis:100%;"><label>교구/교회학교 (다중 선택)</label>
+        <div id="sosok-box" class="chk-box"></div></div>
     </div>
     <div id="result"><div class="msg">조건을 선택하고 <b>조회</b>를 누르세요.</div></div>`;
 
   const gubunSel=document.getElementById("gubun");
-  const sosokSel=document.getElementById("sosok");
+  const sosokBox=document.getElementById("sosok-box");
   function fillSosok(){
     const g=gubunSel.value;
-    let opts=["전체"];
-    if(g==="교구") opts=opts.concat(GU_LIST);
-    else if(g==="교회학교") opts=opts.concat(BU_LIST);
-    sosokSel.innerHTML=opts.map(o=>`<option>${o}</option>`).join("");
-    sosokSel.disabled=(g==="전체");
+    let opts=[];
+    if(g==="교구") opts=GU_LIST;
+    else if(g==="교회학교") opts=BU_LIST;
+    if(!opts.length){
+      sosokBox.innerHTML=`<span class="chk-hint">‘전체’ 구분에서는 모든 소속이 집계됩니다. (교구 또는 교회학교를 고르면 선택 가능)</span>`;
+      return;
+    }
+    sosokBox.innerHTML =
+      `<label class="chk all"><input type="checkbox" id="sosok-all" checked>전체</label>`+
+      opts.map(o=>`<label class="chk"><input type="checkbox" class="sosok-c" value="${o}">${o}</label>`).join("");
+    const all=sosokBox.querySelector("#sosok-all");
+    const cs=[...sosokBox.querySelectorAll(".sosok-c")];
+    // '전체' 체크 시 개별 해제 / 개별 선택 시 '전체' 자동 해제(없으면 다시 전체)
+    all.addEventListener("change",()=>{ if(all.checked) cs.forEach(c=>c.checked=false); else if(!cs.some(x=>x.checked)) all.checked=true; });
+    cs.forEach(c=>c.addEventListener("change",()=>{ all.checked = !cs.some(x=>x.checked); }));
   }
   fillSosok();
   gubunSel.addEventListener("change",fillSosok);
@@ -333,19 +351,27 @@ function renderParticipants(){
   runParticipants();
 }
 
+function getSelectedSosok(){
+  const all=document.getElementById("sosok-all");
+  if(!all || all.checked) return []; // 전체
+  return [...document.querySelectorAll(".sosok-c:checked")].map(c=>c.value);
+}
+
 async function runParticipants(){
   const from=document.getElementById("from").value;
   const to=document.getElementById("to").value;
   const gubun=document.getElementById("gubun").value;
-  const sosok=document.getElementById("sosok").value;
+  const selSosok=getSelectedSosok(); // 다중 선택(빈 배열=전체)
   const result=document.getElementById("result");
   result.innerHTML=`<div class="msg">불러오는 중...</div>`;
-  const data=await callParticipants(from,to,gubun,sosok).catch(()=>({ok:false,error:"network"}));
+  // 소속 다중 필터는 화면에서 처리(서버는 구분까지만 필터)
+  const data=await callParticipants(from,to,gubun,"").catch(()=>({ok:false,error:"network"}));
   if(!data.ok){
     if(data.error==="unauthorized"){sessionStorage.removeItem(PW_KEY);renderLogin();return;}
     result.innerHTML=`<div class="msg err">조회 실패: ${data.error||"오류"}</div>`;return;
   }
-  const list=data.list||[];
+  let list=data.list||[];
+  if(selSosok.length) list=list.filter(r=>selSosok.includes(r.sosok));
   if(!list.length){result.innerHTML=`<div class="msg">해당 조건에 참여자가 없습니다.</div>`;return;}
   const sum=list.reduce((a,r)=>({typing:a.typing+r.typing,voice:a.voice+r.voice,total:a.total+r.total}),{typing:0,voice:0,total:0});
   const rangeTxt=(from||to)?`${from||"처음"} ~ ${to||"오늘"}`:"전체 기간";
