@@ -90,6 +90,11 @@ function doGet(e) {
       return json(getStats(p));
     }
 
+    // 관리자 통계 - 참여자 현황 (비밀번호 필요)
+    if (p.action === 'participants') {
+      return json(getParticipants(p));
+    }
+
     if (p.test === '1') {
       appendRow_({ type: '교구', gu: '사랑', mok: '0', name: 'GET테스트', no: 0, stage: 1, mode: 'test', cid: 'gettest' });
       return json({ ok: true, wrote: true });
@@ -206,6 +211,52 @@ function getStats(p) {
     return a.sosok < b.sosok ? -1 : (a.sosok > b.sosok ? 1 : 0);
   });
 
+  return { ok: true, list: list };
+}
+
+/**
+ * 참여자 현황 — 개인별 집계.
+ * 파라미터: pw, from, to(선택), gubun(선택), sosok(선택)
+ * 반환 list 항목: { gubun, sosok, sebu, name, typing, voice, total }
+ */
+function getParticipants(p) {
+  var pw = PropertiesService.getScriptProperties().getProperty('ADMIN_PW');
+  if (!pw) return { ok: false, error: 'no-password-set' };
+  if (String(p.pw || '') !== pw) return { ok: false, error: 'unauthorized' };
+
+  var from = p.from ? new Date(p.from + 'T00:00:00') : null;
+  var to = p.to ? new Date(p.to + 'T23:59:59') : null;
+  var fGubun = (p.gubun && p.gubun !== '전체') ? String(p.gubun) : null;
+  var fSosok = (p.sosok && p.sosok !== '전체') ? String(p.sosok) : null;
+
+  var values = getSheet_().getDataRange().getValues();
+  var people = {};
+  for (var i = 1; i < values.length; i++) {
+    var r = values[i];
+    var mode = String(r[7] || '');
+    if (mode === 'test') continue;
+    var when = (r[0] instanceof Date) ? r[0] : new Date(r[0]);
+    if (from && when < from) continue;
+    if (to && when > to) continue;
+
+    var gubun = String(r[1] || ''), sosok = String(r[2] || ''), sebu = String(r[3] || ''), name = String(r[4] || '');
+    if (fGubun && gubun !== fGubun) continue;
+    if (fSosok && sosok !== fSosok) continue;
+
+    var key = gubun + '|' + sosok + '|' + sebu + '|' + name;
+    if (!people[key]) people[key] = { gubun: gubun, sosok: sosok, sebu: sebu, name: name, typing: 0, voice: 0 };
+    if (mode === 'voice') people[key].voice++; else people[key].typing++;
+  }
+
+  var list = Object.keys(people).map(function (k) {
+    var x = people[k]; x.total = x.typing + x.voice; return x;
+  });
+  list.sort(function (a, b) {
+    if (a.gubun !== b.gubun) return a.gubun < b.gubun ? -1 : 1;
+    if (a.sosok !== b.sosok) return a.sosok < b.sosok ? -1 : 1;
+    if (a.sebu !== b.sebu) return a.sebu < b.sebu ? -1 : 1;
+    return a.name < b.name ? -1 : (a.name > b.name ? 1 : 0);
+  });
   return { ok: true, list: list };
 }
 
