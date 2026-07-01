@@ -578,7 +578,7 @@ async function runChallengeReport(){
   if(selSosok.length) list=list.filter(r=>selSosok.includes(r.sosok));
   if(!list.length){ result.innerHTML=`<div class="msg">해당 조건에 도전 기록이 없습니다.</div>`; return; }
   list.sort((a,b)=> (b.count-a.count) || (a.name<b.name?-1:(a.name>b.name?1:0)));
-  const sum=list.reduce((a,r)=>({cnt:a.cnt+r.count}),{cnt:0});
+  const sum=list.reduce((a,r)=>({typing:a.typing+(r.typing||0),voice:a.voice+(r.voice||0),cnt:a.cnt+r.count}),{typing:0,voice:0,cnt:0});
   const rangeTxt=(from||to)?`${from||"처음"} ~ ${to||"오늘"}`:"전체 기간";
   const rows=list.map((r,i)=>`
     <tr>
@@ -587,22 +587,27 @@ async function runChallengeReport(){
       <td class="l">${r.sosok||"-"}</td>
       <td>${r.sebu||"-"}</td>
       <td class="l">${r.name||"-"}</td>
+      <td>${r.typing||0}</td>
+      <td>${r.voice||0}</td>
       <td><b>${r.count}</b></td>
     </tr>`).join("");
   result.innerHTML=`
     <div class="summary-row">
       <div class="kpi"><div class="n">${list.length}</div><div class="l">참여자 수</div></div>
+      <div class="kpi"><div class="n">${sum.typing}</div><div class="l">타이핑</div></div>
+      <div class="kpi"><div class="n">${sum.voice}</div><div class="l">음성</div></div>
       <div class="kpi"><div class="n">${sum.cnt}</div><div class="l">총 도전횟수</div></div>
     </div>
     <div style="font-size:.82rem;color:var(--gray);margin:2px 2px 10px;">기간: <b>${rangeTxt}</b> · 참여자 ${list.length}명</div>
     <div class="table-wrap"><table>
       <thead><tr>
         <th>#</th><th class="l">구분</th><th class="l">교구/교회학교</th><th>목장/학년</th>
-        <th class="l">성명</th><th>도전횟수</th>
+        <th class="l">성명</th><th>타이핑</th><th>음성</th><th>도전횟수</th>
       </tr></thead>
       <tbody>${rows}</tbody>
       <tfoot><tr>
-        <td></td><td class="l">합계</td><td></td><td></td><td></td><td>${sum.cnt}</td>
+        <td></td><td class="l">합계</td><td></td><td></td><td></td>
+        <td>${sum.typing}</td><td>${sum.voice}</td><td>${sum.cnt}</td>
       </tr></tfoot>
     </table></div>`;
 }

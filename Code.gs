@@ -363,9 +363,11 @@ function getRanking(p) {
     if (to && when > to) continue;
     var gubun = String(r[1] || ''), sosok = String(r[2] || ''), sebu = String(r[3] || ''), name = String(r[4] || '');
     if (!name) continue;
+    var mode = String(r[6] || ''); // 도전기록 탭 방식 열 (0일시 1구분 2소속 3세부 4성명 5구절No 6방식 7cid)
     var key = gubun + '|' + sosok + '|' + sebu + '|' + name;
-    if (!people[key]) people[key] = { gubun: gubun, sosok: sosok, sebu: sebu, name: name, count: 0 };
+    if (!people[key]) people[key] = { gubun: gubun, sosok: sosok, sebu: sebu, name: name, count: 0, typing: 0, voice: 0 };
     people[key].count++;
+    if (mode === 'voice') people[key].voice++; else people[key].typing++;
   }
 
   var list = Object.keys(people).map(function (k) { return people[k]; });
