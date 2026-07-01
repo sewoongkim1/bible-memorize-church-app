@@ -1089,3 +1089,17 @@ h1 {
 .dark .stat-box.status-done{ background:#17301f; }
 
 .page-header{ position: relative; }
+
+/* 다크: 밝게 남은 카드/버튼 보정 (요약 화면) */
+.dark .stat-box.status-s2{ background:#2b2717; border-color:#4a4327; }
+.dark .stat-box.status-s2 .stat-num{ color:#e8d9a3; }
+.dark .stat-box.status-s1{ background:#1b2740; border-color:#33405a; }
+.dark .stat-box.status-s1 .stat-num{ color:#a8c4f0; }
+.dark .stat-box.status-done .stat-num{ color:#8fd7a0; }
+.dark .summary-install{ background:#232c3f; color:#cdd9f2; border-color:#3a4a68; }
+.dark .summary-install:hover{ background:#2e3a52; }
+.dark .summary-share{ background:#17301f; color:#bfe6c9; border-color:#2c5f2d; }
+.dark .summary-share:hover{ background:#1f3f2a; }
+.dark .radio-chip span{ color:#cdd3dd; }
+.dark .answer-text, .dark .voice-heard, .dark .voice-words,
+.dark .voice-summary, .dark .voice-status, .dark .voice-live{ color:#cdd3dd; }
