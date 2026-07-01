@@ -1283,30 +1283,55 @@ function renderIntro(next) {
   draw();
 }
 
-// 로그인 방법 안내 (익숙지 않은 분들을 위한 단계별 도움말)
+// 로그인 방법 안내 (교구/교회학교 탭으로 분리)
 function renderLoginHelp(back) {
   const appEl = document.getElementById("app");
-  appEl.innerHTML = `
-    <div class="help-screen">
-      <div class="help-card">
-        <div class="help-top">
-          <h2 class="help-title">🔑 로그인 방법</h2>
-          <button class="help-close" id="lh-close">✕ 닫기</button>
+  const stepsFor = {
+    교구: [
+      '<b>구분</b>에서 <b>교구</b>를 선택하세요',
+      '<b>교구</b>를 고르세요 (믿음·소망·사랑·섬김·은혜·화평·기쁨·새가족)',
+      '<b>목장 번호</b>를 숫자만 적으세요 (예: 3)',
+      '<b>이름</b>을 공백 없이 적으세요',
+      '맨 아래 <b>시작하기</b>를 누르면 끝이에요! 🙌',
+    ],
+    교회학교: [
+      '<b>구분</b>에서 <b>교회학교</b>를 선택하세요',
+      '<b>부서</b>를 고르세요 (사랑부·영아부·유아부·유치부·유년부·초등부·중등부·고등부·청년부)',
+      '<b>학년</b>을 적으세요 (예: 3학년)',
+      '<b>이름</b>을 공백 없이 적으세요',
+      '맨 아래 <b>시작하기</b>를 누르면 끝이에요! 🙌',
+    ],
+  };
+  let tab = "교구";
+
+  function draw() {
+    const steps = stepsFor[tab]
+      .map((t, i) => `<div class="lh-step"><span class="lh-no">${i + 1}</span><div>${t}</div></div>`)
+      .join("");
+    appEl.innerHTML = `
+      <div class="help-screen">
+        <div class="help-card">
+          <div class="help-top">
+            <h2 class="help-title">🔑 로그인 방법</h2>
+            <button class="help-close" id="lh-close">✕ 닫기</button>
+          </div>
+          <p class="lh-intro">본인에게 맞는 탭을 고르고, 순서대로만 하시면 됩니다. 😊</p>
+          <div class="lh-tabs">
+            <button data-t="교구" class="${tab === "교구" ? "on" : ""}">교구</button>
+            <button data-t="교회학교" class="${tab === "교회학교" ? "on" : ""}">교회학교</button>
+          </div>
+          <div class="login-steps">${steps}</div>
+          <p class="lh-tip">💡 한 번 입력하면 다음부터는 자동으로 채워져요. 바꾸고 싶으면 <b>로그인 정보변경</b>에서 언제든 수정할 수 있어요.</p>
+          <button class="help-go" id="lh-go">닫고 로그인하기</button>
         </div>
-        <p class="lh-intro">처음이라도 아주 쉬워요! 아래 순서대로만 하시면 됩니다. 😊</p>
-        <div class="login-steps">
-          <div class="lh-step"><span class="lh-no">1</span><div><b>구분</b>을 고르세요 — <b>교구</b> 또는 <b>교회학교</b></div></div>
-          <div class="lh-step"><span class="lh-no">2</span><div>교구면 <b>교구 이름</b>(믿음·소망·사랑…), 교회학교면 <b>부서</b>(초등부·중등부…)를 고르세요</div></div>
-          <div class="lh-step"><span class="lh-no">3</span><div>교구면 <b>목장 번호</b>, 교회학교면 <b>학년</b>을 적으세요</div></div>
-          <div class="lh-step"><span class="lh-no">4</span><div><b>이름</b>을 적으세요</div></div>
-          <div class="lh-step"><span class="lh-no">5</span><div>맨 아래 <b>시작하기</b>를 누르면 끝이에요! 🙌</div></div>
-        </div>
-        <p class="lh-tip">💡 한 번 입력하면 다음부터는 자동으로 채워져요. 바꾸고 싶으면 <b>로그인 정보변경</b>에서 언제든 수정할 수 있어요.</p>
-        <button class="help-go" id="lh-go">닫고 로그인하기</button>
-      </div>
-    </div>`;
-  document.getElementById("lh-close").addEventListener("click", back);
-  document.getElementById("lh-go").addEventListener("click", back);
+      </div>`;
+    document.getElementById("lh-close").addEventListener("click", back);
+    document.getElementById("lh-go").addEventListener("click", back);
+    appEl.querySelectorAll(".lh-tabs button").forEach((b) =>
+      b.addEventListener("click", () => { tab = b.dataset.t; draw(); })
+    );
+  }
+  draw();
 }
 
 // 도움말 전체 화면 (onClose: 닫을 때 돌아갈 처리)
