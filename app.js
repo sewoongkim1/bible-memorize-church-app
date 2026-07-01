@@ -1388,7 +1388,7 @@ function renderChallenge(verse) {
             <div class="test-stage challenge-badge">🔥 도전</div>
             <div class="test-ref">${verse.refShort}</div>
           </div>
-          <button class="back-btn" id="ch-exit">← 돌아가기</button>
+          <button class="back-btn" id="ch-exit">← 뒤로</button>
         </div>
         <div class="challenge-hint-line">출처만 보고 전체를 외워보세요! 막히면 <b>💡 힌트</b>를 누르세요.</div>
         <div class="test-sentence">${wordsHtml}</div>
@@ -1462,13 +1462,12 @@ function renderReview(queue, idx) {
             <div class="test-stage review-badge">📖 복습</div>
             <div class="test-ref">${verse.refShort}</div>
           </div>
-          <button class="back-btn" id="rv-exit">← 돌아가기</button>
+          <button class="back-btn" id="rv-exit">← 뒤로</button>
         </div>
-        <div class="challenge-hint-line">복습 ${idx + 1} / ${queue.length} · 다시 외워볼까요? 막히면 <b>💡 힌트</b>·<b>보기</b>·<b>듣기</b></div>
+        <div class="challenge-hint-line">복습 ${idx + 1} / ${queue.length} · 다시 외워볼까요?</div>
         <div class="test-sentence">${wordsHtml}</div>
         <div class="challenge-remain" id="ch-remain"></div>
-        <div class="btn-row" style="flex-wrap:wrap;">
-          <button class="answer-btn" id="hint-btn">💡 힌트</button>
+        <div class="btn-row">
           <button class="answer-btn" id="show-answer-btn">보기</button>
           <button class="answer-btn" id="listen-answer-btn" aria-label="정답 음성으로 듣기">🔊 듣기</button>
           <button class="voice-btn" id="voice-toggle">🎤 암송시작</button>
@@ -1488,7 +1487,6 @@ function renderReview(queue, idx) {
     </div>`;
 
   document.getElementById("rv-exit").addEventListener("click", () => { stopSpeaking(); renderSummary(); });
-  setupHint();
   setupAnswerToggle();
   // 정답 듣기(TTS)
   const listenBtn = document.getElementById("listen-answer-btn");
