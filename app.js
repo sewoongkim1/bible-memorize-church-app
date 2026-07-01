@@ -1293,6 +1293,7 @@ function renderChallenge(verse) {
         </div>
         <div class="challenge-hint-line">출처만 보고 전체를 외워보세요! 막히면 <b>💡 힌트</b>를 누르세요.</div>
         <div class="test-sentence">${wordsHtml}</div>
+        <div class="challenge-remain" id="ch-remain"></div>
         <div class="btn-row">
           <button class="answer-btn" id="hint-btn">💡 힌트</button>
           <button class="voice-btn" id="voice-toggle">🎤 암송시작</button>
@@ -1321,8 +1322,9 @@ function setupHint() {
     if (!inputs.length) return;
     const target = inputs.includes(document.activeElement) ? document.activeElement : inputs[0];
     const ans = Array.from(target.dataset.answer);
+    const maxReveal = Math.max(1, ans.length - 1); // 전체는 안 보여줌(마지막 글자는 직접 입력)
     const cur = target.placeholder ? Array.from(target.placeholder).length : 0;
-    target.placeholder = ans.slice(0, Math.min(cur + 1, ans.length)).join("");
+    target.placeholder = ans.slice(0, Math.min(cur + 1, maxReveal)).join("");
     target.focus();
   });
 }
@@ -1330,6 +1332,16 @@ function setupHint() {
 // 타이핑 채점 — 전부 맞히면 도전 완료
 function setupChallengeTyping(verse) {
   const inputs = Array.from(document.querySelectorAll(".word-input"));
+  const remainEl = document.getElementById("ch-remain");
+  let done = false;
+  function updateRemain() {
+    const left = inputs.filter((i) => !i.classList.contains("correct")).length;
+    if (remainEl) {
+      remainEl.textContent = left > 0 ? `남은 빈칸 ${left}개` : "모두 맞혔어요! 🎉";
+      remainEl.classList.toggle("clear", left === 0);
+    }
+    return left;
+  }
   function evaluate(input, idx, isComposing) {
     if (input.disabled) return;
     const val = input.value.trim();
@@ -1339,9 +1351,11 @@ function setupChallengeTyping(verse) {
       input.classList.add("correct");
       input.classList.remove("wrong");
       input.disabled = true;
-      const next = inputs.slice(idx + 1).find((inp) => !inp.disabled);
+      const left = updateRemain();
+      // 남은 빈칸이 0이면 완료 (입력 순서와 무관하게 확실히 판정)
+      if (left === 0 && !done) { done = true; challengeComplete(verse, "typing"); return; }
+      const next = inputs.slice(idx + 1).find((inp) => !inp.disabled) || inputs.find((inp) => !inp.disabled);
       if (next) next.focus();
-      else if (inputs.every((inp) => inp.classList.contains("correct"))) challengeComplete(verse, "typing");
     } else if (!isComposing && Array.from(val).length >= Array.from(answer).length) {
       input.classList.add("wrong");
       input.classList.remove("correct");
@@ -1354,6 +1368,7 @@ function setupChallengeTyping(verse) {
     input.addEventListener("compositionend", () => { composing = false; evaluate(input, idx, false); });
     input.addEventListener("input", (e) => { evaluate(input, idx, composing || e.isComposing); });
   });
+  updateRemain();
   if (inputs[0]) inputs[0].focus();
 }
 

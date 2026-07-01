@@ -914,3 +914,10 @@ h1 {
 .rank-msg{ text-align:center; color:var(--gray); padding:30px 10px; line-height:1.6; }
 .rank-msg.err{ color:var(--error); }
 .rank-more{ text-align:center; color:var(--gray); font-size:.82rem; margin-top:10px; }
+
+/* 도전 화면 — 남은 빈칸 표시 */
+.challenge-remain{
+  text-align:center; font-size:.9rem; font-weight:700; color:var(--gray);
+  margin:12px 0 4px; transition:color .15s;
+}
+.challenge-remain.clear{ color:var(--green); }
