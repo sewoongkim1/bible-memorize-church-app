@@ -620,6 +620,33 @@ h1 {
 }
 .settings-back-btn:hover { background: #eef2f8; }
 .dark .settings-back-btn { background: #223049; border-color: #33465f; color: #e6e9ef; }
+
+/* 설정 화면 — 듣기 속도 선택 */
+.setting-block {
+  border: 1px solid var(--border); border-radius: 12px;
+  padding: 12px; margin: 0 0 8px; background: var(--bg);
+}
+.setting-label {
+  font-weight: 700; color: var(--navy); font-size: .96rem; margin-bottom: 8px;
+}
+.tts-rate-row { display: flex; gap: 6px; margin-bottom: 8px; }
+.tts-rate-row button {
+  flex: 1; padding: 9px 4px; font-size: .86rem; font-weight: 700;
+  border: 1.5px solid var(--border); border-radius: 9px;
+  background: var(--white); color: var(--navy); cursor: pointer; font-family: inherit;
+}
+.tts-rate-row button.on { background: var(--navy); color: #fff; border-color: var(--navy); }
+.tts-preview {
+  width: 100%; padding: 10px; font-size: .92rem; font-weight: 700;
+  border: 1.5px solid var(--navy); border-radius: 10px;
+  background: #eef1f8; color: var(--navy); cursor: pointer; font-family: inherit;
+}
+.tts-preview:hover { background: #dce3f5; }
+.dark .setting-block { background: #1c2536; border-color: #33465f; }
+.dark .setting-label { color: #e6e9ef; }
+.dark .tts-rate-row button { background: #223049; color: #cdd9f2; border-color: #3a4a68; }
+.dark .tts-rate-row button.on { background: #3a4a68; color: #fff; border-color: #4a5f8a; }
+.dark .tts-preview { background: #232c3f; color: #cdd9f2; border-color: #3a4a68; }
 .summary-hello {
   flex: 1; /* 아이콘 영역을 제외한 나머지 폭에서 가운데 정렬 */
   font-family: "Nanum Myeongjo", serif; color: var(--navy);

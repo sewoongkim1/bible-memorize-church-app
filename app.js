@@ -481,16 +481,57 @@ function renderSettings() {
           <h2 class="rank-title">⚙️ 설정</h2>
           <button class="settings-back-btn" id="settings-back">← 뒤로</button>
         </div>
+        <div class="setting-block">
+          <div class="setting-label">🔊 말씀 듣기 속도</div>
+          <div class="tts-rate-row" id="tts-rate-row">
+            <button data-rate="0.5">느리게</button>
+            <button data-rate="0.7">보통</button>
+            <button data-rate="0.9">조금 빠르게</button>
+            <button data-rate="1.1">빠르게</button>
+          </div>
+          <button class="tts-preview" id="tts-preview">🔊 이 속도로 들어보기</button>
+        </div>
         <button class="summary-install" id="change-user">👤 로그인 정보변경</button>
         <a class="summary-install" href="reminders.html">🔔 매일 암송 구절 알림 받기</a>
         <button class="summary-install" id="install-btn">⛪ 성경암송 — 홈 화면에 추가</button>
         <button class="summary-install" id="share-btn">🔗 성경암송 — 공유하기</button>
       </div>
     </div>`;
-  document.getElementById("settings-back").addEventListener("click", renderSummary);
+  document.getElementById("settings-back").addEventListener("click", () => { stopSpeaking(); renderSummary(); });
   document.getElementById("change-user").addEventListener("click", renderEntryScreen);
   document.getElementById("share-btn").addEventListener("click", shareApp);
+  setupTtsRate();
   setupInstallButton();
+}
+
+// 듣기(TTS) 속도 선택 UI
+function setupTtsRate() {
+  const row = document.getElementById("tts-rate-row");
+  if (!row) return;
+  const cur = getSpeakRate();
+  const btns = Array.from(row.querySelectorAll("button"));
+  // 현재 값과 가장 가까운 버튼을 활성화
+  let nearest = btns[1];
+  let best = Infinity;
+  btns.forEach((b) => {
+    const d = Math.abs(parseFloat(b.dataset.rate) - cur);
+    if (d < best) { best = d; nearest = b; }
+  });
+  btns.forEach((b) => b.classList.toggle("on", b === nearest));
+  btns.forEach((b) => {
+    b.addEventListener("click", () => {
+      const r = parseFloat(b.dataset.rate);
+      setSpeakRate(r);
+      btns.forEach((x) => x.classList.toggle("on", x === b));
+      stopSpeaking();
+      speakText("주의 말씀은 내 발에 등이요 내 길에 빛이니이다");
+    });
+  });
+  const prev = document.getElementById("tts-preview");
+  if (prev) prev.addEventListener("click", () => {
+    stopSpeaking();
+    speakText("주의 말씀은 내 발에 등이요 내 길에 빛이니이다");
+  });
 }
 
 // PWA '홈 화면에 추가' 버튼 로직 (설정 화면)
@@ -701,7 +742,15 @@ function renderTestScreen(verse, stage) {
 // ------------------------------------------------------------
 // 음성 합성(TTS) — 구절을 한국어로 읽어준다(설치·권한 불필요)
 // ------------------------------------------------------------
-const SPEAK_RATE = 0.7; // 읽기 속도(낮을수록 느림)
+const SPEAK_RATE = 0.7; // 기본 읽기 속도(낮을수록 느림)
+const TTS_RATE_KEY = "tts-rate"; // 사용자가 설정 화면에서 고른 듣기 속도
+function getSpeakRate() {
+  const v = parseFloat(localStorage.getItem(TTS_RATE_KEY));
+  return v >= 0.4 && v <= 1.5 ? v : SPEAK_RATE;
+}
+function setSpeakRate(v) {
+  try { localStorage.setItem(TTS_RATE_KEY, String(v)); } catch (e) {}
+}
 
 // text 를 times 번 연속해서 읽어준다. (빠르게 N번 클릭하면 N번 반복)
 function speakText(text, onEnd, times = 1) {
@@ -715,7 +764,7 @@ function speakText(text, onEnd, times = 1) {
   for (let i = 0; i < n; i++) {
     const ut = new SpeechSynthesisUtterance(text);
     ut.lang = "ko-KR";
-    ut.rate = SPEAK_RATE;
+    ut.rate = getSpeakRate();
     ut.pitch = 1;
     if (onEnd && i === n - 1) {
       // 마지막 반복이 끝났을 때만 콜백
