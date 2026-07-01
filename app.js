@@ -1270,7 +1270,6 @@ function renderIntro(next) {
             <button class="intro-next" id="intro-next">${last ? "시작하기" : "다음 ▸"}</button>
           </div>
           <button class="login-help-btn" id="intro-login-help">❓ 로그인 방법 보기</button>
-          <div class="intro-foot">도움말은 언제든 목록의 <b>❓ 도움말</b>에서 다시 볼 수 있어요</div>
         </div>
       </div>`;
     document.getElementById("intro-skip").addEventListener("click", done);
