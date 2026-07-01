@@ -1111,3 +1111,32 @@ h1 {
 }
 .summary-go.review-cta:hover{ filter:brightness(1.06); background:linear-gradient(135deg,#2c7a7b 0%,#37a0a0 100%); }
 .test-stage.review-badge{ background:#2c7a7b; color:#fff; }
+
+/* 로그인 방법 도움말 버튼(진입/인트로) + 단계 안내 */
+.login-help-btn{
+  display:inline-block; margin-top:10px;
+  background:#eef1f8; border:1.5px solid var(--navy); color:var(--navy);
+  font-weight:700; font-size:.9rem; padding:8px 16px; border-radius:999px;
+  cursor:pointer; font-family:inherit; transition:background .15s, color .15s;
+}
+.login-help-btn:hover{ background:var(--navy); color:#fff; }
+.dark .login-help-btn{ background:#232c3f; color:#cdd9f2; border-color:#3a4a68; }
+
+.lh-intro{ color:#444; font-size:.95rem; line-height:1.6; margin:2px 0 16px; }
+.dark .lh-intro{ color:#c3ccd9; }
+.login-steps{ display:flex; flex-direction:column; gap:11px; }
+.lh-step{ display:flex; align-items:flex-start; gap:12px; font-size:1rem; line-height:1.5; color:#333; }
+.dark .lh-step{ color:#dfe4ec; }
+.lh-step .lh-no{
+  flex-shrink:0; width:28px; height:28px; border-radius:50%;
+  background:var(--navy); color:#fff; font-weight:800; font-size:.95rem;
+  display:flex; align-items:center; justify-content:center;
+}
+.lh-step b{ color:var(--navy); }
+.dark .lh-step b{ color:#a8c4f0; }
+.lh-tip{
+  margin-top:16px; padding:11px 13px; border-radius:10px;
+  background:var(--cream); border:1px solid var(--border);
+  color:#555; font-size:.88rem; line-height:1.6;
+}
+.dark .lh-tip{ color:#aeb8c8; }
