@@ -1450,12 +1450,13 @@ async function callRanking(from, to) {
 
 function renderRanking(range) {
   const r = range || rankRangeFor("yday");
+  const u = loadUser();
   const appEl = document.getElementById("app");
   const tabs = [["today", "오늘"], ["yday", "전일~당일"], ["week", "이번주"], ["all", "전체"]];
   appEl.innerHTML = `
     <div class="rank-screen">
       <div class="list-nav">
-        <button class="remind-cta nav-record" id="rk-back">← 내 기록으로</button>
+        <button class="remind-cta nav-record" id="rk-back">← ${userLabel(u)} 성도님</button>
       </div>
       ${rankModeBar("rank")}
       <h2 class="rank-title">🏆 말씀 도전 순위</h2>
@@ -1567,11 +1568,12 @@ async function callMyDays(u, from, to) {
 
 function renderMyRecord(state) {
   const s = state || { mode: "week", anchor: new Date() };
+  const u = loadUser();
   const appEl = document.getElementById("app");
   appEl.innerHTML = `
     <div class="rank-screen">
       <div class="list-nav">
-        <button class="remind-cta nav-record" id="rk-back">← 내 기록으로</button>
+        <button class="remind-cta nav-record" id="rk-back">← ${userLabel(u)} 성도님</button>
       </div>
       ${rankModeBar("mine")}
       <h2 class="rank-title">📅 나의 말씀 암송 참여</h2>
