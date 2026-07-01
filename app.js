@@ -1288,7 +1288,6 @@ function renderIntro(next) {
             <button class="intro-skip" id="intro-skip">건너뛰기</button>
             <button class="intro-next" id="intro-next">${last ? "시작하기" : "다음 ▸"}</button>
           </div>
-          <button class="login-help-btn" id="intro-login-help">❓ 로그인 방법</button>
         </div>
       </div>`;
     document.getElementById("intro-skip").addEventListener("click", done);
@@ -1296,7 +1295,6 @@ function renderIntro(next) {
       if (last) done();
       else { idx++; draw(); }
     });
-    document.getElementById("intro-login-help").addEventListener("click", () => renderLoginHelp(() => renderIntro(next)));
   }
   function done() { markIntroSeen(); next(); }
   draw();
