@@ -162,7 +162,7 @@ function clearUser() {
 function userLabel(u) {
   if (!u) return "";
   return u.type === "교구"
-    ? `${u.gu} ${u.mok}목장 ${u.name}`
+    ? `${u.gu}-${u.mok} ${u.name}`
     : `${u.bu} ${u.name}`;
 }
 
@@ -442,7 +442,7 @@ function renderSummary() {
       <button class="summary-icon" id="open-help-summary" aria-label="도움말" title="도움말">❓</button>
       <button class="summary-icon" id="open-settings" aria-label="설정" title="설정">⚙️</button>
     </div>
-    <div class="summary-hello"><span class="summary-user">${userLabel(u)} 성도님</span>,<br>주의 이름으로 환영합니다. 🙌</div>
+    <div class="summary-hello"><span class="summary-user">${userLabel(u)} 성도님</span>,<br>환영합니다. 🙌</div>
     <div class="gauge-wrap">
       <div class="gauge-bar"><div class="gauge-fill" style="width:${pct}%"></div></div>
       <div class="gauge-sub">전체 ${total}구절 중 <b>${done}구절</b> 암송 완료</div>
