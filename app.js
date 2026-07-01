@@ -25,7 +25,13 @@ const LOADING_HTML = `
     <div class="al-text">불러오는 중...</div>
   </div>`;
 
-function hideSplash() { if (window.hideSplash) window.hideSplash(); }
+// 스플래시 제거 (index.html의 window.hideSplash와 이름이 겹치지 않게 별도 이름)
+function dismissSplash() {
+  const s = document.getElementById("splash");
+  if (!s) return;
+  s.classList.add("hide");
+  setTimeout(() => { if (s.parentNode) s.parentNode.removeChild(s); }, 450);
+}
 
 // ------------------------------------------------------------
 // 데이터 로드 → 사용자 유무에 따라 진입/요약으로 분기
@@ -43,12 +49,12 @@ async function loadVerses() {
       if (!data.verses || !data.verses.length) throw new Error("데이터 없음");
 
       verses = data.verses;
-      hideSplash();
+      dismissSplash();
       routeAfterLoad();
       return;
     } catch (err) {
       if (url === API_URL) {
-        hideSplash();
+        dismissSplash();
         appEl.innerHTML = `<p class="error" style="text-align:center;padding:40px">연결 실패: ${err.message}</p>`;
       }
     }
