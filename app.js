@@ -305,7 +305,9 @@ function renderEntryScreen() {
     </div>
     <div class="entry-screen">
       <div class="entry-card">
-
+        <div class="login-help-row">
+          <button class="login-help-btn" id="login-help">❓ 로그인 방법</button>
+        </div>
         <div class="entry-field inline">
           <div class="entry-label">구분</div>
           <div class="radio-row" id="type-row">
@@ -315,7 +317,6 @@ function renderEntryScreen() {
                 <span>${t}</span>
               </label>`).join("")}
           </div>
-          <button class="login-help-btn" id="login-help">❓ 로그인 방법</button>
         </div>
 
         <!-- 교구 분기 -->

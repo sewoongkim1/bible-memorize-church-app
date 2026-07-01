@@ -1121,8 +1121,9 @@ h1 {
 }
 .login-help-btn:hover{ background:var(--navy); color:#fff; }
 .dark .login-help-btn{ background:#232c3f; color:#cdd9f2; border-color:#3a4a68; }
-/* '구분' 행 안에서는 오른쪽에 붙이고 작게 */
-.entry-field .login-help-btn{ margin:0 0 0 auto; padding:6px 12px; font-size:.8rem; flex:0 0 auto; white-space:nowrap; }
+/* '로그인 방법' 버튼을 구분 위 오른쪽에 */
+.login-help-row{ text-align:right; margin-bottom:8px; }
+.login-help-row .login-help-btn{ margin:0; padding:6px 12px; font-size:.8rem; }
 
 .lh-intro{ color:#444; font-size:.95rem; line-height:1.6; margin:2px 0 12px; }
 /* 로그인 방법 탭(교구/교회학교) */
