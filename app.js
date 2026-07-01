@@ -1574,7 +1574,7 @@ function renderMyRecord(state) {
         <button class="remind-cta nav-record" id="rk-back">← 내 기록으로</button>
       </div>
       ${rankModeBar("mine")}
-      <h2 class="rank-title">📅 내 도전 참여</h2>
+      <h2 class="rank-title">📅 나의 말씀 암송 참여</h2>
       <div class="myrec-ctrl">
         <div class="myrec-toggle">
           <button data-md="week" class="${s.mode === "week" ? "on" : ""}">주간</button>

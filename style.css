@@ -950,21 +950,21 @@ h1 {
 .rank-mode button:hover{ background:var(--navy); color:#fff; }
 
 /* ---- 내 참여 달력 ---- */
-.myrec-ctrl{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
-.myrec-toggle{ display:flex; gap:6px; }
+.myrec-ctrl{ display:flex; align-items:center; justify-content:space-between; gap:6px; margin-bottom:14px; flex-wrap:nowrap; }
+.myrec-toggle{ display:flex; gap:4px; flex:0 0 auto; }
 .myrec-toggle button{
   border:1px solid var(--border); background:#fff; color:var(--navy);
-  border-radius:999px; padding:7px 16px; font-size:.85rem; font-weight:700;
-  cursor:pointer; font-family:inherit;
+  border-radius:999px; padding:6px 11px; font-size:.8rem; font-weight:700;
+  cursor:pointer; font-family:inherit; white-space:nowrap;
 }
 .myrec-toggle button.on{ background:var(--navy); color:#fff; border-color:var(--navy); }
-.myrec-nav{ display:flex; align-items:center; gap:10px; }
+.myrec-nav{ display:flex; align-items:center; gap:5px; flex:0 0 auto; }
 .myrec-nav button{
   border:1px solid var(--border); background:#fff; color:var(--navy);
-  border-radius:8px; width:32px; height:32px; cursor:pointer; font-size:.9rem; font-family:inherit;
+  border-radius:8px; width:28px; height:28px; cursor:pointer; font-size:.8rem; font-family:inherit; flex:0 0 auto;
 }
 .myrec-nav button:hover{ background:var(--cream); }
-.myrec-nav #mr-label{ font-weight:700; color:var(--navy); font-size:.95rem; min-width:110px; text-align:center; }
+.myrec-nav #mr-label{ font-weight:700; color:var(--navy); font-size:.82rem; min-width:76px; text-align:center; white-space:nowrap; }
 
 .mc-summary{ text-align:center; margin-bottom:10px; font-size:.9rem; color:#444; }
 .mc-summary b.done{ color:var(--green); }
