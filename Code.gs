@@ -17,6 +17,10 @@ var SHEET_NAME = '기록';
 var SS_TITLE = '성경암송진행기록';
 var HEADERS = ['일시', '구분', '소속', '세부', '성명', '구절No', '단계', '방식', '클라이언트ID'];
 
+// 도전(챌린지) 기록 — 일반 연습과 분리된 별도 탭
+var CHALLENGE_SHEET = '도전기록';
+var CHALLENGE_HEADERS = ['일시', '구분', '소속', '세부', '성명', '구절No', '방식', '클라이언트ID'];
+
 /** 시트 핸들을 얻는다. 없으면 스프레드시트+헤더를 자동 생성(지연 초기화). */
 function getSheet_() {
   var props = PropertiesService.getScriptProperties();
@@ -64,10 +68,41 @@ function setup() {
   return ss.getUrl();
 }
 
-/** 회원 버전에서 통과 시 POST */
+/** 도전기록 탭 핸들 (없으면 생성) */
+function getChallengeSheet_() {
+  var ss = getSheet_().getParent();
+  var sheet = ss.getSheetByName(CHALLENGE_SHEET);
+  if (!sheet) {
+    sheet = ss.insertSheet(CHALLENGE_SHEET);
+    sheet.appendRow(CHALLENGE_HEADERS);
+    sheet.getRange(1, 1, 1, CHALLENGE_HEADERS.length).setFontWeight('bold');
+    sheet.setFrozenRows(1);
+  }
+  return sheet;
+}
+
+/** 도전 완료 한 줄 기록 */
+function appendChallenge_(data) {
+  getChallengeSheet_().appendRow([
+    new Date(),                     // 일시
+    data.type || '',                // 구분
+    data.gu || data.bu || '',       // 소속
+    data.mok || data.grade || '',   // 세부
+    data.name || '',                // 성명
+    data.no || '',                  // 구절No
+    data.mode || 'typing',          // 방식 (typing/voice)
+    data.cid || ''                  // 클라이언트ID
+  ]);
+}
+
+/** 회원 버전에서 통과 시 POST (도전은 별도 탭에 저장) */
 function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
+    if (data.action === 'challenge') {
+      appendChallenge_(data);
+      return json({ ok: true });
+    }
     appendRow_(data);
     return json({ ok: true });
   } catch (err) {
@@ -98,6 +133,11 @@ function doGet(e) {
     // 관리자 통계 - 구절별 현황 (비밀번호 필요)
     if (p.action === 'verses') {
       return json(getVerseStats(p));
+    }
+
+    // 도전 순위 (공개 — 성명·소속만)
+    if (p.action === 'ranking') {
+      return json(getRanking(p));
     }
 
     if (p.test === '1') {
@@ -302,6 +342,44 @@ function getVerseStats(p) {
     return { no: g.no, participants: Object.keys(g.participants).length, count: g.count };
   });
   list.sort(function (a, b) { return Number(a.no) - Number(b.no); });
+  return { ok: true, list: list };
+}
+
+/**
+ * 도전 순위 — 기간 내 도전 완료 횟수로 개인 랭킹.
+ * 파라미터: from, to(선택). 비밀번호 불필요(성명·소속만 공개).
+ * 반환 list 항목: { rank, name, gubun, sosok, sebu, count }  (완료 횟수 내림차순)
+ */
+function getRanking(p) {
+  var from = p.from ? new Date(p.from + 'T00:00:00') : null;
+  var to = p.to ? new Date(p.to + 'T23:59:59') : null;
+
+  var values = getChallengeSheet_().getDataRange().getValues();
+  var people = {};
+  for (var i = 1; i < values.length; i++) {
+    var r = values[i];
+    var when = (r[0] instanceof Date) ? r[0] : new Date(r[0]);
+    if (from && when < from) continue;
+    if (to && when > to) continue;
+    var gubun = String(r[1] || ''), sosok = String(r[2] || ''), sebu = String(r[3] || ''), name = String(r[4] || '');
+    if (!name) continue;
+    var key = gubun + '|' + sosok + '|' + sebu + '|' + name;
+    if (!people[key]) people[key] = { gubun: gubun, sosok: sosok, sebu: sebu, name: name, count: 0 };
+    people[key].count++;
+  }
+
+  var list = Object.keys(people).map(function (k) { return people[k]; });
+  list.sort(function (a, b) {
+    if (b.count !== a.count) return b.count - a.count;
+    return a.name < b.name ? -1 : (a.name > b.name ? 1 : 0);
+  });
+  // 공동 등수(1,2,2,4)
+  var rank = 0, prev = null, seen = 0;
+  list.forEach(function (x) {
+    seen++;
+    if (prev === null || x.count < prev) { rank = seen; prev = x.count; }
+    x.rank = rank;
+  });
   return { ok: true, list: list };
 }
 

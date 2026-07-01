@@ -375,6 +375,8 @@ function renderSummary() {
       <div class="stat-box status-none"><div class="stat-num">${counts[0]}</div><div class="stat-lbl">미시도</div></div>
     </div>
     <button class="summary-go" id="go-list">📖 암송하러 가기</button>
+<button class="summary-go challenge-cta" id="go-challenge">🔥 오늘의 말씀 도전</button>
+<button class="summary-help" id="open-ranking">🏆 도전 순위 보기</button>
 <button class="summary-help" id="open-help-summary">❓ 도움말 보기</button>
 <button class="summary-change" id="change-user">⚙️ 로그인 정보변경</button>
 <a class="remind-cta" href="reminders.html">🔔 매일 암송 구절 알림 받기</a>
@@ -385,6 +387,8 @@ function renderSummary() {
 `;
 
   document.getElementById("go-list").addEventListener("click", renderVerseList);
+  document.getElementById("go-challenge").addEventListener("click", startChallenge);
+  document.getElementById("open-ranking").addEventListener("click", () => renderRanking());
   document.getElementById("change-user").addEventListener("click", renderEntryScreen);
   document.getElementById("share-btn").addEventListener("click", shareApp);
   // 도움말: 닫으면 요약 화면으로 돌아온다
@@ -738,7 +742,7 @@ function scoreSpoken(answerText, spokenText) {
   return { accuracy, marks, ansWords: ans };
 }
 
-function setupVoice(verse, stage) {
+function setupVoice(verse, stage, onPass) {
   const toggleBtn = document.getElementById("voice-toggle");
   const panel = document.getElementById("voice-panel");
   const statusEl = document.getElementById("voice-status");
@@ -791,15 +795,6 @@ function setupVoice(verse, stage) {
       .map((w, i) => `<span class="${marks[i] ? "v-ok" : "v-no"}">${w}</span>`)
       .join(" ");
     const passed = accuracy >= VOICE_PASS;
-    if (passed) saveProgress(verse.no, stage, "voice"); // 현재 단계 기준으로 저장
-
-    // 통과 시 빈칸 테스트와 동일하게 다음 단계로 진행(마지막 단계면 완료)
-    const nav = !passed
-      ? ""
-      : stage < 3
-      ? `<button class="next-btn" id="voice-next-stage">${stage + 1}단계로</button>`
-      : `<div class="complete-badge">암송 완료 🙌</div>
-         <button class="next-btn" id="voice-to-summary">내 기록 보기</button>`;
 
     resultEl.innerHTML = `
       <div class="voice-summary"><span class="voice-pct ${passed ? "pass" : "fail"}">${accuracy}%</span> ${passed ? "음성 암송 통과! 🎉" : `조금 더! (통과 ${VOICE_PASS}%)`}</div>
@@ -807,10 +802,19 @@ function setupVoice(verse, stage) {
       <div class="voice-heard">들린 내용: ${heard ? heard : "(인식 안 됨)"}</div>
     `;
 
-    // 다음단계 버튼은 빈칸 테스트와 동일하게 상단(result-area) 한 곳으로 통일
+    // 도전 모드: 통과 시 콜백으로 완료 처리(단계 네비 없음)
+    if (onPass) { if (passed) onPass("voice"); return; }
+
+    // (연습 모드) 저장 + 다음 단계 네비
+    if (passed) saveProgress(verse.no, stage, "voice");
+    const nav = !passed
+      ? ""
+      : stage < 3
+      ? `<button class="next-btn" id="voice-next-stage">${stage + 1}단계로</button>`
+      : `<div class="complete-badge">암송 완료 🙌</div>
+         <button class="next-btn" id="voice-to-summary">내 기록 보기</button>`;
     const topArea = document.getElementById("result-area");
     if (topArea) topArea.innerHTML = nav;
-
     if (passed && stage < 3) {
       document
         .getElementById("voice-next-stage")
@@ -1247,6 +1251,236 @@ function renderHelp(onClose) {
     </div>`;
   document.getElementById("help-close").addEventListener("click", onClose);
   document.getElementById("help-go").addEventListener("click", onClose);
+}
+
+// ============================================================
+// 매일 말씀 암송 도전(챌린지) + 순위
+// ============================================================
+let challengeSession = []; // 이번 세션에 이미 나온 구절 no (중복 회피)
+let challengeCount = 0;    // 이번 세션 완료 수 (표시용)
+
+// 랜덤 구절 배정(세션 내 중복 회피, 모두 소진 시 리셋) → 도전 시작
+function startChallenge() {
+  if (!verses.length) return;
+  let pool = verses.filter((v) => !challengeSession.includes(v.no));
+  if (!pool.length) { challengeSession = []; pool = verses.slice(); }
+  const pick = pool[Math.floor(Math.random() * pool.length)];
+  challengeSession.push(pick.no);
+  renderChallenge(pick);
+}
+
+// 도전 화면 — 3단계(전체 빈칸) 고정 + 힌트 버튼 + 음성
+function renderChallenge(verse) {
+  const appEl = document.getElementById("app");
+  const tokens = verse.text.trim().split(/\s+/);
+
+  const wordsHtml = tokens
+    .map((word) => {
+      const width = Array.from(word).length + 1;
+      return `<input class="word-input" data-answer="${word}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" style="width:${width}em" />`;
+    })
+    .join(" ");
+
+  appEl.innerHTML = `
+    <div class="test-screen">
+      <div class="test-card">
+        <div class="test-top">
+          <div class="test-head">
+            <div class="test-stage challenge-badge">🔥 도전</div>
+            <div class="test-ref">${verse.refShort}</div>
+          </div>
+          <button class="back-btn" id="ch-exit">← 그만</button>
+        </div>
+        <div class="challenge-hint-line">출처만 보고 전체를 외워보세요! 막히면 <b>💡 힌트</b>를 누르세요.</div>
+        <div class="test-sentence">${wordsHtml}</div>
+        <div class="btn-row">
+          <button class="answer-btn" id="hint-btn">💡 힌트</button>
+          <button class="voice-btn" id="voice-toggle">🎤 암송시작</button>
+        </div>
+        <div id="result-area"></div>
+        <div id="voice-panel" class="voice-panel" hidden>
+          <div class="voice-status" id="voice-status">🎙️ 듣고 있어요… <b>‘암송 종료’</b>를 누를 때까지 계속 들어요</div>
+          <div class="voice-live" id="voice-live"></div>
+        </div>
+        <div id="voice-result" class="voice-result"></div>
+      </div>
+    </div>`;
+
+  document.getElementById("ch-exit").addEventListener("click", () => { stopSpeaking(); renderSummary(); });
+  setupHint();
+  setupChallengeTyping(verse);
+  setupVoice(verse, 3, () => challengeComplete(verse, "voice"));
+}
+
+// 힌트: 현재(포커스된) 빈칸의 앞 글자를 한 글자씩 열어준다.
+function setupHint() {
+  const btn = document.getElementById("hint-btn");
+  if (!btn) return;
+  btn.addEventListener("click", () => {
+    const inputs = Array.from(document.querySelectorAll(".word-input:not([disabled])"));
+    if (!inputs.length) return;
+    const target = inputs.includes(document.activeElement) ? document.activeElement : inputs[0];
+    const ans = Array.from(target.dataset.answer);
+    const cur = target.placeholder ? Array.from(target.placeholder).length : 0;
+    target.placeholder = ans.slice(0, Math.min(cur + 1, ans.length)).join("");
+    target.focus();
+  });
+}
+
+// 타이핑 채점 — 전부 맞히면 도전 완료
+function setupChallengeTyping(verse) {
+  const inputs = Array.from(document.querySelectorAll(".word-input"));
+  function evaluate(input, idx, isComposing) {
+    if (input.disabled) return;
+    const val = input.value.trim();
+    const answer = input.dataset.answer;
+    if (val === answer) {
+      input.value = answer;
+      input.classList.add("correct");
+      input.classList.remove("wrong");
+      input.disabled = true;
+      const next = inputs.slice(idx + 1).find((inp) => !inp.disabled);
+      if (next) next.focus();
+      else if (inputs.every((inp) => inp.classList.contains("correct"))) challengeComplete(verse, "typing");
+    } else if (!isComposing && Array.from(val).length >= Array.from(answer).length) {
+      input.classList.add("wrong");
+      input.classList.remove("correct");
+      setTimeout(() => { input.blur(); input.value = ""; input.classList.remove("wrong"); input.focus(); }, 400);
+    }
+  }
+  inputs.forEach((input, idx) => {
+    let composing = false;
+    input.addEventListener("compositionstart", () => { composing = true; });
+    input.addEventListener("compositionend", () => { composing = false; evaluate(input, idx, false); });
+    input.addEventListener("input", (e) => { evaluate(input, idx, composing || e.isComposing); });
+  });
+  if (inputs[0]) inputs[0].focus();
+}
+
+// 도전 완료 처리 → 서버 기록 + 완료 화면
+function challengeComplete(verse, mode) {
+  stopSpeaking();
+  challengeCount++;
+  postChallenge(verse, mode);
+  renderChallengeDone(verse, mode);
+}
+
+// 도전 완료를 서버('도전기록' 탭)에 저장
+function postChallenge(verse, mode) {
+  const u = loadUser();
+  if (!u || !POST_URL) return;
+  const payload = Object.assign({}, u, { action: "challenge", no: verse.no, mode });
+  try {
+    fetch(POST_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload),
+    }).catch(() => {});
+  } catch { /* 무시 */ }
+}
+
+function renderChallengeDone(verse, mode) {
+  const appEl = document.getElementById("app");
+  appEl.innerHTML = `
+    <div class="summary-screen">
+      <div class="summary-card cd-card">
+        <div class="cd-emoji">🎉</div>
+        <div class="cd-title">도전 완료!</div>
+        <div class="cd-sub">${verse.refShort} · ${mode === "voice" ? "음성" : "타이핑"} 암송</div>
+        <div class="cd-count">이번 도전 <b>${challengeCount}회</b> 완료</div>
+        <button class="summary-go challenge-cta" id="cd-again">🔥 한 번 더 도전</button>
+        <button class="summary-help" id="cd-rank">🏆 순위 보기</button>
+        <button class="summary-change" id="cd-home">기록 화면으로</button>
+      </div>
+    </div>`;
+  document.getElementById("cd-again").addEventListener("click", startChallenge);
+  document.getElementById("cd-rank").addEventListener("click", () => renderRanking());
+  document.getElementById("cd-home").addEventListener("click", renderSummary);
+}
+
+// ---- 순위 ----
+function ymdKo(d) {
+  const z = (n) => String(n).padStart(2, "0");
+  return d.getFullYear() + "-" + z(d.getMonth() + 1) + "-" + z(d.getDate());
+}
+function rankRangeFor(key) {
+  const now = new Date();
+  if (key === "today") { const t = ymdKo(now); return { key, from: t, to: t }; }
+  if (key === "week") { const w = new Date(now); w.setDate(w.getDate() - 6); return { key, from: ymdKo(w), to: ymdKo(now) }; }
+  if (key === "all") { return { key, from: "", to: "" }; }
+  const y = new Date(now); y.setDate(y.getDate() - 1); // 기본: 전일~당일
+  return { key: "yday", from: ymdKo(y), to: ymdKo(now) };
+}
+async function callRanking(from, to) {
+  const params = new URLSearchParams({ action: "ranking" });
+  if (from) params.set("from", from);
+  if (to) params.set("to", to);
+  const res = await fetch(POST_URL + "?" + params.toString(), { cache: "no-cache" });
+  return res.json();
+}
+
+function renderRanking(range) {
+  const r = range || rankRangeFor("yday");
+  const appEl = document.getElementById("app");
+  const tabs = [["today", "오늘"], ["yday", "전일~당일"], ["week", "이번주"], ["all", "전체"]];
+  appEl.innerHTML = `
+    <div class="rank-screen">
+      <div class="list-nav">
+        <button class="remind-cta nav-record" id="rk-back">← 내 기록으로</button>
+      </div>
+      <h2 class="rank-title">🏆 말씀 도전 순위</h2>
+      <div class="rank-filter" id="rk-filter">
+        ${tabs.map(([k, l]) => `<button data-k="${k}" class="${r.key === k ? "on" : ""}">${l}</button>`).join("")}
+      </div>
+      <div id="rank-body"><p class="rank-msg">불러오는 중...</p></div>
+    </div>`;
+  document.getElementById("rk-back").addEventListener("click", renderSummary);
+  document.getElementById("rk-filter").querySelectorAll("button").forEach((b) =>
+    b.addEventListener("click", () => renderRanking(rankRangeFor(b.dataset.k)))
+  );
+  loadRankingBody(r);
+}
+
+async function loadRankingBody(r) {
+  const body = document.getElementById("rank-body");
+  const u = loadUser();
+  const data = await callRanking(r.from, r.to).catch(() => ({ ok: false }));
+  if (!data || !data.ok) { body.innerHTML = `<p class="rank-msg err">순위를 불러오지 못했습니다.</p>`; return; }
+
+  const list = data.list || [];
+  const keyOf = (g, s, sb, n) => g + "|" + s + "|" + sb + "|" + n;
+  const myKey = u ? keyOf(u.type, u.gu || u.bu || "", u.mok || u.grade || "", u.name) : null;
+  const me = myKey ? list.find((x) => keyOf(x.gubun, x.sosok, x.sebu, x.name) === myKey) : null;
+  const medal = (n) => (n === 1 ? "🥇" : n === 2 ? "🥈" : n === 3 ? "🥉" : n);
+  const soLabel = (x) => (x.gubun === "교구" ? `${x.sosok}교구 ${x.sebu}목장` : `${x.sosok} ${x.sebu}`);
+
+  const myHtml = u
+    ? `<div class="my-rank">
+         <span class="mr-label">내 순위</span>
+         ${me
+            ? `<span class="mr-rank">${medal(me.rank)}</span><span class="mr-name">${u.name}</span><span class="mr-cnt">${me.count}회</span>`
+            : `<span class="mr-name">${u.name}</span><span class="mr-cnt none">아직 기록 없음 — 도전해보세요! 🔥</span>`}
+       </div>`
+    : "";
+
+  if (!list.length) {
+    body.innerHTML = myHtml + `<p class="rank-msg">아직 도전 기록이 없어요.<br>첫 도전의 주인공이 되어보세요! 🔥</p>`;
+    return;
+  }
+
+  const top = list.slice(0, 10);
+  const rows = top.map((x) => {
+    const isMe = keyOf(x.gubun, x.sosok, x.sebu, x.name) === myKey;
+    return `<div class="rank-row ${x.rank <= 3 ? "top" : ""} ${isMe ? "me" : ""}">
+      <span class="rk-no">${medal(x.rank)}</span>
+      <span class="rk-name">${x.name}</span>
+      <span class="rk-so">${soLabel(x)}</span>
+      <span class="rk-cnt">${x.count}회</span>
+    </div>`;
+  }).join("");
+
+  body.innerHTML = myHtml + `<div class="rank-list">${rows}</div>` +
+    (list.length > 10 ? `<p class="rank-more">외 ${list.length - 10}명 참여</p>` : "");
 }
 
 promptOpenExternal();

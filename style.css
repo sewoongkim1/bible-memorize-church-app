@@ -843,3 +843,74 @@ h1 {
   transition: background .15s, transform .12s, box-shadow .15s;
 }
 .help-go:hover { background: var(--navy-dark); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(13,27,62,.28); }
+
+/* ============================================================
+   매일 말씀 암송 도전(챌린지) + 순위
+   ============================================================ */
+
+/* 요약 화면의 도전 버튼 강조 (골드 계열) */
+.summary-go.challenge-cta{
+  background:linear-gradient(135deg,#c8a84b 0%,#d9bd68 100%);
+  color:var(--navy-dark); border:1.5px solid var(--gold);
+}
+.summary-go.challenge-cta:hover{ background:linear-gradient(135deg,#bd9c3f 0%,#ccae59 100%); color:var(--navy-dark); }
+
+/* 도전 화면 배지 */
+.test-stage.challenge-badge{ background:var(--gold); color:var(--navy-dark); }
+.challenge-hint-line{
+  text-align:center; color:var(--gray); font-size:.86rem; line-height:1.5; margin:2px 0 14px;
+}
+.challenge-hint-line b{ color:var(--navy); }
+
+/* 도전 완료 화면 */
+.cd-card{ text-align:center; }
+.cd-emoji{ font-size:52px; line-height:1; margin-bottom:6px; }
+.cd-title{ font-family:"Nanum Myeongjo",serif; font-weight:800; color:var(--navy); font-size:1.5rem; }
+.cd-sub{ color:var(--gray); font-size:.92rem; margin-top:6px; }
+.cd-count{ margin:12px 0 20px; font-size:1rem; color:#444; }
+.cd-count b{ color:var(--gold); font-weight:800; }
+
+/* 순위 화면 */
+.rank-screen{ max-width:520px; margin:0 auto; }
+.rank-title{
+  text-align:center; font-family:"Nanum Myeongjo",serif; color:var(--navy);
+  font-size:1.35rem; font-weight:800; margin:4px 0 14px;
+}
+.rank-filter{ display:flex; gap:7px; justify-content:center; flex-wrap:wrap; margin-bottom:16px; }
+.rank-filter button{
+  border:1px solid var(--border); background:#fff; color:var(--navy);
+  border-radius:999px; padding:7px 14px; font-size:.85rem; font-weight:600;
+  cursor:pointer; font-family:inherit; transition:all .15s;
+}
+.rank-filter button:hover{ background:var(--cream); }
+.rank-filter button.on{ background:var(--navy); color:#fff; border-color:var(--navy); }
+
+/* 내 순위 (최상단 고정) */
+.my-rank{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  background:linear-gradient(135deg,#0d1b3e 0%,#1a3a6b 100%); color:#fff;
+  border-radius:14px; padding:14px 16px; margin-bottom:14px;
+  box-shadow:0 4px 16px rgba(13,27,62,.18);
+}
+.my-rank .mr-label{ font-size:.78rem; color:rgba(255,255,255,.75); }
+.my-rank .mr-rank{ font-size:1.3rem; font-weight:800; min-width:1.6em; text-align:center; }
+.my-rank .mr-name{ font-weight:800; font-size:1.05rem; }
+.my-rank .mr-cnt{ margin-left:auto; font-weight:800; color:var(--gold); }
+.my-rank .mr-cnt.none{ color:rgba(255,255,255,.85); font-weight:600; font-size:.85rem; }
+
+/* 순위 리스트 */
+.rank-list{ display:flex; flex-direction:column; gap:7px; }
+.rank-row{
+  display:flex; align-items:center; gap:12px;
+  background:#fff; border:1px solid var(--border); border-radius:11px; padding:11px 14px;
+}
+.rank-row.top{ border-color:var(--gold); background:#fffdf6; }
+.rank-row.me{ box-shadow:0 0 0 2px var(--navy) inset; }
+.rank-row .rk-no{ font-size:1.05rem; font-weight:800; color:var(--navy); min-width:1.8em; text-align:center; }
+.rank-row .rk-name{ font-weight:700; color:#222; }
+.rank-row .rk-so{ color:var(--gray); font-size:.82rem; }
+.rank-row .rk-cnt{ margin-left:auto; font-weight:800; color:var(--navy); }
+.rank-row.top .rk-cnt{ color:var(--gold); }
+.rank-msg{ text-align:center; color:var(--gray); padding:30px 10px; line-height:1.6; }
+.rank-msg.err{ color:var(--error); }
+.rank-more{ text-align:center; color:var(--gray); font-size:.82rem; margin-top:10px; }
