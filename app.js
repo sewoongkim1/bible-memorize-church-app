@@ -1390,12 +1390,12 @@ function renderChallenge(verse) {
           </div>
           <button class="back-btn" id="ch-exit">← 뒤로</button>
         </div>
-        <div class="challenge-hint-line">출처만 보고 전체를 외워보세요! 막히면 <b>💡 힌트</b>를 누르세요.</div>
+        <div class="challenge-hint-line">출처만 보고 전체를 외워보세요!</div>
         <div class="test-sentence">${wordsHtml}</div>
         <div class="challenge-remain" id="ch-remain"></div>
         <div class="btn-row" style="flex-wrap:wrap;">
           <button class="answer-btn" id="hint-btn">💡 힌트</button>
-          <button class="answer-btn" id="ch-shuffle">🔀 다른 말씀</button>
+          <button class="answer-btn" id="ch-shuffle">🔀 다른말씀</button>
           <button class="voice-btn" id="voice-toggle">🎤 암송시작</button>
         </div>
         <div id="result-area"></div>
