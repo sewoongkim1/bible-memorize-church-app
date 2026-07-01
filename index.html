@@ -39,6 +39,7 @@
     </div>
   </div>
   <script>
+    window.__splashStart = Date.now(); // 스플래시 최소 노출 시간 계산용
     // 스플래시 숨기기(콘텐츠 준비되면 app.js가 호출, 못 부르면 최대 4초 뒤 자동)
     window.hideSplash = function () {
       var s = document.getElementById("splash");

@@ -25,12 +25,17 @@ const LOADING_HTML = `
     <div class="al-text">불러오는 중...</div>
   </div>`;
 
-// 스플래시 제거 (index.html의 window.hideSplash와 이름이 겹치지 않게 별도 이름)
+// 스플래시 제거 — 광고 효과를 위해 시작 후 최소 2초는 유지한 뒤 사라진다.
+const SPLASH_MIN_MS = 2000;
 function dismissSplash() {
   const s = document.getElementById("splash");
   if (!s) return;
-  s.classList.add("hide");
-  setTimeout(() => { if (s.parentNode) s.parentNode.removeChild(s); }, 450);
+  const start = window.__splashStart || Date.now();
+  const wait = Math.max(0, SPLASH_MIN_MS - (Date.now() - start));
+  setTimeout(() => {
+    s.classList.add("hide");
+    setTimeout(() => { if (s.parentNode) s.parentNode.removeChild(s); }, 450);
+  }, wait);
 }
 
 // ------------------------------------------------------------
