@@ -475,10 +475,10 @@ function renderSettings() {
   appEl.innerHTML = `
     <div class="summary-screen">
       <div class="summary-card">
-        <div class="list-nav">
-          <button class="remind-cta nav-record" id="settings-back">← 뒤로</button>
+        <div class="settings-head">
+          <h2 class="rank-title">⚙️ 설정</h2>
+          <button class="settings-back-btn" id="settings-back">← 뒤로</button>
         </div>
-        <h2 class="rank-title">⚙️ 설정</h2>
         <button class="summary-change" id="change-user">👤 로그인 정보변경</button>
         <a class="remind-cta" href="reminders.html">🔔 매일 암송 구절 알림 받기</a>
         <button class="summary-install" id="install-btn">⛪ 성경암송 — 홈 화면에 추가</button>

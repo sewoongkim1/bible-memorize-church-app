@@ -604,6 +604,20 @@ h1 {
 }
 .summary-icon:hover { background: #eef2f8; }
 .dark .summary-icon { background: #223049; border-color: #33465f; color: #e6e9ef; }
+/* 설정 화면 헤더: 제목 중앙 + 우측 작은 '뒤로' 버튼 */
+.settings-head {
+  position: relative; display: flex; align-items: center;
+  justify-content: center; margin: 2px 0 12px;
+}
+.settings-head .rank-title { margin: 0; }
+.settings-back-btn {
+  position: absolute; right: 0;
+  padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg); color: var(--navy);
+  font-size: 14px; font-weight: 700; cursor: pointer;
+}
+.settings-back-btn:hover { background: #eef2f8; }
+.dark .settings-back-btn { background: #223049; border-color: #33465f; color: #e6e9ef; }
 .summary-hello {
   font-family: "Nanum Myeongjo", serif; color: var(--navy);
   font-size: 0.82rem; /* 0.91rem의 0.9배 */ line-height: 1.35; margin-bottom: 6px;
