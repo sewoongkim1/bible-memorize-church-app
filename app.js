@@ -1388,7 +1388,7 @@ function renderChallenge(verse) {
             <div class="test-stage challenge-badge">🔥 도전</div>
             <div class="test-ref">${verse.refShort}</div>
           </div>
-          <button class="back-btn" id="ch-exit">← 그만</button>
+          <button class="back-btn" id="ch-exit">← 돌아가기</button>
         </div>
         <div class="challenge-hint-line">출처만 보고 전체를 외워보세요! 막히면 <b>💡 힌트</b>를 누르세요.</div>
         <div class="test-sentence">${wordsHtml}</div>
@@ -1460,7 +1460,7 @@ function renderReview(queue, idx) {
             <div class="test-stage review-badge">📖 복습</div>
             <div class="test-ref">${verse.refShort}</div>
           </div>
-          <button class="back-btn" id="rv-exit">← 그만</button>
+          <button class="back-btn" id="rv-exit">← 돌아가기</button>
         </div>
         <div class="challenge-hint-line">복습 ${idx + 1} / ${queue.length} · 다시 외워볼까요? 막히면 <b>💡 힌트</b>·<b>보기</b>·<b>듣기</b></div>
         <div class="test-sentence">${wordsHtml}</div>
