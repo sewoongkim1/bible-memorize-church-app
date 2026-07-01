@@ -922,18 +922,19 @@ h1 {
 }
 .challenge-remain.clear{ color:var(--green); }
 
-/* 순위 화면 — 날짜 직접 선택 */
+/* 순위 화면 — 날짜 직접 선택 (한 줄에 들어오도록 작게) */
 .rank-dates{
-  display:flex; align-items:center; justify-content:center; gap:8px;
-  flex-wrap:wrap; margin-bottom:16px;
+  display:flex; align-items:center; justify-content:center; gap:5px;
+  flex-wrap:nowrap; margin-bottom:16px;
 }
 .rank-dates input[type=date]{
-  padding:8px 10px; border:1px solid var(--border); border-radius:9px;
-  background:#fff; font-family:inherit; font-size:.9rem; color:var(--navy);
+  flex:1 1 0; min-width:0;
+  padding:6px 6px; border:1px solid var(--border); border-radius:8px;
+  background:#fff; font-family:inherit; font-size:.76rem; color:var(--navy);
 }
-.rank-dates .rd-sep{ color:var(--gray); }
+.rank-dates .rd-sep{ flex:0 0 auto; color:var(--gray); font-size:.8rem; }
 .rank-dates .rd-go{
-  padding:9px 16px; border:none; border-radius:9px; background:var(--navy);
-  color:#fff; font-weight:700; font-size:.9rem; cursor:pointer; font-family:inherit;
+  flex:0 0 auto; padding:7px 13px; border:none; border-radius:999px; background:var(--navy);
+  color:#fff; font-weight:700; font-size:.82rem; cursor:pointer; font-family:inherit;
 }
 .rank-dates .rd-go:hover{ background:var(--navy-dark); }
