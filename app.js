@@ -479,10 +479,10 @@ function renderSettings() {
           <h2 class="rank-title">⚙️ 설정</h2>
           <button class="settings-back-btn" id="settings-back">← 뒤로</button>
         </div>
-        <button class="summary-change" id="change-user">👤 로그인 정보변경</button>
-        <a class="remind-cta" href="reminders.html">🔔 매일 암송 구절 알림 받기</a>
+        <button class="summary-install" id="change-user">👤 로그인 정보변경</button>
+        <a class="summary-install" href="reminders.html">🔔 매일 암송 구절 알림 받기</a>
         <button class="summary-install" id="install-btn">⛪ 성경암송 — 홈 화면에 추가</button>
-        <button class="summary-share" id="share-btn">🔗 성경암송 — 공유하기</button>
+        <button class="summary-install" id="share-btn">🔗 성경암송 — 공유하기</button>
       </div>
     </div>`;
   document.getElementById("settings-back").addEventListener("click", renderSummary);
