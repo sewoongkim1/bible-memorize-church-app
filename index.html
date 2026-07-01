@@ -30,6 +30,26 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- 앱 시작 스플래시 화면 -->
+  <div id="splash">
+    <div class="splash-inner">
+      <img id="splash-logo" src="logo.jpg" alt="고척교회"
+           onerror="this.onerror=null;this.src='https://sewoongkim1.github.io/summer-bible/logo3.png';" />
+      <div class="splash-title">온라인 성경말씀 암송</div>
+      <div class="splash-sub">오직 성경, 말씀이 답이다!</div>
+    </div>
+  </div>
+  <script>
+    // 스플래시 숨기기(콘텐츠 준비되면 app.js가 호출, 못 부르면 최대 4초 뒤 자동)
+    window.hideSplash = function () {
+      var s = document.getElementById("splash");
+      if (!s) return;
+      s.classList.add("hide");
+      setTimeout(function () { if (s && s.parentNode) s.parentNode.removeChild(s); }, 450);
+    };
+    setTimeout(window.hideSplash, 4000);
+  </script>
+
   <div class="page-header">
     <div class="logo-wrap">
       <img src="https://sewoongkim1.github.io/summer-bible/logo3.png" alt="고척교회 로고" />

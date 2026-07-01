@@ -18,12 +18,21 @@ const BU_LIST = ["사랑부", "영아부", "유아부", "유치부", "유년부"
 
 let verses = []; // 화면에 쓰는 구절 데이터
 
+// 화면 전환 시 보이는 로딩 표시 (로고 + "불러오는 중...")
+const LOADING_HTML = `
+  <div class="app-loading">
+    <img class="al-logo" src="logo.jpg" alt="" onerror="this.onerror=null;this.src='favicon.png';" />
+    <div class="al-text">불러오는 중...</div>
+  </div>`;
+
+function hideSplash() { if (window.hideSplash) window.hideSplash(); }
+
 // ------------------------------------------------------------
 // 데이터 로드 → 사용자 유무에 따라 진입/요약으로 분기
 // ------------------------------------------------------------
 async function loadVerses() {
   const appEl = document.getElementById("app");
-  appEl.innerHTML = "<p style='text-align:center;padding:40px'>불러오는 중...</p>";
+  appEl.innerHTML = LOADING_HTML;
 
   for (const url of [DATA_URL, API_URL]) {
     try {
@@ -34,10 +43,12 @@ async function loadVerses() {
       if (!data.verses || !data.verses.length) throw new Error("데이터 없음");
 
       verses = data.verses;
+      hideSplash();
       routeAfterLoad();
       return;
     } catch (err) {
       if (url === API_URL) {
+        hideSplash();
         appEl.innerHTML = `<p class="error" style="text-align:center;padding:40px">연결 실패: ${err.message}</p>`;
       }
     }
