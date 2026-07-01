@@ -438,11 +438,13 @@ function renderSummary() {
   appEl.innerHTML = `
 <div class="summary-screen">
   <div class="summary-card">
-    <div class="summary-icons">
-      <button class="summary-icon" id="open-help-summary" aria-label="도움말" title="도움말">❓</button>
-      <button class="summary-icon" id="open-settings" aria-label="설정" title="설정">⚙️</button>
+    <div class="summary-headrow">
+      <div class="summary-hello"><span class="summary-user">${userLabel(u)}</span> <span class="summary-honor">성도님</span>,<br>환영합니다. 🙌</div>
+      <div class="summary-icons">
+        <button class="summary-icon" id="open-help-summary" aria-label="도움말" title="도움말">❓</button>
+        <button class="summary-icon" id="open-settings" aria-label="설정" title="설정">⚙️</button>
+      </div>
     </div>
-    <div class="summary-hello"><span class="summary-user">${userLabel(u)}</span> <span class="summary-honor">성도님</span>,<br>환영합니다. 🙌</div>
     <div class="gauge-wrap">
       <div class="gauge-bar"><div class="gauge-fill" style="width:${pct}%"></div></div>
       <div class="gauge-sub">전체 ${total}구절 중 <b>${done}구절</b> 암송 완료</div>
