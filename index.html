@@ -46,7 +46,19 @@
       s.classList.add("hide");
       setTimeout(function () { if (s && s.parentNode) s.parentNode.removeChild(s); }, 450);
     };
-    setTimeout(window.hideSplash, 4000);
+    // PWA(홈 화면 실행)는 네이티브 시작 화면이 이미 로고를 보여주므로,
+    // 앱 안 스플래시는 즉시 제거해 '로고 화면 하나'만 보이게 한다.
+    (function () {
+      var standalone =
+        (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+        window.navigator.standalone === true;
+      if (standalone) {
+        var s = document.getElementById("splash");
+        if (s && s.parentNode) s.parentNode.removeChild(s);
+      } else {
+        setTimeout(window.hideSplash, 4000); // 브라우저에서만 앱 안 스플래시 표시
+      }
+    })();
   </script>
 
   <div class="page-header">
