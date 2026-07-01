@@ -1257,7 +1257,21 @@ function renderHelp(onClose) {
 // 매일 말씀 암송 도전(챌린지) + 순위
 // ============================================================
 let challengeSession = []; // 이번 세션에 이미 나온 구절 no (중복 회피)
-let challengeCount = 0;    // 이번 세션 완료 수 (표시용)
+
+// 오늘 도전 완료 수 (이 기기, 새로고침에도 유지)
+function challengeCountKey() {
+  const d = new Date();
+  const z = (n) => String(n).padStart(2, "0");
+  return "challenge-count-" + d.getFullYear() + z(d.getMonth() + 1) + z(d.getDate());
+}
+function bumpTodayChallenge() {
+  const k = challengeCountKey();
+  let n = 0;
+  try { n = parseInt(localStorage.getItem(k) || "0", 10) || 0; } catch {}
+  n++;
+  try { localStorage.setItem(k, String(n)); } catch {}
+  return n;
+}
 
 // 랜덤 구절 배정(세션 내 중복 회피, 모두 소진 시 리셋) → 도전 시작
 function startChallenge() {
@@ -1375,9 +1389,9 @@ function setupChallengeTyping(verse) {
 // 도전 완료 처리 → 서버 기록 + 완료 화면
 function challengeComplete(verse, mode) {
   stopSpeaking();
-  challengeCount++;
+  const n = bumpTodayChallenge();
   postChallenge(verse, mode);
-  renderChallengeDone(verse, mode);
+  renderChallengeDone(verse, mode, n);
 }
 
 // 도전 완료를 서버('도전기록' 탭)에 저장
@@ -1394,7 +1408,7 @@ function postChallenge(verse, mode) {
   } catch { /* 무시 */ }
 }
 
-function renderChallengeDone(verse, mode) {
+function renderChallengeDone(verse, mode, todayCount) {
   const appEl = document.getElementById("app");
   appEl.innerHTML = `
     <div class="summary-screen">
@@ -1402,7 +1416,7 @@ function renderChallengeDone(verse, mode) {
         <div class="cd-emoji">🎉</div>
         <div class="cd-title">도전 완료!</div>
         <div class="cd-sub">${verse.refShort} · ${mode === "voice" ? "음성" : "타이핑"} 암송</div>
-        <div class="cd-count">이번 도전 <b>${challengeCount}회</b> 완료</div>
+        <div class="cd-count">오늘 <b>${todayCount}회</b> 완료</div>
         <button class="summary-go challenge-cta" id="cd-again">🔥 한 번 더 도전</button>
         <button class="summary-help" id="cd-rank">🏆 순위 보기</button>
         <button class="summary-change" id="cd-home">기록 화면으로</button>
