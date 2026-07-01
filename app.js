@@ -593,14 +593,12 @@ function renderVerseList() {
   appEl.innerHTML = `
     <div class="list-nav">
       <button class="remind-cta nav-record" id="to-summary">← ${userLabel(u)} 성도님</button>
-      <button class="help-btn" id="open-help">❓ 도움말</button>
     </div>
     <div id="verse-list" class="verse-grid"></div>
   `;
 
   const listEl = document.getElementById("verse-list");
   document.getElementById("to-summary").addEventListener("click", renderSummary);
-  document.getElementById("open-help").addEventListener("click", () => renderHelp(renderVerseList));
 
   [...verses].reverse().forEach((v) => {
     const passed = getPassedStage(v.no);
