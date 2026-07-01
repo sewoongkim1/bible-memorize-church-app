@@ -625,7 +625,8 @@ h1 {
   font-family: "Nanum Myeongjo", serif; color: var(--navy);
   font-size: 0.82rem; /* 0.91rem의 0.9배 */ line-height: 1.35; margin-bottom: 0;
 }
-/* 인사 문구 내 '성도님'은 작게 */
+/* 인사 문구 내 소속(화평-20 등)과 '성도님'은 작게, 이름만 크게 */
+.summary-hello .summary-affil,
 .summary-hello .summary-honor { font-size: 0.8rem; font-weight: 600; color: var(--navy); }
 /* 인사 문구 내 로그인 정보(이름·소속) 강조 */
 .summary-hello .summary-user {
