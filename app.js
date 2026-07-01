@@ -302,7 +302,6 @@ function renderEntryScreen() {
     <div class="entry-header">
       <h2 class="entry-main-title">성경말씀 암송하기</h2>
       <p class="entry-sub-title">내가 주의 말씀을 내 마음에 두었나이다</p>
-      <button class="login-help-btn" id="login-help">❓ 로그인 방법 보기</button>
     </div>
     <div class="entry-screen">
       <div class="entry-card">
@@ -316,6 +315,7 @@ function renderEntryScreen() {
                 <span>${t}</span>
               </label>`).join("")}
           </div>
+          <button class="login-help-btn" id="login-help">❓ 로그인 방법</button>
         </div>
 
         <!-- 교구 분기 -->
@@ -1269,7 +1269,7 @@ function renderIntro(next) {
             <button class="intro-skip" id="intro-skip">건너뛰기</button>
             <button class="intro-next" id="intro-next">${last ? "시작하기" : "다음 ▸"}</button>
           </div>
-          <button class="login-help-btn" id="intro-login-help">❓ 로그인 방법 보기</button>
+          <button class="login-help-btn" id="intro-login-help">❓ 로그인 방법</button>
         </div>
       </div>`;
     document.getElementById("intro-skip").addEventListener("click", done);
