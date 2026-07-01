@@ -621,6 +621,8 @@ h1 {
 .summary-hello {
   font-family: "Nanum Myeongjo", serif; color: var(--navy);
   font-size: 0.82rem; /* 0.91rem의 0.9배 */ line-height: 1.35; margin-bottom: 6px;
+  /* 우상단 아이콘(❓⚙️) 영역을 피해 가운데 정렬되도록 좌우 동일 여백 */
+  padding: 0 84px;
 }
 /* 인사 문구 내 로그인 정보(이름·소속) 강조 */
 .summary-hello .summary-user {
