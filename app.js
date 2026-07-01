@@ -21,7 +21,7 @@ let verses = []; // 화면에 쓰는 구절 데이터
 // 화면 전환 시 보이는 로딩 표시 (로고 + "불러오는 중...")
 const LOADING_HTML = `
   <div class="app-loading">
-    <img class="al-logo" src="logo.jpg" alt="" onerror="this.onerror=null;this.src='favicon.png';" />
+    <img class="al-logo" src="https://sewoongkim1.github.io/summer-bible/logo3.png" alt="" />
     <div class="al-text">불러오는 중...</div>
   </div>`;
 
