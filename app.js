@@ -10,7 +10,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycbzO4GDAy0hJBbZ-L3hVuZQI
 
 // 진행기록 저장 엔드포인트(Apps Script doPost). setup 후 배포한 /exec URL을 넣는다.
 // 비어 있으면 서버 저장은 건너뛰고 localStorage만 사용한다.
-const POST_URL = "https://script.google.com/macros/s/AKfycbwT_ttuV6_wGGqqnmz7-D9ubnSuEmemmkSm7jwOQh0R9xoK97VPthUrAzkHbza7pIJ-Zw/exec";
+const POST_URL = "https://script.google.com/macros/s/AKfycbyRcm6xnF-CdTj-wO2WYtxJOH-j2mcHWqzoS3pasMQ8MCt1qIeVJj0D5S4KqYmPtfWTGw/exec";
 
 // 식별 항목 (summer-bible 등록 화면과 동일)
 const GU_LIST = ["믿음", "소망", "사랑", "섬김", "은혜", "화평", "기쁨", "새가족"];
