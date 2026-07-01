@@ -590,10 +590,10 @@ h1 {
   border: 1px solid var(--border); border-radius: 16px;
   padding: 16px 18px; box-shadow: 0 6px 20px rgba(13,27,62,.06); text-align: center;
 }
-/* 요약 화면 우측 상단 아이콘(도움말·설정) */
+/* 요약 화면 우측 상단 아이콘(도움말·설정) — 인사말과 겹치지 않도록 별도 줄 */
 .summary-icons {
-  position: absolute; top: 10px; right: 12px;
-  display: flex; gap: 6px; z-index: 2;
+  display: flex; justify-content: flex-end; gap: 6px;
+  margin: 0 0 6px;
 }
 .summary-icon {
   width: 38px; height: 38px; padding: 0;
