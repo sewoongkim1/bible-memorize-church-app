@@ -26,7 +26,7 @@ const LOADING_HTML = `
   </div>`;
 
 // 스플래시 제거 — 광고 효과를 위해 시작 후 최소 2초는 유지한 뒤 사라진다.
-const SPLASH_MIN_MS = 2000;
+const SPLASH_MIN_MS = 5000;
 function dismissSplash() {
   const s = document.getElementById("splash");
   if (!s) return;
