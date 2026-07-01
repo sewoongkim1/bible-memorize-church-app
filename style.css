@@ -1043,7 +1043,7 @@ h1 {
   box-shadow:0 8px 26px rgba(0,0,0,.28);
 }
 .splash-title{
-  font-family:"Nanum Myeongjo",serif; color:#fff; font-size:1.4rem;
+  font-family:"Nanum Myeongjo",serif; color:#fff; font-size:1.15rem;
   font-weight:800; letter-spacing:.5px; line-height:1.4; padding:0 10px;
 }
 .splash-sub{ color:rgba(255,255,255,.8); font-size:.95rem; margin-top:12px; }
