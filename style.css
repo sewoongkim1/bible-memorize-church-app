@@ -984,6 +984,10 @@ h1 {
 .mc-cell .mc-cnt.miss{ color:var(--border); font-size:1rem; line-height:1; }
 .mc-cell.done{ background:#eaf5ec; border-color:#bcdfc1; }
 .mc-cell.miss{ background:#fbeceb; border-color:#f0c9c6; }
-.mc-cell.miss .mc-day{ color:var(--error); }
 .mc-cell.future{ background:var(--light); opacity:.55; }
 .mc-cell.today{ box-shadow:0 0 0 2px var(--gold) inset; }
+/* 요일/공휴일 색: 일·공휴일 빨강, 토 파랑 */
+.mc-day.sun{ color:var(--error) !important; }
+.mc-day.sat{ color:#1a5fd0 !important; }
+.mc-week-head span.sun{ color:var(--error); }
+.mc-week-head span.sat{ color:#1a5fd0; }

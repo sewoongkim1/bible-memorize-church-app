@@ -1612,6 +1612,27 @@ async function loadMyRecord(s) {
   body.innerHTML = renderCalendar(start, end, data.days || {}, s.mode);
 }
 
+// 공휴일(빨강) — 2026년 대한민국 공휴일. 필요 시 여기 날짜를 추가/수정하세요.
+const HOLIDAYS = new Set([
+  "2026-01-01",                             // 신정
+  "2026-02-16", "2026-02-17", "2026-02-18", // 설날 연휴
+  "2026-03-01", "2026-03-02",               // 삼일절(+대체)
+  "2026-05-05",                             // 어린이날
+  "2026-05-24", "2026-05-25",               // 부처님오신날(+대체)
+  "2026-06-06",                             // 현충일
+  "2026-08-15", "2026-08-17",               // 광복절(+대체)
+  "2026-09-24", "2026-09-25", "2026-09-26", // 추석 연휴
+  "2026-10-03", "2026-10-05",               // 개천절(+대체)
+  "2026-10-09",                             // 한글날
+  "2026-12-25",                             // 성탄절
+]);
+function dayColorClass(d, key) {
+  const dow = d.getDay();
+  if (HOLIDAYS.has(key) || dow === 0) return "sun"; // 일요일·공휴일 빨강
+  if (dow === 6) return "sat";                       // 토요일 파랑
+  return "";
+}
+
 function renderCalendar(start, end, days, mode) {
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const dates = [];
@@ -1632,10 +1653,10 @@ function renderCalendar(start, end, days, mode) {
       else { cls += " miss"; missed++; mark = `<div class="mc-cnt miss">·</div>`; }
     }
     if (isToday) cls += " today";
-    return `<div class="${cls}"><div class="mc-day">${d.getDate()}</div>${mark}</div>`;
+    return `<div class="${cls}"><div class="mc-day ${dayColorClass(d, key)}">${d.getDate()}</div>${mark}</div>`;
   };
 
-  const head = `<div class="mc-week-head">${["일","월","화","수","목","금","토"].map((w) => `<span>${w}</span>`).join("")}</div>`;
+  const head = `<div class="mc-week-head">${["일","월","화","수","목","금","토"].map((w, i) => `<span class="${i === 0 ? "sun" : i === 6 ? "sat" : ""}">${w}</span>`).join("")}</div>`;
   let cellsHtml = "";
   if (mode === "month") {
     const lead = new Date(start).getDay();
