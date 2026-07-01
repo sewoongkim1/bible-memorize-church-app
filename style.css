@@ -1002,17 +1002,17 @@ h1 {
   opacity:1; transition:opacity .45s ease;
 }
 #splash.hide{ opacity:0; pointer-events:none; }
-.splash-inner{ text-align:center; animation:splashPop .5s ease; padding:20px; }
+.splash-inner{ text-align:center; animation:splashPop .5s ease; padding:24px; }
 #splash-logo{
-  width:112px; height:auto; margin-bottom:16px;
+  width:112px; height:auto; margin-bottom:30px;
   background:rgba(255,255,255,.92); border-radius:18px; padding:12px;
   box-shadow:0 8px 26px rgba(0,0,0,.28);
 }
 .splash-title{
   font-family:"Nanum Myeongjo",serif; color:#fff; font-size:1.4rem;
-  font-weight:800; letter-spacing:.5px;
+  font-weight:800; letter-spacing:.5px; line-height:1.4; padding:0 10px;
 }
-.splash-sub{ color:rgba(255,255,255,.8); font-size:.95rem; margin-top:6px; }
+.splash-sub{ color:rgba(255,255,255,.8); font-size:.95rem; margin-top:12px; }
 @keyframes splashPop{ from{ transform:scale(.92); opacity:0 } to{ transform:scale(1); opacity:1 } }
 
 /* 화면 전환 로딩(로고 + 불러오는 중...) */
