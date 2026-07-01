@@ -1501,7 +1501,11 @@ function renderReview(queue, idx) {
       speakText(`${verse.refFull}. ${verse.text}`, () => { listenBtn.textContent = "🔊 듣기"; });
     });
   }
-  const onDone = () => { advanceReview(verse.no); reviewNext(queue, idx); };
+  const onDone = (mode) => {
+    postChallenge(verse, mode || "voice"); // 복습 완료도 도전 순위 데이터에 누적
+    advanceReview(verse.no);
+    reviewNext(queue, idx);
+  };
   setupChallengeTyping(verse, onDone);
   setupVoice(verse, 3, onDone);
 }
