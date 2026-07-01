@@ -1026,3 +1026,66 @@ h1 {
 }
 .app-loading .al-text{ color:var(--gray); font-size:.95rem; font-weight:600; }
 @keyframes alPulse{ 0%,100%{ transform:scale(1); opacity:.65 } 50%{ transform:scale(1.08); opacity:1 } }
+
+/* ============================================================
+   야간(다크) 모드
+   ============================================================ */
+.theme-toggle{
+  position:absolute; top:8px; right:12px; z-index:5;
+  width:34px; height:34px; border-radius:999px; cursor:pointer;
+  background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.35);
+  font-size:16px; line-height:1; color:#fff;
+}
+.theme-toggle:hover{ background:rgba(255,255,255,.28); }
+
+.dark{
+  --cream:#0f1218;   /* 페이지 배경 */
+  --white:#1b2233;   /* 카드 배경 */
+  --light:#232c3f;
+  --border:#33405a;
+  --gray:#9aa6b8;
+}
+.dark body{ background:#0f1218; color:#e6e9ef; }
+
+/* 네이비 계열 글씨 → 밝게 */
+.dark .page-title, .dark .verse-ref, .dark .test-ref, .dark .rank-title,
+.dark .summary-hello, .dark .cd-title, .dark .entry-title, .dark .help-title,
+.dark .stat-num, .dark .rk-name, .dark .rk-cnt, .dark .mr-label,
+.dark .test-stage, .dark .answer-title, .dark .gauge-pct, .dark .rank-row .rk-no{
+  color:#cdd9f2;
+}
+/* 카드·패널 텍스트 */
+.dark .verse-card, .dark .test-card, .dark .summary-card, .dark .entry-card,
+.dark .answer-panel, .dark .rank-row, .dark .kpi, .dark .stat-box,
+.dark .my-rank, .dark .mc-cell, .dark .voice-result, .dark .test-sentence,
+.dark .word-fixed{ color:#e6e9ef; }
+.dark .verse-hint, .dark .entry-sub, .dark .cd-sub, .dark .gauge-sub,
+.dark .summary-next, .dark .help-section p, .dark .help-section li,
+.dark .challenge-hint-line, .dark .rank-msg, .dark .mc-summary{ color:#aeb8c8; }
+.dark .help-section b, .dark .summary-next b, .dark .gauge-sub b{ color:#cdd9f2; }
+
+/* 옅은 네이비 버튼 → 어두운 표면 */
+.dark .remind-cta, .dark .back-btn, .dark .answer-btn, .dark .help-btn,
+.dark .summary-help, .dark .summary-change, .dark .nav-btn, .dark .nav-record,
+.dark .rank-filter button, .dark .card-listen, .dark .myrec-toggle button,
+.dark .myrec-nav button, .dark .rank-dates .rd-go, .dark .back-to-test-btn{
+  background:#232c3f; color:#cdd9f2; border-color:#3a4a68;
+}
+.dark .remind-cta:hover, .dark .answer-btn:hover, .dark .help-btn:hover,
+.dark .rank-filter button:hover{ background:#2e3a52; color:#fff; }
+.dark .rank-filter button.on, .dark .myrec-toggle button.on{ background:#3a4a68; color:#fff; }
+
+/* 입력창 */
+.dark .word-input, .dark .entry-input, .dark input[type=date]{
+  background:#232c3f; color:#e6e9ef; border-color:#3a4a68;
+}
+.dark .word-input.correct{ background:#1f3b2a; border-color:#2c5f2d; color:#dff5e3; }
+
+/* 상태/달력 배경 톤 살짝 조정 */
+.dark .verse-card.status-done, .dark .rank-row.top{ background:#20261c; }
+.dark .mc-cell.done{ background:#17301f; border-color:#2c5f2d; }
+.dark .mc-cell.miss{ background:#3a2020; border-color:#6b2f2f; }
+.dark .mc-cell.future{ background:#171c26; }
+.dark .stat-box.status-done{ background:#17301f; }
+
+.page-header{ position: relative; }

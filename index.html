@@ -3,6 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    // 야간(다크) 모드: 저장값 없으면 시스템 설정 따름 — 깜빡임 방지를 위해 head에서 먼저 적용
+    (function () {
+      try {
+        var t = localStorage.getItem("theme");
+        if (!t) t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        if (t === "dark") document.documentElement.classList.add("dark");
+      } catch (e) {}
+    })();
+  </script>
   <title>말씀 암송 | 오직 성경, 말씀이 답이다!</title>
   <meta name="description" content="주의 말씀은 내 발에 등이요 내 길에 빛이니이다" />
 
@@ -51,6 +61,7 @@
   </script>
 
   <div class="page-header">
+    <button id="theme-toggle" class="theme-toggle" aria-label="야간 모드 전환">🌙</button>
     <div class="logo-wrap">
       <img src="https://sewoongkim1.github.io/summer-bible/logo3.png" alt="고척교회 로고" />
       <div class="logo-tagline">
@@ -67,6 +78,20 @@
     <p style="text-align:center;padding:40px">불러오는 중...</p>
   </main>
 
+  <script>
+    // 야간 모드 토글 버튼
+    (function () {
+      var btn = document.getElementById("theme-toggle");
+      if (!btn) return;
+      function sync() { btn.textContent = document.documentElement.classList.contains("dark") ? "☀️" : "🌙"; }
+      btn.addEventListener("click", function () {
+        var dark = document.documentElement.classList.toggle("dark");
+        try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+        sync();
+      });
+      sync();
+    })();
+  </script>
   <script src="app.js"></script>
 </body>
 </html>
