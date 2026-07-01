@@ -454,6 +454,7 @@ ${dueCount > 0 ? `<button class="summary-go review-cta" id="go-review">📖 오�
 <a class="remind-cta" href="reminders.html">🔔 매일 암송 구절 알림 받기</a>
 <button class="summary-install" id="install-btn">⛪ 성경암송 — 홈 화면에 추가</button>
 <button class="summary-share" id="share-btn">🔗 성경암송 — 공유하기</button>
+<button class="summary-change" id="force-review" style="margin-top:6px; font-size:.82rem;">🧪 복습 즉시 테스트 (개발용)</button>
   </div>
 </div>
 `;
@@ -462,6 +463,7 @@ ${dueCount > 0 ? `<button class="summary-go review-cta" id="go-review">📖 오�
   if (dueCount > 0) document.getElementById("go-review").addEventListener("click", startReview);
   document.getElementById("go-challenge").addEventListener("click", startChallenge);
   document.getElementById("open-ranking").addEventListener("click", () => renderRanking());
+  document.getElementById("force-review").addEventListener("click", forceReviewDue);
   document.getElementById("change-user").addEventListener("click", renderEntryScreen);
   document.getElementById("share-btn").addEventListener("click", shareApp);
   // 도움말: 닫으면 요약 화면으로 돌아온다
@@ -1418,6 +1420,24 @@ function startReview() {
   const queue = verses.filter((v) => dueNos.includes(v.no));
   if (!queue.length) { renderSummary(); return; }
   renderReview(queue, 0);
+}
+
+// 개발/테스트용 — 복습 일정을 즉시 '오늘 복습 대상'으로 만든다.
+// 등록된 게 없으면 완료 구절을, 그마저 없으면 전체 구절을 임시 등록.
+function forceReviewDue() {
+  let r = loadReview();
+  if (Object.keys(r).length === 0) {
+    verses.forEach((v) => { if (getPassedStage(v.no) === 3) ensureReviewScheduled(v.no); });
+    r = loadReview();
+  }
+  if (Object.keys(r).length === 0) {
+    verses.forEach((v) => ensureReviewScheduled(v.no)); // 완료 구절도 없으면 테스트용 전체 등록
+    r = loadReview();
+  }
+  Object.keys(r).forEach((no) => { r[no].next = "2000-01-01"; });
+  saveReviewData(r);
+  alert("복습 일정을 '오늘 복습'으로 만들었어요. 요약 화면에 복습 버튼이 나타납니다.");
+  renderSummary();
 }
 
 function renderReview(queue, idx) {
