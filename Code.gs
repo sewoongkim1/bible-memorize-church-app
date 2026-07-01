@@ -140,6 +140,11 @@ function doGet(e) {
       return json(getRanking(p));
     }
 
+    // 내 도전 참여(일자별) — 본인 식별로 조회(공개)
+    if (p.action === 'mydays') {
+      return json(getMyChallengeDays(p));
+    }
+
     if (p.test === '1') {
       appendRow_({ type: '교구', gu: '사랑', mok: '0', name: 'GET테스트', no: 0, stage: 1, mode: 'test', cid: 'gettest' });
       return json({ ok: true, wrote: true });
@@ -383,6 +388,36 @@ function getRanking(p) {
     x.rank = rank;
   });
   return { ok: true, list: list };
+}
+
+/**
+ * 내 도전 참여(일자별) — 본인 식별 + 기간으로 날짜별 도전 횟수.
+ * 파라미터: type, gu/bu, mok/grade, name, from, to
+ * 반환: { ok, days: { "2026-06-29": 3, ... } }
+ */
+function getMyChallengeDays(p) {
+  var type = String(p.type || '');
+  var sosok = String(p.gu || p.bu || '');
+  var sebu = String(p.mok || p.grade || '');
+  var name = String(p.name || '');
+  if (!type || !sosok || !sebu || !name) return { ok: true, days: {} };
+
+  var from = p.from ? new Date(p.from + 'T00:00:00') : null;
+  var to = p.to ? new Date(p.to + 'T23:59:59') : null;
+  var tz = 'Asia/Seoul';
+
+  var values = getChallengeSheet_().getDataRange().getValues();
+  var days = {};
+  for (var i = 1; i < values.length; i++) {
+    var r = values[i];
+    if (String(r[1]) !== type || String(r[2]) !== sosok || String(r[3]) !== sebu || String(r[4]) !== name) continue;
+    var when = (r[0] instanceof Date) ? r[0] : new Date(r[0]);
+    if (from && when < from) continue;
+    if (to && when > to) continue;
+    var key = Utilities.formatDate(when, tz, 'yyyy-MM-dd');
+    days[key] = (days[key] || 0) + 1;
+  }
+  return { ok: true, days: days };
 }
 
 function json(obj) {

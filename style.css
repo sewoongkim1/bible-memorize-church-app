@@ -938,3 +938,52 @@ h1 {
   color:#fff; font-weight:700; font-size:.82rem; cursor:pointer; font-family:inherit;
 }
 .rank-dates .rd-go:hover{ background:var(--navy-dark); }
+
+/* ---- 순위/내참여 모드 전환 바 ---- */
+.rank-mode{ display:flex; gap:8px; justify-content:center; margin:2px 0 12px; }
+.rank-mode button{
+  flex:1 1 0; max-width:200px; padding:10px; border:1.5px solid var(--navy);
+  background:#eef1f8; color:var(--navy); font-weight:700; font-size:.92rem;
+  border-radius:12px; cursor:pointer; font-family:inherit; transition:all .15s;
+}
+.rank-mode button.on{ background:var(--navy); color:#fff; }
+.rank-mode button:hover{ background:var(--navy); color:#fff; }
+
+/* ---- 내 참여 달력 ---- */
+.myrec-ctrl{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
+.myrec-toggle{ display:flex; gap:6px; }
+.myrec-toggle button{
+  border:1px solid var(--border); background:#fff; color:var(--navy);
+  border-radius:999px; padding:7px 16px; font-size:.85rem; font-weight:700;
+  cursor:pointer; font-family:inherit;
+}
+.myrec-toggle button.on{ background:var(--navy); color:#fff; border-color:var(--navy); }
+.myrec-nav{ display:flex; align-items:center; gap:10px; }
+.myrec-nav button{
+  border:1px solid var(--border); background:#fff; color:var(--navy);
+  border-radius:8px; width:32px; height:32px; cursor:pointer; font-size:.9rem; font-family:inherit;
+}
+.myrec-nav button:hover{ background:var(--cream); }
+.myrec-nav #mr-label{ font-weight:700; color:var(--navy); font-size:.95rem; min-width:110px; text-align:center; }
+
+.mc-summary{ text-align:center; margin-bottom:10px; font-size:.9rem; color:#444; }
+.mc-summary b.done{ color:var(--green); }
+.mc-summary b.miss{ color:var(--error); }
+.mc-summary .mc-sub{ color:var(--gray); font-size:.8rem; }
+
+.mc-week-head{ display:grid; grid-template-columns:repeat(7,1fr); gap:5px; margin-bottom:5px; }
+.mc-week-head span{ text-align:center; font-size:.75rem; color:var(--gray); font-weight:600; }
+.mc-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:5px; }
+.mc-cell{
+  min-height:52px; border:1px solid var(--border); border-radius:9px; background:#fff;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; padding:4px 2px;
+}
+.mc-cell.blank{ border:none; background:transparent; }
+.mc-cell .mc-day{ font-size:.8rem; font-weight:700; color:#333; }
+.mc-cell .mc-cnt{ font-size:.72rem; font-weight:700; color:var(--green); }
+.mc-cell .mc-cnt.miss{ color:var(--border); font-size:1rem; line-height:1; }
+.mc-cell.done{ background:#eaf5ec; border-color:#bcdfc1; }
+.mc-cell.miss{ background:#fbeceb; border-color:#f0c9c6; }
+.mc-cell.miss .mc-day{ color:var(--error); }
+.mc-cell.future{ background:var(--light); opacity:.55; }
+.mc-cell.today{ box-shadow:0 0 0 2px var(--gold) inset; }

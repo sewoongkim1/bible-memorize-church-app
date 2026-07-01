@@ -1457,6 +1457,7 @@ function renderRanking(range) {
       <div class="list-nav">
         <button class="remind-cta nav-record" id="rk-back">← 내 기록으로</button>
       </div>
+      ${rankModeBar("rank")}
       <h2 class="rank-title">🏆 말씀 도전 순위</h2>
       <div class="rank-filter" id="rk-filter">
         ${tabs.map(([k, l]) => `<button data-k="${k}" class="${r.key === k ? "on" : ""}">${l}</button>`).join("")}
@@ -1470,6 +1471,7 @@ function renderRanking(range) {
       <div id="rank-body"><p class="rank-msg">불러오는 중...</p></div>
     </div>`;
   document.getElementById("rk-back").addEventListener("click", renderSummary);
+  wireRankMode();
   document.getElementById("rk-filter").querySelectorAll("button").forEach((b) =>
     b.addEventListener("click", () => renderRanking(rankRangeFor(b.dataset.k)))
   );
@@ -1521,6 +1523,128 @@ async function loadRankingBody(r) {
 
   body.innerHTML = myHtml + `<div class="rank-list">${rows}</div>` +
     (list.length > 10 ? `<p class="rank-more">외 ${list.length - 10}명 참여</p>` : "");
+}
+
+// ---- 순위/내참여 모드 전환 바 ----
+function rankModeBar(active) {
+  return `<div class="rank-mode">
+    <button class="${active === "rank" ? "on" : ""}" data-m="rank">🏆 전체 순위</button>
+    <button class="${active === "mine" ? "on" : ""}" data-m="mine">📅 내 참여</button>
+  </div>`;
+}
+function wireRankMode() {
+  document.querySelectorAll(".rank-mode button").forEach((b) =>
+    b.addEventListener("click", () => (b.dataset.m === "mine" ? renderMyRecord() : renderRanking()))
+  );
+}
+
+// ---- 내 참여(주간/월간 달력) ----
+function mdLabel(d) { return (d.getMonth() + 1) + "/" + d.getDate(); }
+function weekRange(anchor) {
+  const a = new Date(anchor); a.setHours(0, 0, 0, 0);
+  const start = new Date(a); start.setDate(a.getDate() - a.getDay()); // 일요일
+  const end = new Date(start); end.setDate(start.getDate() + 6);
+  return { start, end };
+}
+function monthRange(anchor) {
+  const start = new Date(anchor.getFullYear(), anchor.getMonth(), 1);
+  const end = new Date(anchor.getFullYear(), anchor.getMonth() + 1, 0);
+  return { start, end };
+}
+function shiftPeriod(s, dir) {
+  const a = new Date(s.anchor);
+  if (s.mode === "week") a.setDate(a.getDate() + 7 * dir);
+  else a.setMonth(a.getMonth() + dir);
+  return { mode: s.mode, anchor: a };
+}
+async function callMyDays(u, from, to) {
+  const params = new URLSearchParams({ action: "mydays", type: u.type, name: u.name, from, to });
+  if (u.type === "교구") { params.set("gu", u.gu); params.set("mok", u.mok); }
+  else { params.set("bu", u.bu); params.set("grade", u.grade); }
+  const res = await fetch(POST_URL + "?" + params.toString(), { cache: "no-cache" });
+  return res.json();
+}
+
+function renderMyRecord(state) {
+  const s = state || { mode: "week", anchor: new Date() };
+  const appEl = document.getElementById("app");
+  appEl.innerHTML = `
+    <div class="rank-screen">
+      <div class="list-nav">
+        <button class="remind-cta nav-record" id="rk-back">← 내 기록으로</button>
+      </div>
+      ${rankModeBar("mine")}
+      <h2 class="rank-title">📅 내 도전 참여</h2>
+      <div class="myrec-ctrl">
+        <div class="myrec-toggle">
+          <button data-md="week" class="${s.mode === "week" ? "on" : ""}">주간</button>
+          <button data-md="month" class="${s.mode === "month" ? "on" : ""}">월간</button>
+        </div>
+        <div class="myrec-nav">
+          <button id="mr-prev">◀</button>
+          <span id="mr-label">…</span>
+          <button id="mr-next">▶</button>
+        </div>
+      </div>
+      <div id="myrec-body"><p class="rank-msg">불러오는 중...</p></div>
+    </div>`;
+  document.getElementById("rk-back").addEventListener("click", renderSummary);
+  wireRankMode();
+  appEl.querySelectorAll(".myrec-toggle button").forEach((b) =>
+    b.addEventListener("click", () => renderMyRecord({ mode: b.dataset.md, anchor: s.anchor }))
+  );
+  document.getElementById("mr-prev").addEventListener("click", () => renderMyRecord(shiftPeriod(s, -1)));
+  document.getElementById("mr-next").addEventListener("click", () => renderMyRecord(shiftPeriod(s, 1)));
+  loadMyRecord(s);
+}
+
+async function loadMyRecord(s) {
+  const u = loadUser();
+  const body = document.getElementById("myrec-body");
+  const label = document.getElementById("mr-label");
+  const { start, end } = s.mode === "week" ? weekRange(s.anchor) : monthRange(s.anchor);
+  label.textContent = s.mode === "week"
+    ? `${mdLabel(start)} ~ ${mdLabel(end)}`
+    : `${start.getFullYear()}년 ${start.getMonth() + 1}월`;
+  if (!u) { body.innerHTML = `<p class="rank-msg">로그인 정보가 없습니다.</p>`; return; }
+  const data = await callMyDays(u, ymdKo(start), ymdKo(end)).catch(() => ({ ok: false }));
+  if (!data || !data.ok) { body.innerHTML = `<p class="rank-msg err">기록을 불러오지 못했습니다.</p>`; return; }
+  body.innerHTML = renderCalendar(start, end, data.days || {}, s.mode);
+}
+
+function renderCalendar(start, end, days, mode) {
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const dates = [];
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) dates.push(new Date(d));
+
+  let participated = 0, missed = 0, total = 0;
+  const cell = (d) => {
+    const key = ymdKo(d);
+    const cnt = days[key] || 0;
+    const isFuture = d > today;
+    const isToday = d.getTime() === today.getTime();
+    let cls = "mc-cell";
+    let mark = "";
+    if (isFuture) { cls += " future"; mark = ""; }
+    else {
+      total++;
+      if (cnt > 0) { cls += " done"; participated++; mark = `<div class="mc-cnt">✅ ${cnt}</div>`; }
+      else { cls += " miss"; missed++; mark = `<div class="mc-cnt miss">·</div>`; }
+    }
+    if (isToday) cls += " today";
+    return `<div class="${cls}"><div class="mc-day">${d.getDate()}</div>${mark}</div>`;
+  };
+
+  const head = `<div class="mc-week-head">${["일","월","화","수","목","금","토"].map((w) => `<span>${w}</span>`).join("")}</div>`;
+  let cellsHtml = "";
+  if (mode === "month") {
+    const lead = new Date(start).getDay();
+    cellsHtml = Array.from({ length: lead }, () => `<div class="mc-cell blank"></div>`).join("");
+  }
+  cellsHtml += dates.map(cell).join(""); // cell() 실행 중 카운터 집계
+
+  const summary = `<div class="mc-summary">참여 <b class="done">${participated}일</b> · 미참여 <b class="miss">${missed}일</b> <span class="mc-sub">(지난 ${total}일 기준)</span></div>`;
+  return summary + head + `<div class="mc-grid">${cellsHtml}</div>`;
 }
 
 promptOpenExternal();
