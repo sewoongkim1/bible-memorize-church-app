@@ -439,7 +439,7 @@ function renderSummary() {
 <div class="summary-screen">
   <div class="summary-card">
     <div class="summary-headrow">
-      <div class="summary-hello"><span class="summary-affil">${u.type === "교구" ? `${u.gu}-${u.mok}` : `${u.bu}${u.grade ? " " + u.grade : ""}`}</span> <span class="summary-user">${u.name}</span> <span class="summary-honor">성도님</span>,<br>환영합니다. 🙌</div>
+      <div class="summary-hello"><span class="summary-affil">${u.type === "교구" ? `${u.gu}-${u.mok}` : `${u.bu}${u.grade ? " " + u.grade : ""}`}</span> <span class="summary-user">${u.name}</span> <span class="summary-honor">성도님</span><br>환영합니다. 🙌</div>
       <div class="summary-icons">
         <button class="summary-icon" id="open-help-summary" aria-label="도움말" title="도움말">❓</button>
         <button class="summary-icon" id="open-settings" aria-label="설정" title="설정">⚙️</button>
