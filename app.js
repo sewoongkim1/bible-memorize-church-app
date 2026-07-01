@@ -706,6 +706,13 @@ function speakText(text, onEnd, times = 1) {
 
 function stopSpeaking() {
   if (window.speechSynthesis) window.speechSynthesis.cancel();
+  killVoice(); // 화면 전환 시 음성인식(입력)도 함께 중단
+}
+
+// 현재 활성 음성인식을 안전하게 중단(자동 재시작·뒤늦은 채점 방지)
+let voiceKill = null;
+function killVoice() {
+  if (voiceKill) { try { voiceKill(); } catch (e) {} voiceKill = null; }
 }
 
 function setupAnswerToggle() {
@@ -818,6 +825,7 @@ function scoreSpoken(answerText, spokenText) {
 }
 
 function setupVoice(verse, stage, onPass) {
+  killVoice(); // 이전 화면에서 시작된 음성인식이 남아 있으면 중단
   const toggleBtn = document.getElementById("voice-toggle");
   const panel = document.getElementById("voice-panel");
   const statusEl = document.getElementById("voice-status");
@@ -946,6 +954,7 @@ function setupVoice(verse, stage, onPass) {
       if (!stopped) {
         try { rec = newSession(); rec.start(); return; } catch (e) {}
       }
+      voiceKill = null; // 이 인식 세션 종료
       setRunning(false);
       evaluateAndShow();
     };
@@ -963,6 +972,8 @@ function setupVoice(verse, stage, onPass) {
       try {
         rec = newSession();
         rec.start();
+        // 화면을 벗어나면 이 인식을 강제 종료(자동 재시작·뒤늦은 채점 방지)
+        voiceKill = () => { stopped = true; if (rec) { try { rec.onend = null; rec.stop(); } catch (e) {} } };
       } catch (err) {
         setRunning(false);
         statusEl.textContent = "음성인식을 시작할 수 없습니다.";
