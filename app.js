@@ -214,6 +214,8 @@ function saveProgress(no, stage, mode = "typing") {
       /* 저장 실패(시크릿 모드 등) 무시 */
     }
   }
+  // 완료(3단계)한 구절은 복습 일정에 등록
+  if (stage === 3) ensureReviewScheduled(no);
   // 로컬 진행과 무관하게 통과 활동은 서버에 백업(집계용)
   postProgress(no, stage, mode);
 }
@@ -244,6 +246,50 @@ const STATUS_LABEL = {
   2: { cls: "status-s2", text: "2단계 완료" },
   3: { cls: "status-done", text: "암송 완료 🙌" },
 };
+
+// ------------------------------------------------------------
+// 복습 모드(간격 반복) — 주 단위. 완료(3단계)한 구절을 잊기 전에 다시 암송.
+//   key: "memorize-review::<사용자>" → { "7": { level:2, next:"2026-07-15" }, ... }
+//   간격(일): 3일 → 1주 → 2주 → 1개월 → 2개월 (복습할수록 길어짐)
+// ------------------------------------------------------------
+const REVIEW_KEY = "memorize-review";
+const REVIEW_INTERVALS = [3, 7, 14, 30, 60];
+
+function reviewKey() {
+  const u = loadUser();
+  if (!u) return REVIEW_KEY;
+  const id = u.type === "교구" ? `g|${u.gu}|${u.mok}|${u.name}` : `s|${u.bu}|${u.grade}|${u.name}`;
+  return REVIEW_KEY + "::" + id;
+}
+function loadReview() {
+  try { return JSON.parse(localStorage.getItem(reviewKey())) || {}; } catch { return {}; }
+}
+function saveReviewData(r) {
+  try { localStorage.setItem(reviewKey(), JSON.stringify(r)); } catch {}
+}
+function ymdLocal(d) {
+  const z = (n) => String(n).padStart(2, "0");
+  return d.getFullYear() + "-" + z(d.getMonth() + 1) + "-" + z(d.getDate());
+}
+function afterDaysStr(days) { const d = new Date(); d.setDate(d.getDate() + days); return ymdLocal(d); }
+
+// 완료(3단계) 시 복습 일정 시작 (이미 있으면 유지)
+function ensureReviewScheduled(no) {
+  const r = loadReview();
+  if (!r[no]) { r[no] = { level: 0, next: afterDaysStr(REVIEW_INTERVALS[0]) }; saveReviewData(r); }
+}
+// 오늘까지 복습 예정인 구절No 목록
+function dueReviewNos() {
+  const r = loadReview(); const t = ymdLocal(new Date());
+  return Object.keys(r).filter((no) => r[no] && r[no].next <= t).map(Number);
+}
+// 복습 완료 → 다음(더 긴) 간격으로
+function advanceReview(no) {
+  const r = loadReview();
+  const level = Math.min(((r[no] && r[no].level) || 0) + 1, REVIEW_INTERVALS.length - 1);
+  r[no] = { level, next: afterDaysStr(REVIEW_INTERVALS[level]) };
+  saveReviewData(r);
+}
 
 // ------------------------------------------------------------
 // 화면 0: 진입(식별) 화면 — 구분(교구/교회학교) 분기 입력
@@ -380,6 +426,9 @@ function renderSummary() {
   });
   const done = counts[3];
   const pct = total ? Math.round((done / total) * 100) : 0;
+  // 이미 완료(3단계)한 구절을 복습 일정에 등록(과거 완료분도 포함, 중복 없음)
+  verses.forEach((v) => { if (getPassedStage(v.no) === 3) ensureReviewScheduled(v.no); });
+  const dueCount = dueReviewNos().length; // 오늘 복습할 구절 수
 
   const appEl = document.getElementById("app");
   appEl.innerHTML = `
@@ -397,6 +446,7 @@ function renderSummary() {
       <div class="stat-box status-none"><div class="stat-num">${counts[0]}</div><div class="stat-lbl">미시도</div></div>
     </div>
     <button class="summary-go" id="go-list">📖 암송하러 가기</button>
+${dueCount > 0 ? `<button class="summary-go review-cta" id="go-review">📖 오늘 복습 (${dueCount}구절)</button>` : ""}
 <button class="summary-go challenge-cta" id="go-challenge">🔥 오늘의 말씀 도전</button>
 <button class="summary-help" id="open-ranking">🏆 도전 순위 보기</button>
 <button class="summary-help" id="open-help-summary">❓ 도움말 보기</button>
@@ -409,6 +459,7 @@ function renderSummary() {
 `;
 
   document.getElementById("go-list").addEventListener("click", renderVerseList);
+  if (dueCount > 0) document.getElementById("go-review").addEventListener("click", startReview);
   document.getElementById("go-challenge").addEventListener("click", startChallenge);
   document.getElementById("open-ranking").addEventListener("click", () => renderRanking());
   document.getElementById("change-user").addEventListener("click", renderEntryScreen);
@@ -1355,8 +1406,83 @@ function renderChallenge(verse) {
 
   document.getElementById("ch-exit").addEventListener("click", () => { stopSpeaking(); renderSummary(); });
   setupHint();
-  setupChallengeTyping(verse);
+  setupChallengeTyping(verse, (mode) => challengeComplete(verse, mode));
   setupVoice(verse, 3, () => challengeComplete(verse, "voice"));
+}
+
+// ------------------------------------------------------------
+// 복습 화면 — 오늘 복습 대상 구절을 순서대로 3단계(전체 빈칸)로 다시 암송
+// ------------------------------------------------------------
+function startReview() {
+  const dueNos = dueReviewNos();
+  const queue = verses.filter((v) => dueNos.includes(v.no));
+  if (!queue.length) { renderSummary(); return; }
+  renderReview(queue, 0);
+}
+
+function renderReview(queue, idx) {
+  const verse = queue[idx];
+  const appEl = document.getElementById("app");
+  const tokens = verse.text.trim().split(/\s+/);
+  const wordsHtml = tokens
+    .map((word) => {
+      const width = Array.from(word).length + 1;
+      return `<input class="word-input" data-answer="${word}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" style="width:${width}em" />`;
+    })
+    .join(" ");
+
+  appEl.innerHTML = `
+    <div class="test-screen">
+      <div class="test-card">
+        <div class="test-top">
+          <div class="test-head">
+            <div class="test-stage review-badge">📖 복습</div>
+            <div class="test-ref">${verse.refShort}</div>
+          </div>
+          <button class="back-btn" id="rv-exit">← 그만</button>
+        </div>
+        <div class="challenge-hint-line">복습 ${idx + 1} / ${queue.length} · 다시 외워볼까요? 막히면 <b>💡 힌트</b></div>
+        <div class="test-sentence">${wordsHtml}</div>
+        <div class="challenge-remain" id="ch-remain"></div>
+        <div class="btn-row">
+          <button class="answer-btn" id="hint-btn">💡 힌트</button>
+          <button class="voice-btn" id="voice-toggle">🎤 암송시작</button>
+        </div>
+        <div id="result-area"></div>
+        <div id="voice-panel" class="voice-panel" hidden>
+          <div class="voice-status" id="voice-status">🎙️ 듣고 있어요… <b>‘암송 종료’</b>를 누를 때까지 계속 들어요</div>
+          <div class="voice-live" id="voice-live"></div>
+        </div>
+        <div id="voice-result" class="voice-result"></div>
+      </div>
+    </div>`;
+
+  document.getElementById("rv-exit").addEventListener("click", () => { stopSpeaking(); renderSummary(); });
+  setupHint();
+  const onDone = () => { advanceReview(verse.no); reviewNext(queue, idx); };
+  setupChallengeTyping(verse, onDone);
+  setupVoice(verse, 3, onDone);
+}
+
+function reviewNext(queue, idx) {
+  stopSpeaking();
+  if (idx + 1 < queue.length) renderReview(queue, idx + 1);
+  else renderReviewDone(queue.length);
+}
+
+function renderReviewDone(count) {
+  const appEl = document.getElementById("app");
+  appEl.innerHTML = `
+    <div class="summary-screen">
+      <div class="summary-card cd-card">
+        <div class="cd-emoji">🎉</div>
+        <div class="cd-title">복습 완료!</div>
+        <div class="cd-sub">오늘 복습 ${count}구절을 마쳤어요. 잘하셨어요! 🙌</div>
+        <div class="cd-count">다음 복습은 자동으로 안내됩니다.</div>
+        <button class="summary-go" id="rv-home">기록 화면으로</button>
+      </div>
+    </div>`;
+  document.getElementById("rv-home").addEventListener("click", renderSummary);
 }
 
 // 힌트: 현재(포커스된) 빈칸의 앞 글자를 한 글자씩 열어준다.
@@ -1375,8 +1501,8 @@ function setupHint() {
   });
 }
 
-// 타이핑 채점 — 전부 맞히면 도전 완료
-function setupChallengeTyping(verse) {
+// 타이핑 채점 — 전부 맞히면 onComplete 호출 (도전/복습 공용)
+function setupChallengeTyping(verse, onComplete) {
   const inputs = Array.from(document.querySelectorAll(".word-input"));
   const remainEl = document.getElementById("ch-remain");
   let done = false;
@@ -1399,7 +1525,7 @@ function setupChallengeTyping(verse) {
       input.disabled = true;
       const left = updateRemain();
       // 남은 빈칸이 0이면 완료 (입력 순서와 무관하게 확실히 판정)
-      if (left === 0 && !done) { done = true; challengeComplete(verse, "typing"); return; }
+      if (left === 0 && !done) { done = true; onComplete("typing"); return; }
       const next = inputs.slice(idx + 1).find((inp) => !inp.disabled) || inputs.find((inp) => !inp.disabled);
       if (next) next.focus();
     } else if (!isComposing && Array.from(val).length >= Array.from(answer).length) {

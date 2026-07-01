@@ -1103,3 +1103,11 @@ h1 {
 .dark .radio-chip span{ color:#cdd3dd; }
 .dark .answer-text, .dark .voice-heard, .dark .voice-words,
 .dark .voice-summary, .dark .voice-status, .dark .voice-live{ color:#cdd3dd; }
+
+/* 복습 모드 버튼/배지 (요약 화면 + 복습 화면) */
+.summary-go.review-cta{
+  background:linear-gradient(135deg,#2c7a7b 0%,#37a0a0 100%);
+  color:#fff; border:1.5px solid #2c7a7b;
+}
+.summary-go.review-cta:hover{ filter:brightness(1.06); background:linear-gradient(135deg,#2c7a7b 0%,#37a0a0 100%); }
+.test-stage.review-badge{ background:#2c7a7b; color:#fff; }
