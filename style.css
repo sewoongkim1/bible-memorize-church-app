@@ -921,3 +921,19 @@ h1 {
   margin:12px 0 4px; transition:color .15s;
 }
 .challenge-remain.clear{ color:var(--green); }
+
+/* 순위 화면 — 날짜 직접 선택 */
+.rank-dates{
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  flex-wrap:wrap; margin-bottom:16px;
+}
+.rank-dates input[type=date]{
+  padding:8px 10px; border:1px solid var(--border); border-radius:9px;
+  background:#fff; font-family:inherit; font-size:.9rem; color:var(--navy);
+}
+.rank-dates .rd-sep{ color:var(--gray); }
+.rank-dates .rd-go{
+  padding:9px 16px; border:none; border-radius:9px; background:var(--navy);
+  color:#fff; font-weight:700; font-size:.9rem; cursor:pointer; font-family:inherit;
+}
+.rank-dates .rd-go:hover{ background:var(--navy-dark); }

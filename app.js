@@ -1461,12 +1461,23 @@ function renderRanking(range) {
       <div class="rank-filter" id="rk-filter">
         ${tabs.map(([k, l]) => `<button data-k="${k}" class="${r.key === k ? "on" : ""}">${l}</button>`).join("")}
       </div>
+      <div class="rank-dates">
+        <input type="date" id="rk-from" value="${r.from || ""}" />
+        <span class="rd-sep">~</span>
+        <input type="date" id="rk-to" value="${r.to || ""}" />
+        <button class="rd-go" id="rk-go">조회</button>
+      </div>
       <div id="rank-body"><p class="rank-msg">불러오는 중...</p></div>
     </div>`;
   document.getElementById("rk-back").addEventListener("click", renderSummary);
   document.getElementById("rk-filter").querySelectorAll("button").forEach((b) =>
     b.addEventListener("click", () => renderRanking(rankRangeFor(b.dataset.k)))
   );
+  document.getElementById("rk-go").addEventListener("click", () => {
+    const from = document.getElementById("rk-from").value;
+    const to = document.getElementById("rk-to").value;
+    renderRanking({ key: "custom", from, to });
+  });
   loadRankingBody(r);
 }
 
