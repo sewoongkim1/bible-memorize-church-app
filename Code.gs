@@ -145,6 +145,14 @@ function doGet(e) {
       return json(getMyChallengeDays(p));
     }
 
+    // v2 이관용 전체 내보내기 (비밀번호 필요)
+    if (p.action === 'dump') {
+      var dpw = PropertiesService.getScriptProperties().getProperty('ADMIN_PW');
+      if (!dpw) return json({ ok: false, error: 'no-password-set' });
+      if (String(p.pw || '') !== dpw) return json({ ok: false, error: 'unauthorized' });
+      return json(dumpAll_());
+    }
+
     if (p.test === '1') {
       appendRow_({ type: '교구', gu: '사랑', mok: '0', name: 'GET테스트', no: 0, stage: 1, mode: 'test', cid: 'gettest' });
       return json({ ok: true, wrote: true });
@@ -418,6 +426,24 @@ function getMyChallengeDays(p) {
     days[key] = (days[key] || 0) + 1;
   }
   return { ok: true, days: days };
+}
+
+/** v2 이관용: 두 탭 전체를 JSON(일시=ISO)으로 반환 */
+function dumpAll_() {
+  var toIso = function (v) { var d = (v instanceof Date) ? v : new Date(v); return isNaN(d.getTime()) ? '' : d.toISOString(); };
+  var rec = getSheet_().getDataRange().getValues();
+  var rows = [];
+  for (var i = 1; i < rec.length; i++) {
+    var r = rec[i];
+    rows.push({ when: toIso(r[0]), type: String(r[1] || ''), sosok: String(r[2] || ''), sebu: String(r[3] || ''), name: String(r[4] || ''), no: r[5], stage: r[6], mode: String(r[7] || ''), cid: String(r[8] || '') });
+  }
+  var cv = getChallengeSheet_().getDataRange().getValues();
+  var chal = [];
+  for (var j = 1; j < cv.length; j++) {
+    var c = cv[j];
+    chal.push({ when: toIso(c[0]), type: String(c[1] || ''), sosok: String(c[2] || ''), sebu: String(c[3] || ''), name: String(c[4] || ''), no: c[5], mode: String(c[6] || ''), cid: String(c[7] || '') });
+  }
+  return { ok: true, rows: rows, challenge: chal };
 }
 
 function json(obj) {
