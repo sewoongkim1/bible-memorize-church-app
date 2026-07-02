@@ -482,6 +482,13 @@ function renderSettings() {
           <button class="settings-back-btn" id="settings-back">← 뒤로</button>
         </div>
         <div class="setting-block">
+          <div class="setting-label">🌙 화면 밝기</div>
+          <div class="tts-rate-row" id="theme-row">
+            <button data-theme="light">☀️ 밝게</button>
+            <button data-theme="dark">🌙 어둡게</button>
+          </div>
+        </div>
+        <div class="setting-block">
           <div class="setting-label">🔊 말씀 듣기 속도</div>
           <div class="tts-rate-row" id="tts-rate-row">
             <button data-rate="0.5">느리게</button>
@@ -500,8 +507,29 @@ function renderSettings() {
   document.getElementById("settings-back").addEventListener("click", () => { stopSpeaking(); renderSummary(); });
   document.getElementById("change-user").addEventListener("click", renderEntryScreen);
   document.getElementById("share-btn").addEventListener("click", shareApp);
+  setupThemeSetting();
   setupTtsRate();
   setupInstallButton();
+}
+
+// 화면 밝기(다크 모드) 선택 UI
+function setupThemeSetting() {
+  const row = document.getElementById("theme-row");
+  if (!row) return;
+  const btns = Array.from(row.querySelectorAll("button"));
+  const sync = () => {
+    const dark = document.documentElement.classList.contains("dark");
+    btns.forEach((b) => b.classList.toggle("on", b.dataset.theme === (dark ? "dark" : "light")));
+  };
+  sync();
+  btns.forEach((b) => {
+    b.addEventListener("click", () => {
+      const dark = b.dataset.theme === "dark";
+      document.documentElement.classList.toggle("dark", dark);
+      try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+      sync();
+    });
+  });
 }
 
 // 듣기(TTS) 속도 선택 UI
