@@ -760,6 +760,13 @@ h1 {
   margin: 0 0 12px;
   text-align: left;
 }
+.weekly-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
 .weekly-kicker {
   display: inline-block;
   background: var(--gold);
@@ -768,7 +775,7 @@ h1 {
   padding: 2px 9px;
   font-size: .75rem;
   font-weight: 800;
-  margin-bottom: 7px;
+  white-space: nowrap;
 }
 .weekly-ref {
   color: var(--navy);
@@ -792,15 +799,21 @@ h1 {
 .weekly-state {
   display: inline-block;
   border-radius: 999px;
-  padding: 3px 9px;
-  font-size: .75rem;
+  padding: 4px 10px;
+  font-size: .76rem;
   font-weight: 800;
-  margin-bottom: 9px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(13,27,62,.08);
 }
 .weekly-state.status-none { color: var(--gray); background: var(--light); }
 .weekly-state.status-s1 { color: var(--navy); background: #e7ecf5; }
 .weekly-state.status-s2 { color: var(--white); background: var(--navy); }
-.weekly-state.status-done { color: var(--navy-dark); background: #f4e3ad; }
+.weekly-state.status-done {
+  color: var(--navy-dark);
+  background: linear-gradient(135deg,#ffe7a8 0%,#f4c95d 100%);
+  border: 1px solid #d6a928;
+  font-size: .82rem;
+}
 .weekly-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -832,6 +845,9 @@ h1 {
 }
 .weekly-primary:hover { background: var(--navy-dark); border-color: var(--navy-dark); }
 .weekly-secondary:hover { background: #eef2f8; }
+@media (max-width: 360px) {
+  .weekly-topline { align-items: flex-start; flex-direction: column; }
+}
 
 .summary-next {
   font-size: .92rem; color: #444; margin-bottom: 12px;

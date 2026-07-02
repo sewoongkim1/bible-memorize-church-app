@@ -633,11 +633,13 @@ function renderSummary() {
   const weeklyActionText = weeklyStage >= 3 ? "다시 복습하기" : "바로 암송하기";
   const weeklyHtml = weeklyVerse ? `
     <div class="weekly-card">
-      <div class="weekly-kicker">${weeklyInfo.label}</div>
+      <div class="weekly-topline">
+        <div class="weekly-kicker">${weeklyInfo.label}</div>
+        <div class="weekly-state ${weeklyStatus.cls}">${weeklyStatus.text}</div>
+      </div>
       <div class="weekly-ref">${weeklyVerse.refShort}</div>
       <div class="weekly-title">${weeklyVerse.sermonTitle || weeklyVerse.refFull || ""}</div>
       <div class="weekly-text">${weeklyVerse.text}</div>
-      <div class="weekly-state ${weeklyStatus.cls}">${weeklyStatus.text}</div>
       <div class="weekly-actions ${weeklyVerse.url ? "" : "single"}">
         <button class="weekly-primary" id="weekly-start">${weeklyActionText}</button>
         ${weeklyVerse.url ? `<a class="weekly-secondary" id="weekly-sermon" href="${weeklyVerse.url}" target="_blank" rel="noopener">설교 보기</a>` : ""}
