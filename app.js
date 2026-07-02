@@ -717,6 +717,7 @@ function renderSettings() {
         <a class="summary-install" href="reminders.html">🔔 매일 암송 구절 알림 받기</a>
         <button class="summary-install" id="install-btn">⛪ 홈 화면에 추가</button>
         <button class="summary-install" id="share-btn">🔗 공유하기</button>
+        <a class="summary-install" href="admin.html">📊 관리자 페이지</a>
         <div class="setting-block">
           <div class="setting-label">☁️ 동기화 상태</div>
           ${syncStatusHtml()}
