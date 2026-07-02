@@ -87,6 +87,11 @@
   .kpi{flex:1;min-width:120px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px 14px;text-align:center;}
   .kpi .n{font-size:1.5rem;font-weight:800;color:var(--navy);}
   .kpi .l{font-size:.76rem;color:var(--gray);margin-top:2px;}
+  .report-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;
+    font-size:.82rem;color:var(--gray);margin:2px 2px 10px;}
+  .download-btn{border:1.5px solid var(--navy);background:#eef1f8;color:var(--navy);
+    border-radius:999px;padding:7px 13px;font-size:.8rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;}
+  .download-btn:hover{background:var(--navy);color:#fff;}
 
   .table-wrap{overflow-x:auto;background:#fff;border:1px solid var(--border);border-radius:12px;}
   table{width:100%;border-collapse:collapse;min-width:560px;}
@@ -208,6 +213,34 @@ function ymd(d){
   const z=n=>String(n).padStart(2,"0");
   return d.getFullYear()+"-"+z(d.getMonth()+1)+"-"+z(d.getDate());
 }
+function fileDate(){
+  return ymd(new Date()).replaceAll("-","");
+}
+function rangeForName(from,to){
+  if(!from&&!to) return "전체";
+  return (from||"처음")+"_"+(to||"오늘");
+}
+function csvEscape(v){
+  const s=String(v==null?"":v);
+  return /[",\r\n]/.test(s) ? `"${s.replaceAll('"','""')}"` : s;
+}
+function downloadCsv(filename, headers, rows){
+  const lines=[headers, ...rows].map(row=>row.map(csvEscape).join(","));
+  const blob=new Blob(["\ufeff"+lines.join("\r\n")],{type:"text/csv;charset=utf-8"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download=filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+function attachCsvButton(id, filename, headers, rows){
+  const btn=document.getElementById(id);
+  if(!btn) return;
+  btn.addEventListener("click",()=>downloadCsv(filename,headers,rows));
+}
 function renderUsageReport(){
   const today = new Date();
   const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -280,7 +313,10 @@ async function runUsage(){
       <div class="kpi"><div class="n">${sum.voice}</div><div class="l">음성</div></div>
       <div class="kpi"><div class="n">${sum.total}</div><div class="l">총횟수</div></div>
     </div>
-    <div style="font-size:.82rem;color:var(--gray);margin:2px 2px 10px;">기간: <b>${rangeTxt}</b> · 그룹 ${list.length}개</div>
+    <div class="report-toolbar">
+      <span>기간: <b>${rangeTxt}</b> · 그룹 ${list.length}개</span>
+      <button class="download-btn" id="download-usage">CSV 다운로드</button>
+    </div>
     <div class="table-wrap">
       <table>
         <thead><tr>
@@ -295,6 +331,13 @@ async function runUsage(){
         </tr></tfoot>
       </table>
     </div>`;
+  attachCsvButton(
+    "download-usage",
+    `성경암송_기간별사용현황_${rangeForName(from,to)}_${fileDate()}.csv`,
+    ["구분","교구/교회학교","신규인원","참여인원","타이핑횟수","음성횟수","총횟수"],
+    list.map(r=>[r.gubun,r.sosok||"",r.newCount,r.participants,r.typing,r.voice,r.total])
+      .concat([["합계","",sum.newCount,sum.participants,sum.typing,sum.voice,sum.total]])
+  );
 }
 
 // ---------- 리포트 2: 참여자 현황 ----------
@@ -407,7 +450,10 @@ async function runParticipants(){
       <div class="kpi"><div class="n">${sum.voice}</div><div class="l">음성</div></div>
       <div class="kpi"><div class="n">${sum.total}</div><div class="l">총횟수</div></div>
     </div>
-    <div style="font-size:.82rem;color:var(--gray);margin:2px 2px 10px;">기간: <b>${rangeTxt}</b> · 참여자 ${list.length}명</div>
+    <div class="report-toolbar">
+      <span>기간: <b>${rangeTxt}</b> · 참여자 ${list.length}명</span>
+      <button class="download-btn" id="download-participants">CSV 다운로드</button>
+    </div>
     <div class="table-wrap"><table>
       <thead><tr>
         <th>#</th><th class="l">구분</th><th class="l">교구/교회학교</th><th>목장/학년</th>
@@ -419,6 +465,13 @@ async function runParticipants(){
         <td>${sum.typing}</td><td>${sum.voice}</td><td>${sum.total}</td>
       </tr></tfoot>
     </table></div>`;
+  attachCsvButton(
+    "download-participants",
+    `성경암송_참여자현황_${rangeForName(from,to)}_${fileDate()}.csv`,
+    ["번호","구분","교구/교회학교","목장/학년","성명","타이핑횟수","음성횟수","총횟수"],
+    list.map((r,i)=>[i+1,r.gubun,r.sosok||"",r.sebu||"",r.name||"",r.typing,r.voice,r.total])
+      .concat([["","합계","","","",sum.typing,sum.voice,sum.total]])
+  );
 }
 
 // ---------- 리포트 3: 구절별 현황 ----------
@@ -502,12 +555,22 @@ async function runVerses(){
       <div class="kpi"><div class="n">${list.length}</div><div class="l">사용된 구절 수</div></div>
       <div class="kpi"><div class="n">${sum.count}</div><div class="l">총 참여횟수</div></div>
     </div>
-    <div style="font-size:.82rem;color:var(--gray);margin:2px 2px 10px;">기간: <b>${rangeTxt}</b></div>
+    <div class="report-toolbar">
+      <span>기간: <b>${rangeTxt}</b></span>
+      <button class="download-btn" id="download-verses">CSV 다운로드</button>
+    </div>
     <div class="table-wrap"><table>
       <thead><tr><th>말씀 순번</th><th class="l">말씀</th><th>참여자</th><th>참여횟수</th></tr></thead>
       <tbody>${rows}</tbody>
       <tfoot><tr><td></td><td class="l">합계</td><td></td><td>${sum.count}</td></tr></tfoot>
     </table></div>`;
+  attachCsvButton(
+    "download-verses",
+    `성경암송_구절별현황_${rangeForName(from,to)}_${fileDate()}.csv`,
+    ["말씀순번","말씀","참여자","참여횟수"],
+    list.map(r=>[r.no,map[String(r.no)]||"",r.participants,r.count])
+      .concat([["","합계","",sum.count]])
+  );
 }
 
 // ---------- 리포트 4: 도전 현황 (공개 ranking 엔드포인트 재사용) ----------
@@ -606,7 +669,10 @@ async function runChallengeReport(){
       <div class="kpi"><div class="n">${sum.voice}</div><div class="l">음성</div></div>
       <div class="kpi"><div class="n">${sum.cnt}</div><div class="l">총 도전횟수</div></div>
     </div>
-    <div style="font-size:.82rem;color:var(--gray);margin:2px 2px 10px;">기간: <b>${rangeTxt}</b> · 참여자 ${list.length}명</div>
+    <div class="report-toolbar">
+      <span>기간: <b>${rangeTxt}</b> · 참여자 ${list.length}명</span>
+      <button class="download-btn" id="download-challenge">CSV 다운로드</button>
+    </div>
     <div class="table-wrap"><table>
       <thead><tr>
         <th>#</th><th class="l">구분</th><th class="l">교구/교회학교</th><th>목장/학년</th>
@@ -618,6 +684,13 @@ async function runChallengeReport(){
         <td>${sum.typing}</td><td>${sum.voice}</td><td>${sum.cnt}</td>
       </tr></tfoot>
     </table></div>`;
+  attachCsvButton(
+    "download-challenge",
+    `성경암송_도전현황_${rangeForName(from,to)}_${fileDate()}.csv`,
+    ["번호","구분","교구/교회학교","목장/학년","성명","타이핑","음성","도전횟수"],
+    list.map((r,i)=>[i+1,r.gubun,r.sosok||"",r.sebu||"",r.name||"",r.typing||0,r.voice||0,r.count])
+      .concat([["","합계","","","",sum.typing,sum.voice,sum.cnt]])
+  );
 }
 
 // ---------- 시작 ----------
