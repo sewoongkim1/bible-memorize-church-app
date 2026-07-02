@@ -135,6 +135,23 @@ async function syncProgress() {
 //   교회학교: { type:"교회학교", bu, grade, name, cid }
 // ------------------------------------------------------------
 const USER_KEY = "memorize-user";
+const PRIVACY_CONSENT_KEY = "privacy-consent";
+
+function hasPrivacyConsent() {
+  try {
+    return localStorage.getItem(PRIVACY_CONSENT_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function savePrivacyConsent() {
+  try {
+    localStorage.setItem(PRIVACY_CONSENT_KEY, "1");
+  } catch {
+    /* 저장 실패 무시 */
+  }
+}
 
 function loadUser() {
   try {
@@ -360,6 +377,21 @@ function renderEntryScreen() {
           <input class="entry-input" id="name" placeholder="이름" value="${u.name || ""}"/>
         </div>
 
+        <div class="privacy-box">
+          <div class="privacy-title">개인정보 수집·이용 안내</div>
+          <p>
+            성경말씀 암송 앱은 개인 암송 진도 저장과 교회 내 참여 통계를 위해
+            이름, 소속, 암송 진행 기록, 복습 및 도전 참여 기록을 저장합니다.
+            수집된 정보는 암송 프로그램 운영 목적으로만 사용되며,
+            운영 종료 또는 삭제 요청 시 정리됩니다.
+          </p>
+          <button class="privacy-more" id="privacy-more" type="button">자세히 보기</button>
+          <label class="privacy-consent">
+            <input type="checkbox" id="privacy-consent" ${hasPrivacyConsent() ? "checked" : ""}/>
+            <span>위 개인정보 수집·이용 안내를 확인하고 동의합니다.</span>
+          </label>
+        </div>
+
         <div class="entry-error" id="entry-error" hidden></div>
         <button class="entry-submit" id="entry-submit">시작하기</button>
       </div>
@@ -367,6 +399,7 @@ function renderEntryScreen() {
   `;
 
   document.getElementById("login-help").addEventListener("click", () => renderLoginHelp(renderEntryScreen));
+  document.getElementById("privacy-more").addEventListener("click", () => renderPrivacyInfo(renderEntryScreen));
 
   const guFields = document.getElementById("gu-fields");
   const schoolFields = document.getElementById("school-fields");
@@ -392,6 +425,9 @@ function renderEntryScreen() {
     };
 
     if (!name) return fail("이름을 입력해 주세요.");
+    if (!document.getElementById("privacy-consent").checked) {
+      return fail("개인정보 수집·이용 안내에 동의해 주세요.");
+    }
 
     let user;
     if (type === "교구") {
@@ -410,6 +446,7 @@ function renderEntryScreen() {
 
     const prev = loadUser();
     if (prev && prev.cid) user.cid = prev.cid; // 기존 기기 식별자 유지
+    savePrivacyConsent();
     saveUser(user);
     enterAfterLogin(); // 서버 기록 동기화 후 요약 화면
   });
@@ -499,6 +536,7 @@ function renderSettings() {
           <button class="tts-preview" id="tts-preview">🔊 이 속도로 들어보기</button>
         </div>
         <button class="summary-install" id="change-user">👤 로그인 정보변경</button>
+        <button class="summary-install" id="privacy-info">🔐 개인정보 안내 보기</button>
         <a class="summary-install" href="reminders.html">🔔 매일 암송 구절 알림 받기</a>
         <button class="summary-install" id="install-btn">⛪ 성경암송 — 홈 화면에 추가</button>
         <button class="summary-install" id="share-btn">🔗 성경암송 — 공유하기</button>
@@ -506,6 +544,7 @@ function renderSettings() {
     </div>`;
   document.getElementById("settings-back").addEventListener("click", () => { stopSpeaking(); renderSummary(); });
   document.getElementById("change-user").addEventListener("click", renderEntryScreen);
+  document.getElementById("privacy-info").addEventListener("click", () => renderPrivacyInfo(renderSettings));
   document.getElementById("share-btn").addEventListener("click", shareApp);
   setupThemeSetting();
   setupTtsRate();
@@ -1426,6 +1465,47 @@ function renderLoginHelp(back) {
     );
   }
   draw();
+}
+
+function renderPrivacyInfo(back) {
+  const appEl = document.getElementById("app");
+  appEl.innerHTML = `
+    <div class="help-screen">
+      <div class="help-card">
+        <div class="help-top">
+          <h2 class="help-title">🔐 개인정보 수집·이용 안내</h2>
+          <button class="help-close" id="privacy-close">✕ 닫기</button>
+        </div>
+        <section class="help-section">
+          <h3>수집 항목</h3>
+          <ul>
+            <li>이름</li>
+            <li>교구/목장 또는 교회학교 부서/학년</li>
+            <li>암송 진행 기록, 복습 및 도전 참여 기록</li>
+            <li>기기 식별용 임의 ID</li>
+          </ul>
+        </section>
+        <section class="help-section">
+          <h3>이용 목적</h3>
+          <ul>
+            <li>개인 암송 진도 저장과 기기 간 진도 동기화</li>
+            <li>교구/부서별 참여 통계 확인</li>
+            <li>암송 프로그램 운영, 격려, 보고 자료 작성</li>
+          </ul>
+        </section>
+        <section class="help-section">
+          <h3>보관 기간</h3>
+          <p>암송 프로그램 운영 기간 동안 보관하며, 운영 종료 또는 삭제 요청 시 확인 후 정리합니다.</p>
+        </section>
+        <section class="help-section">
+          <h3>관리 주체</h3>
+          <p>고척교회 제자양육부 신앙운동팀</p>
+        </section>
+        <button class="help-go" id="privacy-back">확인했습니다</button>
+      </div>
+    </div>`;
+  document.getElementById("privacy-close").addEventListener("click", back);
+  document.getElementById("privacy-back").addEventListener("click", back);
 }
 
 // 도움말 전체 화면 (onClose: 닫을 때 돌아갈 처리)

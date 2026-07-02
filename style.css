@@ -575,6 +575,28 @@ h1 {
   color: var(--error); font-size: .82rem; text-align: center;
   margin-bottom: 8px; font-weight: 500;
 }
+.privacy-box {
+  border: 1px solid var(--border); border-radius: 12px;
+  background: #f7f4ee; padding: 11px 12px; margin: 10px 0 12px;
+  text-align: left;
+}
+.privacy-title {
+  color: var(--navy); font-weight: 800; font-size: .92rem; margin-bottom: 4px;
+}
+.privacy-box p {
+  margin: 0; color: #555; font-size: .8rem; line-height: 1.55;
+}
+.privacy-more {
+  margin: 8px 0 7px; padding: 5px 10px; border: 1px solid var(--border);
+  border-radius: 999px; background: var(--white); color: var(--navy);
+  font-size: .78rem; font-weight: 700; cursor: pointer; font-family: inherit;
+}
+.privacy-more:hover { background: #eef2f8; }
+.privacy-consent {
+  display: flex; align-items: flex-start; gap: 7px; color: #333;
+  font-size: .82rem; font-weight: 700; line-height: 1.45; cursor: pointer;
+}
+.privacy-consent input { margin-top: 3px; flex: none; }
 .entry-submit {
   width: 100%; padding: 11px; font-size: 1rem; font-weight: 700;
   color: #fff; background: var(--navy); border: none; border-radius: 12px;
@@ -1165,6 +1187,11 @@ h1 {
 .dark .radio-chip span{ color:#cdd3dd; }
 .dark .answer-text, .dark .voice-heard, .dark .voice-words,
 .dark .voice-summary, .dark .voice-status, .dark .voice-live{ color:#cdd3dd; }
+.dark .privacy-box{ background:#1b2333; border-color:#33465f; }
+.dark .privacy-title{ color:#cdd9f2; }
+.dark .privacy-box p, .dark .privacy-consent{ color:#cdd3dd; }
+.dark .privacy-more{ background:#232c3f; color:#cdd9f2; border-color:#3a4a68; }
+.dark .privacy-more:hover{ background:#2e3a52; color:#fff; }
 
 /* 복습 모드 버튼/배지 (요약 화면 + 복습 화면) */
 .summary-go.review-cta{

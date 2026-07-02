@@ -41,6 +41,9 @@
   /* 카드 메뉴 */
   .section-title{font-weight:800;color:var(--navy);font-size:1.05rem;margin:6px 2px 14px;}
   .card-grid{display:flex;flex-direction:column;gap:12px;}
+  .privacy-notice{background:#fff8e8;border:1px solid #e5c978;border-radius:12px;padding:12px 14px;
+    color:#6f5614;font-size:.84rem;line-height:1.55;margin-bottom:14px;}
+  .privacy-notice b{color:#4b390b;}
   .rep-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px 20px;
     cursor:pointer;transition:transform .12s,box-shadow .12s;box-shadow:0 2px 10px rgba(26,58,107,.06);}
   .rep-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(26,58,107,.14);}
@@ -167,6 +170,11 @@ function renderMenu(){
   logoutBtn.hidden = false;
   app.innerHTML = `
     <div class="section-title">통계 리포트</div>
+    <div class="privacy-notice">
+      <b>개인정보 취급 주의</b><br>
+      관리자 통계에는 성명, 소속, 암송·도전 기록이 포함됩니다.
+      암송 프로그램 운영과 참여 격려 목적 외에는 사용하지 말고, 외부 공유 시 필요한 범위로만 최소화해 주세요.
+    </div>
     <div class="card-grid">
       <div class="rep-card" id="rep-usage">
         <div class="ic">📅</div>
