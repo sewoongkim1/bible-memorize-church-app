@@ -663,6 +663,33 @@ h1 {
 .setting-label {
   font-weight: 700; color: var(--navy); font-size: .96rem; margin-bottom: 8px;
 }
+.sync-status {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  border: 1px solid var(--border); border-radius: 12px;
+  background: var(--white); padding: 10px 11px; margin: 0 0 10px;
+  text-align: left;
+}
+.sync-status.compact { margin: 0 0 10px; padding: 9px 10px; }
+.sync-title {
+  color: var(--navy); font-size: .9rem; font-weight: 800; line-height: 1.3;
+}
+.sync-detail {
+  color: var(--gray); font-size: .76rem; line-height: 1.45; margin-top: 2px;
+}
+.sync-retry {
+  flex: 0 0 auto; border: 1px solid var(--border); border-radius: 999px;
+  background: #eef1f8; color: var(--navy); font-family: inherit;
+  font-size: .76rem; font-weight: 800; padding: 6px 10px; cursor: pointer;
+}
+.sync-retry:hover { background: #dde4f2; }
+.sync-retry:disabled { opacity: .55; cursor: wait; }
+.sync-status.success { border-color: #bcdfc1; background: #f3fbf5; }
+.sync-status.success .sync-title { color: var(--green); }
+.sync-status.error { border-color: #f0c9c6; background: #fff5f4; }
+.sync-status.error .sync-title { color: var(--error); }
+.sync-status.saving { border-color: #ecd9a0; background: #fffaf0; }
+.sync-status.saving .sync-title { color: #9a7b28; }
+.sync-status.local { border-color: #d6dbe5; background: #f7f8fb; }
 .tts-rate-row { display: flex; gap: 6px; margin-bottom: 8px; }
 .tts-rate-row button {
   flex: 1; padding: 9px 4px; font-size: .86rem; font-weight: 700;
@@ -1293,6 +1320,17 @@ h1 {
 .dark .weekly-text{ color:#e6e9ef; }
 .dark .weekly-secondary{ background:#232c3f; color:#cdd9f2; border-color:#3a4a68; }
 .dark .weekly-secondary:hover{ background:#2e3a52; color:#fff; }
+.dark .sync-status{ background:#1b2333; border-color:#33465f; }
+.dark .sync-title{ color:#cdd9f2; }
+.dark .sync-detail{ color:#aeb8c8; }
+.dark .sync-retry{ background:#232c3f; color:#cdd9f2; border-color:#3a4a68; }
+.dark .sync-retry:hover{ background:#2e3a52; color:#fff; }
+.dark .sync-status.success{ background:#17301f; border-color:#2c5f2d; }
+.dark .sync-status.success .sync-title{ color:#8fd7a0; }
+.dark .sync-status.error{ background:#3a2020; border-color:#6b2f2f; }
+.dark .sync-status.error .sync-title{ color:#ffaaa2; }
+.dark .sync-status.saving{ background:#2b2717; border-color:#4a4327; }
+.dark .sync-status.saving .sync-title{ color:#e8d9a3; }
 
 /* 복습 모드 버튼/배지 (요약 화면 + 복습 화면) */
 .summary-go.review-cta{
