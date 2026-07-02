@@ -659,7 +659,6 @@ function renderSummary() {
       <div class="gauge-bar"><div class="gauge-fill" style="width:${pct}%"></div></div>
       <div class="gauge-sub">전체 ${total}구절 중 <b>${done}구절</b> 암송 완료</div>
     </div>
-    ${syncStatusHtml(true)}
     <div class="stat-grid">
       <div class="stat-box status-done"><div class="stat-num">${counts[3]}</div><div class="stat-lbl">완료</div></div>
       <div class="stat-box status-s2"><div class="stat-num">${counts[2]}</div><div class="stat-lbl">2단계</div></div>
@@ -682,7 +681,6 @@ ${dueCount > 0 ? `<button class="summary-go review-cta" id="go-review">📖 오�
   document.getElementById("open-ranking").addEventListener("click", () => renderRanking());
   document.getElementById("open-help-summary").addEventListener("click", () => renderHelp(renderSummary));
   document.getElementById("open-settings").addEventListener("click", renderSettings);
-  setupSyncRetry((changed) => { if (changed) renderSummary(); });
 }
 
 // 설정 화면 — 로그인 정보변경 · 알림 · 홈 화면 추가 · 공유 (요약에서 분리)
