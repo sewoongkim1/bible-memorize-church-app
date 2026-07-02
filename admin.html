@@ -44,6 +44,24 @@
   .privacy-notice{background:#fff8e8;border:1px solid #e5c978;border-radius:12px;padding:12px 14px;
     color:#6f5614;font-size:.84rem;line-height:1.55;margin-bottom:14px;}
   .privacy-notice b{color:#4b390b;}
+  .dash{margin-bottom:16px;}
+  .dash-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 2px 10px;}
+  .dash-title{font-weight:800;color:var(--navy);font-size:1.05rem;}
+  .dash-sub{color:var(--gray);font-size:.78rem;white-space:nowrap;}
+  .dash-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:10px;}
+  .dash-kpi{background:#fff;border:1px solid var(--border);border-radius:14px;padding:13px 14px;
+    box-shadow:0 2px 10px rgba(26,58,107,.05);min-width:0;}
+  .dash-kpi .n{font-size:1.55rem;font-weight:800;color:var(--navy);line-height:1.15;}
+  .dash-kpi .l{font-size:.78rem;color:var(--gray);margin-top:4px;line-height:1.35;}
+  .dash-panels{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .dash-panel{background:#fff;border:1px solid var(--border);border-radius:14px;padding:13px 14px;min-width:0;}
+  .dash-panel .h{font-weight:800;color:var(--navy);font-size:.92rem;margin-bottom:8px;}
+  .dash-list{display:flex;flex-direction:column;gap:7px;}
+  .dash-item{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;font-size:.84rem;}
+  .dash-item .rank{font-weight:800;color:var(--gold);min-width:22px;}
+  .dash-item .name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#333;}
+  .dash-item .cnt{font-weight:800;color:var(--navy);white-space:nowrap;}
+  .dash-msg{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center;color:var(--gray);font-size:.86rem;}
   .rep-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px 20px;
     cursor:pointer;transition:transform .12s,box-shadow .12s;box-shadow:0 2px 10px rgba(26,58,107,.06);}
   .rep-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(26,58,107,.14);}
@@ -105,6 +123,29 @@
   .gubun-교회학교{background:#f4e3ad;color:var(--navy-dark);}
   .msg{text-align:center;color:var(--gray);padding:30px;}
   .err{color:var(--error);}
+  @media (max-width:700px){
+    .topbar{padding:14px 14px;}
+    .topbar h1{font-size:1.02rem;}
+    main{padding:16px 12px 44px;}
+    .dash-head{align-items:flex-start;flex-direction:column;gap:2px;}
+    .dash-sub{white-space:normal;}
+    .dash-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+    .dash-kpi{padding:12px 10px;}
+    .dash-kpi .n{font-size:1.35rem;}
+    .dash-panels{grid-template-columns:1fr;}
+    .dash-panel{padding:12px;}
+    .dash-item{font-size:.82rem;}
+    .privacy-notice{font-size:.8rem;}
+    .rep-card{padding:15px 16px;}
+    .filters{padding:12px;gap:10px;}
+    .filters .fld{flex:1 1 140px;}
+    .filters input[type=date], .filters .go{width:100%;}
+    .report-toolbar{align-items:flex-start;flex-direction:column;}
+    .download-btn{width:100%;}
+  }
+  @media (max-width:380px){
+    .dash-grid{grid-template-columns:1fr;}
+  }
 </style>
 </head>
 <body>
@@ -129,6 +170,10 @@ logoutBtn.addEventListener("click", () => {
 });
 
 function getPw(){ return sessionStorage.getItem(PW_KEY) || ""; }
+
+function htmlEsc(v){
+  return String(v==null?"":v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+}
 
 async function callStats(from, to){
   const params = new URLSearchParams({ action:"stats", pw:getPw() });
@@ -174,6 +219,13 @@ function renderLogin(){
 function renderMenu(){
   logoutBtn.hidden = false;
   app.innerHTML = `
+    <div class="dash" id="dash">
+      <div class="dash-head">
+        <div class="dash-title">운영 대시보드</div>
+        <div class="dash-sub">오늘과 이번 주 흐름을 빠르게 확인합니다.</div>
+      </div>
+      <div class="dash-msg">대시보드를 불러오는 중...</div>
+    </div>
     <div class="section-title">통계 리포트</div>
     <div class="privacy-notice">
       <b>개인정보 취급 주의</b><br>
@@ -206,6 +258,97 @@ function renderMenu(){
   document.getElementById("rep-participants").addEventListener("click", renderParticipants);
   document.getElementById("rep-verses").addEventListener("click", renderVerses);
   document.getElementById("rep-challenge").addEventListener("click", renderChallengeReport);
+  loadDashboard();
+}
+
+function weekStart(d){
+  const x=new Date(d);
+  const day=x.getDay();
+  const diff=day===0?6:day-1;
+  x.setDate(x.getDate()-diff);
+  return x;
+}
+function sumStatsList(list){
+  return (list||[]).reduce((a,r)=>({
+    newCount:a.newCount+(r.newCount||0),
+    participants:a.participants+(r.participants||0),
+    typing:a.typing+(r.typing||0),
+    voice:a.voice+(r.voice||0),
+    total:a.total+(r.total||0)
+  }),{newCount:0,participants:0,typing:0,voice:0,total:0});
+}
+function sumChallenge(list){
+  return (list||[]).reduce((a,r)=>({
+    people:a.people+1,
+    count:a.count+(r.count||0),
+    typing:a.typing+(r.typing||0),
+    voice:a.voice+(r.voice||0)
+  }),{people:0,count:0,typing:0,voice:0});
+}
+async function loadDashboard(){
+  const dash=document.getElementById("dash");
+  if(!dash) return;
+  const today=ymd(new Date());
+  const wk=ymd(weekStart(new Date()));
+  try{
+    const [todayStats,weekStats,allStats,todayChallenge,weekChallenge,verseMap,weekVerses]=await Promise.all([
+      callStats(today,today),
+      callStats(wk,today),
+      callStats("",""),
+      callChallengeRanking(today,today),
+      callChallengeRanking(wk,today),
+      loadVerseMap(),
+      callVerses(wk,today)
+    ]);
+    if(todayStats.error==="unauthorized"||weekStats.error==="unauthorized"||allStats.error==="unauthorized"){
+      sessionStorage.removeItem(PW_KEY); renderLogin(); return;
+    }
+    const ts=sumStatsList(todayStats.list||[]);
+    const ws=sumStatsList(weekStats.list||[]);
+    const as=sumStatsList(allStats.list||[]);
+    const tc=sumChallenge(todayChallenge.list||[]);
+    const wc=sumChallenge(weekChallenge.list||[]);
+    const topVerses=(weekVerses.list||[]).slice().sort((a,b)=>(b.count-a.count)).slice(0,5);
+    const topVerseHtml=topVerses.length ? topVerses.map((r,i)=>`
+      <div class="dash-item">
+        <span class="rank">${i+1}</span>
+        <span class="name">${htmlEsc(verseLabel(verseMap,r.no))}</span>
+        <span class="cnt">${r.count}회</span>
+      </div>`).join("") : `<div class="dash-msg">이번 주 구절 기록이 없습니다.</div>`;
+    const topChallenge=(weekChallenge.list||[]).slice().sort((a,b)=>(b.count-a.count)).slice(0,5);
+    const topChallengeHtml=topChallenge.length ? topChallenge.map((r,i)=>`
+      <div class="dash-item">
+        <span class="rank">${i+1}</span>
+        <span class="name">${htmlEsc((r.sosok||"")+" "+(r.name||""))}</span>
+        <span class="cnt">${r.count}회</span>
+      </div>`).join("") : `<div class="dash-msg">이번 주 도전 기록이 없습니다.</div>`;
+    dash.innerHTML=`
+      <div class="dash-head">
+        <div class="dash-title">운영 대시보드</div>
+        <div class="dash-sub">오늘 ${today} · 이번 주 ${wk} ~ ${today}</div>
+      </div>
+      <div class="dash-grid">
+        <div class="dash-kpi"><div class="n">${ts.participants}</div><div class="l">오늘 참여자</div></div>
+        <div class="dash-kpi"><div class="n">${ws.participants}</div><div class="l">이번 주 참여자</div></div>
+        <div class="dash-kpi"><div class="n">${as.participants}</div><div class="l">전체 누적 참여자</div></div>
+        <div class="dash-kpi"><div class="n">${tc.count}</div><div class="l">오늘 도전 횟수</div></div>
+        <div class="dash-kpi"><div class="n">${ws.total}</div><div class="l">이번 주 암송 활동</div></div>
+        <div class="dash-kpi"><div class="n">${wc.count}</div><div class="l">이번 주 도전 횟수</div></div>
+        <div class="dash-kpi"><div class="n">${as.total}</div><div class="l">전체 암송 활동</div></div>
+        <div class="dash-kpi"><div class="n">${weekVerses.list?weekVerses.list.length:0}</div><div class="l">이번 주 사용 구절</div></div>
+      </div>
+      <div class="dash-panels">
+        <div class="dash-panel"><div class="h">이번 주 많이 참여한 말씀</div><div class="dash-list">${topVerseHtml}</div></div>
+        <div class="dash-panel"><div class="h">이번 주 도전 Top 5</div><div class="dash-list">${topChallengeHtml}</div></div>
+      </div>`;
+  }catch(e){
+    dash.innerHTML=`
+      <div class="dash-head">
+        <div class="dash-title">운영 대시보드</div>
+        <div class="dash-sub">잠시 후 다시 확인해 주세요.</div>
+      </div>
+      <div class="dash-msg err">대시보드를 불러오지 못했습니다.</div>`;
+  }
 }
 
 // ---------- 리포트 1: 기간별 사용현황 ----------
