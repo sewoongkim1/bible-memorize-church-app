@@ -710,15 +710,15 @@ function renderSettings() {
           </div>
           <button class="tts-preview" id="tts-preview">🔊 이 속도로 들어보기</button>
         </div>
+        <button class="summary-install" id="change-user">👤 로그인 정보변경</button>
+        <button class="summary-install" id="privacy-info">🔐 개인정보 안내 보기</button>
+        <a class="summary-install" href="reminders.html">🔔 매일 암송 구절 알림 받기</a>
+        <button class="summary-install" id="install-btn">⛪ 홈 화면에 추가</button>
+        <button class="summary-install" id="share-btn">🔗 공유하기</button>
         <div class="setting-block">
           <div class="setting-label">☁️ 동기화 상태</div>
           ${syncStatusHtml()}
         </div>
-        <button class="summary-install" id="change-user">👤 로그인 정보변경</button>
-        <button class="summary-install" id="privacy-info">🔐 개인정보 안내 보기</button>
-        <a class="summary-install" href="reminders.html">🔔 매일 암송 구절 알림 받기</a>
-        <button class="summary-install" id="install-btn">⛪ 성경암송 — 홈 화면에 추가</button>
-        <button class="summary-install" id="share-btn">🔗 성경암송 — 공유하기</button>
       </div>
     </div>`;
   document.getElementById("settings-back").addEventListener("click", () => { stopSpeaking(); renderSummary(); });
