@@ -479,12 +479,27 @@ let VERSE_MAP=null;
 async function loadVerseMap(){
   if(VERSE_MAP) return VERSE_MAP;
   VERSE_MAP={};
-  try{
-    const res=await fetch("verses.json",{cache:"no-cache"});
-    const d=await res.json();
-    (d.verses||[]).forEach(v=>{ VERSE_MAP[String(v.no)]=v.refShort || ("No."+v.no); });
-  }catch{ /* 매핑 실패 시 순번만 표시 */ }
+  const urls=[
+    "verses.json?v="+Date.now(),
+    "https://sewoongkim1.github.io/bible-memorize-church-app/verses.json?v="+Date.now()
+  ];
+  for(const url of urls){
+    try{
+      const res=await fetch(url,{cache:"no-cache"});
+      if(!res.ok) throw new Error("HTTP "+res.status);
+      const d=await res.json();
+      (d.verses||[]).forEach(v=>{
+        const label=[v.refShort||v.refFull||("No."+v.no), v.sermonTitle].filter(Boolean).join(" · ");
+        VERSE_MAP[String(Number(v.no))]=label;
+      });
+      if(Object.keys(VERSE_MAP).length) break;
+    }catch{ /* 다음 경로로 재시도 */ }
+  }
   return VERSE_MAP;
+}
+function verseLabel(map,no){
+  const key=String(Number(no));
+  return map[key] || ("No."+no);
 }
 
 async function callVerses(from,to){
@@ -546,7 +561,7 @@ async function runVerses(){
   const rows=list.map(r=>`
     <tr>
       <td>${r.no}</td>
-      <td class="l">${map[String(r.no)]||"-"}</td>
+      <td class="l">${verseLabel(map,r.no)}</td>
       <td>${r.participants}</td>
       <td><b>${r.count}</b></td>
     </tr>`).join("");
@@ -568,7 +583,7 @@ async function runVerses(){
     "download-verses",
     `성경암송_구절별현황_${rangeForName(from,to)}_${fileDate()}.csv`,
     ["말씀순번","말씀","참여자","참여횟수"],
-    list.map(r=>[r.no,map[String(r.no)]||"",r.participants,r.count])
+    list.map(r=>[r.no,verseLabel(map,r.no),r.participants,r.count])
       .concat([["","합계","",sum.count]])
   );
 }
