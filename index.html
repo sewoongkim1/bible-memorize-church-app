@@ -3,78 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script>
-    // 야간(다크) 모드: 기본값은 화이트, 사용자가 직접 선택해 저장한 경우만 다크 적용
-    (function () {
-      try {
-        if (localStorage.getItem("theme") === "dark") document.documentElement.classList.add("dark");
-      } catch (e) {}
-    })();
-  </script>
-  <title>성경말씀 암송 | 오직 성경, 말씀이 답이다!</title>
-  <meta name="description" content="주의 말씀은 내 발에 등이요 내 길에 빛이니이다" />
-
+  <meta http-equiv="refresh" content="0; url=https://sewoongkim1.github.io/bible-memorize-church-app-v2/" />
+  <link rel="canonical" href="https://sewoongkim1.github.io/bible-memorize-church-app-v2/" />
+  <title>성경말씀 암송 — 새 주소로 이동</title>
   <link rel="icon" href="favicon.png" />
-  <link rel="apple-touch-icon" href="favicon.png" />
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#1a3a6b" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="성경암송" />
-
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="성경말씀 암송 | 오직 성경, 말씀이 답이다!" />
-  <meta property="og:description" content="주의 말씀은 내 발에 등이요 내 길에 빛이니이다" />
-  <meta property="og:image" content="https://sewoongkim1.github.io/bible-memorize-church-app/og-cover.png" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:url" content="https://sewoongkim1.github.io/bible-memorize-church-app/" />
-  <meta property="og:site_name" content="고척교회 제자양육부 신앙운동팀" />
-  <meta name="twitter:card" content="summary_large_image" />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@300;400;500;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=20260702g" />
+  <script>
+    // 새 버전(v2)으로 이동. 해시가 있으면 함께 전달.
+    location.replace("https://sewoongkim1.github.io/bible-memorize-church-app-v2/" + (location.hash || ""));
+  </script>
+  <style>
+    body{font-family:"Noto Sans KR",sans-serif;background:#fdf8f0;color:#1a3a6b;
+      text-align:center;padding:56px 20px;line-height:1.6;}
+    a{color:#1a3a6b;font-weight:800;}
+  </style>
 </head>
 <body>
-  <!-- 앱 시작 스플래시 화면 -->
-  <div id="splash">
-    <div class="splash-inner">
-      <img id="splash-logo" src="https://sewoongkim1.github.io/summer-bible/logo3.png" alt="고척교회" />
-      <div class="splash-title">오직 성경, 말씀이 답이다!</div>
-      <div class="splash-sub">주의 말씀은 내 발에 등이요<br>내 길에 빛이니이다</div>
-    </div>
-  </div>
-  <script>
-    window.__splashStart = Date.now(); // 스플래시 최소 노출 시간 계산용
-    // 스플래시 숨기기(콘텐츠 준비되면 app.js가 호출, 못 부르면 최대 4초 뒤 자동)
-    window.hideSplash = function () {
-      var s = document.getElementById("splash");
-      if (!s) return;
-      s.classList.add("hide");
-      setTimeout(function () { if (s && s.parentNode) s.parentNode.removeChild(s); }, 450);
-    };
-    setTimeout(window.hideSplash, 7000); // 안전장치(app.js가 최소 5초 유지 후 닫음)
-  </script>
-
-  <div class="page-header">
-    <div class="logo-wrap">
-      <img src="https://sewoongkim1.github.io/summer-bible/logo3.png" alt="고척교회 로고" />
-      <div class="logo-tagline">
-        <span class="tagline-main">오직 성경, 말씀이 답이다!</span>
-        <span class="tagline-sub">주의 말씀은 내 발에 등이요</span>
-        <span class="tagline-sub">내 길에 빛이니이다.</span>
-        <span class="tagline-sub">시편 119편 105절</span>
-      </div>
-    </div>
-    <p class="hero-subtitle">제자양육부 신앙운동팀</p>
-  </div>
-
-  <main id="app">
-    <p style="text-align:center;padding:40px">불러오는 중...</p>
-  </main>
-
-  <script src="app.js?v=20260702g"></script>
+  <p>📖 성경말씀 암송 앱이 새 주소로 이동했습니다.</p>
+  <p>잠시 후 자동으로 이동합니다…</p>
+  <p><a href="https://sewoongkim1.github.io/bible-memorize-church-app-v2/">여기</a>를 눌러 바로 이동하세요.</p>
 </body>
 </html>
